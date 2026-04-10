@@ -1,0 +1,6 @@
+0040 reset
+029F main_loop
+02A9 int0_handler
+02B0 wait_vdp_b_command_clear
+8100 FRAME_COUNTER_LO
+8101 FRAME_COUNTER_HI
