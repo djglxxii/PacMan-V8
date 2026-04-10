@@ -13,8 +13,8 @@ human-approved before advancing.
 
 ## Current focus
 
-- Active: *(none — awaiting user to activate T003)*
-- Next proposed: **T003**
+- Active: *(none — awaiting user to activate T004)*
+- Next proposed: **T004**
 
 ## Phase 0 — Scaffolding
 
@@ -22,7 +22,7 @@ human-approved before advancing.
 |------|---------------------------------------------|---------|---------------------|
 | T001 | Repository scaffold + build driver          | completed | checklist + ROM   |
 | T002 | Empty ROM boots to known background         | completed | frame capture     |
-| T003 | Asset conversion tool stubs                 | planned | checklist           |
+| T003 | Asset conversion tool stubs                 | completed | checklist           |
 
 ## Phase 1 — Visual bring-up
 

@@ -1,0 +1,13 @@
+total 16
+drwxr-xr-x 2 djglxxii djglxxii 4096 Apr 10 17:19 .
+drwxr-xr-x 8 djglxxii djglxxii 4096 Apr 10 17:20 ..
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 16:05 .gitkeep
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 17:20 hud_font.bin
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 17:20 music_data.bin
+-rw-r--r-- 1 djglxxii djglxxii   32 Apr 10 17:20 palette_a.bin
+-rw-r--r-- 1 djglxxii djglxxii   32 Apr 10 17:20 palette_b.bin
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 17:20 sprites_colors.bin
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 17:20 sprites_patterns.bin
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 17:20 tile_nametable.bin
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 17:20 tiles_vdpb.bin
+-rw-r--r-- 1 djglxxii djglxxii    0 Apr 10 17:20 wsg_instruments.bin

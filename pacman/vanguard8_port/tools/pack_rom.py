@@ -9,19 +9,32 @@ import subprocess
 import sys
 import tempfile
 
+from _common import REPO_ROOT
 
-REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+
 SOURCE_PATH = REPO_ROOT / "src" / "main.asm"
 OUTPUT_DIR = REPO_ROOT / "build"
 ROM_PATH = OUTPUT_DIR / "pacman.rom"
 SYM_PATH = OUTPUT_DIR / "pacman.sym"
 SYMBOL_PATTERN = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*):\s+EQU\s+0x([0-9A-Fa-f]+)\s*$")
 CARTRIDGE_PAGE_SIZE = 0x4000
+CONVERTERS = [
+    "conv_palette.py",
+    "conv_tiles.py",
+    "conv_sprites.py",
+    "conv_hud_font.py",
+    "conv_audio.py",
+]
 
 
 def run_command(argv: list[str]) -> None:
-    print("$ " + " ".join(shlex.quote(arg) for arg in argv))
+    print("$ " + " ".join(shlex.quote(arg) for arg in argv), flush=True)
     subprocess.run(argv, cwd=REPO_ROOT, check=True)
+
+
+def run_converters() -> None:
+    for converter_name in CONVERTERS:
+        run_command(["python3", f"tools/{converter_name}"])
 
 
 def convert_sjasm_symbols(raw_symbol_path: pathlib.Path, output_symbol_path: pathlib.Path) -> int:
@@ -73,6 +86,7 @@ def main() -> int:
         raise FileNotFoundError(f"Pac-Man source file not found: {SOURCE_PATH}")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    run_converters()
 
     with tempfile.NamedTemporaryFile(
         prefix="pacman-",

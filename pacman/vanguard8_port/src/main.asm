@@ -220,3 +220,5 @@ wait_vdp_b_command_clear:
         jr nz, .wait
         VDP_REG_B 15, 0x00
         ret
+
+        INCLUDE "data.asm"
