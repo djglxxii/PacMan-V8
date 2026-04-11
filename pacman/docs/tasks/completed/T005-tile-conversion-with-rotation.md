@@ -51,7 +51,7 @@ Out of scope:
 ## Implementation notes
 
 Rotation: for a source tile `src[y][x]` (y, x ∈ 0..7), the rotated tile is
-`dst[x][7 - y]` (CCW). Do the rotation in the 2bpp planar form and then
+`dst[7 - x][y]` (CCW). Do the rotation in the 2bpp planar form and then
 repack to 4bpp so the palette mapping happens exactly once per pixel.
 
 De-duplication: hash each rotated, recolored tile's 32 bytes and keep
@@ -74,7 +74,7 @@ clear message so T004's slot map can be extended.
 - `vanguard8_port/tests/evidence/T005-tiles/conversion_log.txt` — stdout
   of `conv_tiles.py` listing: total source tiles, unique maze tiles
   kept, bytes written, any palette-mapping warnings. Current unique tile
-  count: `41`; current byte size: `1312`.
+  count: `40`; current byte size: `1280`.
 - `vanguard8_port/tests/evidence/T005-tiles/build_log.txt` — clean
   `pack_rom.py` regression build log.
 - `vanguard8_port/tests/evidence/T005-tiles/t004_regression_log.txt` —
@@ -120,3 +120,15 @@ cd /home/djglxxii/src/pacman/vanguard8_port && python3 tools/conv_tiles.py
   `680738b26715e28175a12855123559974c36e55085cf19bffaf40fcfd22153c9`.
 - 2026-04-10 — approved by human reviewer and ready to move to
   `docs/tasks/completed/`.
+- 2026-04-10 — corrected during T006 review after
+  `vanguard8_port/tests/evidence/T006-maze/ANALYSIS-maze-distortion.md`
+  identified the accepted formula as clockwise. The converter now uses
+  `dst[7 - x][y]`, regenerating `tiles_vdpb.bin`, `tiles_vdpb.index.txt`,
+  and `tile_bank.png` while preserving the 41-tile / 1312-byte count.
+- 2026-04-10 — corrected again during T006 round-two review after
+  `vanguard8_port/tests/evidence/T006-maze/ANALYSIS-maze-distortion-round2.md`
+  showed that the previous MAME-style tile decode orientation did not match
+  the public playfield tile-code grid. `conv_tiles.py` now decodes tiles in
+  displayed tile-code orientation before applying the planned CCW rotation.
+  The deduped tile bank is now 40 tiles / 1280 bytes, still inside the
+  accepted sanity bound.

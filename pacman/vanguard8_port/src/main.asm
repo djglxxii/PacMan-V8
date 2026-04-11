@@ -31,9 +31,10 @@ reset:
         VDP_REG_B 5, 0xF8          ; SAT base 0x7C00
         VDP_REG_B 6, 0x0E          ; sprite pattern base 0x7000
         VDP_REG_B 7, 0x00          ; backdrop color 0
-        VDP_REG_B 8, 0x20          ; TP = 1
+        VDP_REG_B 8, 0x00          ; opaque background layer
         VDP_REG_B 9, 0x80          ; LN = 1
         VDP_REG_B 11, 0x00
+        VDP_REG_B 23, 0x00         ; no vertical scroll
 
         VDP_REG_A 0, 0x04          ; Graphic 3
         VDP_REG_A 1, 0x00
@@ -44,6 +45,7 @@ reset:
         VDP_REG_A 8, 0x20          ; TP = 1 for compositing
         VDP_REG_A 9, 0x80          ; LN = 1
         VDP_REG_A 11, 0x00
+        VDP_REG_A 23, 0x00         ; no vertical scroll
 
         ld hl, PALETTE_B_DATA
         call upload_vdp_b_palette
@@ -58,10 +60,11 @@ reset:
         VDP_A_WRITE 0x4200, 0xD0
         VDP_B_WRITE 0x7C00, 0xD0
 
-        call render_palette_swatch
+        call upload_vdp_b_tile_bank
+        call render_static_maze
 
         VDP_REG_B 1, 0x40          ; display on
-        VDP_REG_A 1, 0x60          ; display on + V-blank IRQ
+        VDP_REG_A 1, 0x00          ; VDP-A overlay is unused for T006
 
         im 1
         ei
@@ -286,58 +289,42 @@ upload_vdp_b_palette:
         out (0x86), a
         ret
 
-render_palette_swatch:
+upload_vdp_b_tile_bank:
+        VDP_REG_B 14, 0x01
+        ld a, 0x00
+        out (0x85), a
+        ld a, 0x7D
+        out (0x85), a
+        ld hl, TILES_VDPB_DATA
+        REPT 10
+        call upload_vdp_b_128_bytes
+        ENDR
+        ret
+
+render_static_maze:
+        VDP_REG_B 14, 0x00
         ld a, 0x00
         out (0x85), a
         ld a, 0x40
         out (0x85), a
-        ld b, 212
-.row:
-        ld a, 0x00
-        call write_vdp_b_eight_bytes
-        ld a, 0x11
-        call write_vdp_b_eight_bytes
-        ld a, 0x22
-        call write_vdp_b_eight_bytes
-        ld a, 0x33
-        call write_vdp_b_eight_bytes
-        ld a, 0x44
-        call write_vdp_b_eight_bytes
-        ld a, 0x55
-        call write_vdp_b_eight_bytes
-        ld a, 0x66
-        call write_vdp_b_eight_bytes
-        ld a, 0x77
-        call write_vdp_b_eight_bytes
-        ld a, 0x88
-        call write_vdp_b_eight_bytes
-        ld a, 0x99
-        call write_vdp_b_eight_bytes
-        ld a, 0xAA
-        call write_vdp_b_eight_bytes
-        ld a, 0xBB
-        call write_vdp_b_eight_bytes
-        ld a, 0xCC
-        call write_vdp_b_eight_bytes
-        ld a, 0xDD
-        call write_vdp_b_eight_bytes
-        ld a, 0xEE
-        call write_vdp_b_eight_bytes
-        ld a, 0xFF
-        call write_vdp_b_eight_bytes
-        dec b
-        jr nz, .row
+        ld hl, TILE_NAMETABLE_DATA
+        REPT 212
+        call upload_vdp_b_128_bytes
+        ENDR
         ret
 
-write_vdp_b_eight_bytes:
+upload_vdp_b_128_bytes:
+        ld b, 128
+        call upload_vdp_b_b_bytes
+        ret
+
+upload_vdp_b_b_bytes:
+.byte:
+        ld a, (hl)
         out (0x84), a
-        out (0x84), a
-        out (0x84), a
-        out (0x84), a
-        out (0x84), a
-        out (0x84), a
-        out (0x84), a
-        out (0x84), a
+        inc hl
+        dec b
+        jr nz, .byte
         ret
 
 wait_vdp_b_command_clear:

@@ -1,0 +1,10 @@
+Current candidate hash:
+Frame SHA-256 (60): 855ca25d699a8b1fe984aff1dc6ca3d1f505ebe8b01ce95a7786b0fbc6d45c49
+
+Superseded distortion hashes:
+Frame SHA-256 (60): c3610aee20811d023a9cba43604d9bbbae499cd255c095586d0cdc79ec8298d2
+Frame SHA-256 (60): 6e04314d154c9fb0563b5a236e9f7b31ffc689d2cac4d906dd5297ed18ea49bc
+Frame SHA-256 (60): 3046530eef86856ba48592391595682fc3924e89a86dac8f5c12850e19a593e0
+
+Command:
+cd /home/djglxxii/src/pacman/vanguard8_port && rm -rf build && python3 tools/pack_rom.py && /home/djglxxii/src/Vanguard8/build/src/vanguard8_headless --rom build/pacman.rom --frames 60 --dump-frame tests/evidence/T006-maze/maze.ppm --hash-frame 60 && python3 tools/check_maze_layout.py

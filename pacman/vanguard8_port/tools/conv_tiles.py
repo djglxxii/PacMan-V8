@@ -30,12 +30,22 @@ MAZE_WALL_CLUT_ID = 16
 
 PALETTE_MAP_PATH = REPO_ROOT / "assets" / "src" / "palette_map.md"
 TILE_INDEX_PATH = ASSETS_DIR / "tiles_vdpb.index.txt"
+MAZE_LAYOUT_PATH = REPO_ROOT / "assets" / "src" / "maze_layout.txt"
 EVIDENCE_DIR = REPO_ROOT / "tests" / "evidence" / "T005-tiles"
 TILE_BANK_PNG_PATH = EVIDENCE_DIR / "tile_bank.png"
 
 TILE_WIDTH = 8
 TILE_HEIGHT = 8
 TILE_BYTES = 32
+FRAME_WIDTH = 256
+FRAME_HEIGHT = 212
+FRAME_ROW_BYTES = FRAME_WIDTH // 2
+ARCADE_COLUMNS = 28
+ARCADE_ROWS = 36
+ROTATED_COLUMNS = ARCADE_ROWS
+ROTATED_ROWS = ARCADE_COLUMNS
+MAZE_CROP_X = 16
+MAZE_CROP_Y = 6
 ZOOM = 4
 
 
@@ -54,30 +64,19 @@ class ConvertedTile:
     packed: bytes
 
 
-def get_bit(data: bytes, bit_offset: int) -> int:
-    return (data[bit_offset >> 3] >> (7 - (bit_offset & 7))) & 1
-
-
 def decode_tiles(rom: bytes) -> list[list[list[int]]]:
-    plane_offsets = (0, 4)
-    x_offsets = (8 * 8 + 0, 8 * 8 + 1, 8 * 8 + 2, 8 * 8 + 3, 0, 1, 2, 3)
-    y_offsets = tuple(i * 8 for i in range(TILE_HEIGHT))
-    char_inc = 16 * 8
-    count = (len(rom) * 8) // char_inc
+    count = len(rom) // 16
     tiles: list[list[list[int]]] = []
 
     for tile_id in range(count):
-        base = tile_id * char_inc
         tile = [[0] * TILE_WIDTH for _ in range(TILE_HEIGHT)]
-        for y in range(TILE_HEIGHT):
-            for x in range(TILE_WIDTH):
-                pixel = 0
-                for plane, plane_offset in enumerate(plane_offsets):
-                    pixel |= (
-                        get_bit(rom, base + y_offsets[y] + x_offsets[x] + plane_offset)
-                        << plane
-                    )
-                tile[y][x] = pixel
+        for x in range(TILE_WIDTH):
+            for base_y, row_offset in ((0, 8), (4, 0)):
+                byte = rom[tile_id * 16 + row_offset + (7 - x)]
+                for y in range(TILE_HEIGHT // 2):
+                    high = (byte >> (7 - y)) & 1
+                    low = (byte >> (3 - y)) & 1
+                    tile[base_y + y][x] = (high << 1) | low
         tiles.append(tile)
 
     return tiles
@@ -125,7 +124,7 @@ def rotate_ccw(tile: list[list[int]]) -> list[list[int]]:
     rotated = [[0] * TILE_WIDTH for _ in range(TILE_HEIGHT)]
     for y in range(TILE_HEIGHT):
         for x in range(TILE_WIDTH):
-            rotated[x][7 - y] = tile[y][x]
+            rotated[7 - x][y] = tile[y][x]
     return rotated
 
 
@@ -181,10 +180,11 @@ def convert_tiles(
     tiles: list[list[list[int]]],
     clut: list[tuple[int, int, int, int]],
     prom_to_slot: dict[int, int],
-) -> tuple[list[ConvertedTile], list[str]]:
+) -> tuple[list[ConvertedTile], list[str], dict[int, int]]:
     converted: list[ConvertedTile] = []
     warnings: list[str] = []
     seen: dict[bytes, ConvertedTile] = {}
+    source_to_index: dict[int, int] = {}
 
     for source in make_tile_sources():
         rotated = rotate_ccw(tiles[source.tile_id])
@@ -196,6 +196,7 @@ def convert_tiles(
                 f"dedupe: source ${source.tile_id:02X} {source.name} matches "
                 f"tile {existing.index:02d} from source ${existing.source.tile_id:02X}"
             )
+            source_to_index[source.tile_id] = existing.index
             continue
 
         name = source.name
@@ -204,8 +205,9 @@ def convert_tiles(
         tile = ConvertedTile(len(converted), TileSource(source.tile_id, source.clut_id, name), colored, packed)
         converted.append(tile)
         seen[packed] = tile
+        source_to_index[source.tile_id] = tile.index
 
-    return converted, warnings
+    return converted, warnings, source_to_index
 
 
 def render_tile_bank_png(converted: list[ConvertedTile], slot_rgb: dict[int, tuple[int, int, int]]) -> None:
@@ -250,6 +252,94 @@ def write_index(converted: list[ConvertedTile]) -> None:
     TILE_INDEX_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def unpack_graphic4_tiles(payload: bytes) -> list[tuple[tuple[int, ...], ...]]:
+    if len(payload) % TILE_BYTES != 0:
+        raise RuntimeError(f"tile payload size is not a multiple of {TILE_BYTES}: {len(payload)}")
+
+    tiles: list[tuple[tuple[int, ...], ...]] = []
+    for offset in range(0, len(payload), TILE_BYTES):
+        rows = []
+        tile_bytes = payload[offset : offset + TILE_BYTES]
+        for y in range(TILE_HEIGHT):
+            row = []
+            for value in tile_bytes[y * 4 : y * 4 + 4]:
+                row.append(value >> 4)
+                row.append(value & 0x0F)
+            rows.append(tuple(row))
+        tiles.append(tuple(rows))
+    return tiles
+
+
+def load_maze_layout(path: Path) -> list[list[str]]:
+    rows = [
+        line.split()
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    ]
+    if len(rows) != ARCADE_ROWS:
+        raise RuntimeError(f"{path} must contain {ARCADE_ROWS} maze rows, found {len(rows)}")
+    for row_index, row in enumerate(rows):
+        if len(row) != ARCADE_COLUMNS:
+            raise RuntimeError(
+                f"{path} row {row_index + 1} must contain {ARCADE_COLUMNS} tokens, found {len(row)}"
+            )
+    return rows
+
+
+def rotate_arcade_layout_ccw(layout: list[list[str]]) -> list[list[str]]:
+    rotated = [["00"] * ROTATED_COLUMNS for _ in range(ROTATED_ROWS)]
+    for source_y, row in enumerate(layout):
+        for source_x, token in enumerate(row):
+            rotated[ARCADE_COLUMNS - 1 - source_x][source_y] = token
+    return rotated
+
+
+def render_static_maze_framebuffer(
+    converted_payload: bytes,
+    source_to_index: dict[int, int],
+) -> bytes:
+    tile_pixels = unpack_graphic4_tiles(converted_payload)
+    layout = rotate_arcade_layout_ccw(load_maze_layout(MAZE_LAYOUT_PATH))
+
+    full_width = ROTATED_COLUMNS * TILE_WIDTH
+    full_height = ROTATED_ROWS * TILE_HEIGHT
+    frame = [[0] * full_width for _ in range(full_height)]
+
+    for row_index, row in enumerate(layout):
+        for column_index, token in enumerate(row):
+            try:
+                tile_id = int(token, 16)
+            except ValueError as error:
+                raise RuntimeError(
+                    f"{MAZE_LAYOUT_PATH} row {row_index + 1}, column {column_index + 1}: "
+                    f"expected a hex tile source token, found {token!r}"
+                ) from error
+            try:
+                tile_index = source_to_index[tile_id]
+            except KeyError as error:
+                raise RuntimeError(
+                    f"{MAZE_LAYOUT_PATH} row {row_index + 1}, column {column_index + 1}: "
+                    f"tile source ${tile_id:02X} is not present in the converted tile bank"
+                ) from error
+
+            tile = tile_pixels[tile_index]
+            dest_x = column_index * TILE_WIDTH
+            dest_y = row_index * TILE_HEIGHT
+            for y in range(TILE_HEIGHT):
+                for x in range(TILE_WIDTH):
+                    frame[dest_y + y][dest_x + x] = tile[y][x]
+
+    cropped = [
+        row[MAZE_CROP_X : MAZE_CROP_X + FRAME_WIDTH]
+        for row in frame[MAZE_CROP_Y : MAZE_CROP_Y + FRAME_HEIGHT]
+    ]
+    packed = bytearray()
+    for row in cropped:
+        for x in range(0, FRAME_WIDTH, 2):
+            packed.append((row[x] << 4) | row[x + 1])
+    return bytes(packed)
+
+
 def main() -> int:
     def action() -> None:
         tile_rom = require_input("pacman.5e")
@@ -258,11 +348,12 @@ def main() -> int:
         clut = decode_clut(clut_prom)
         prom_to_slot = load_prom_to_slot_map(PALETTE_MAP_PATH)
         slot_rgb = load_slot_rgb(PALETTE_MAP_PATH)
-        converted, warnings = convert_tiles(tiles, clut, prom_to_slot)
+        converted, warnings, source_to_index = convert_tiles(tiles, clut, prom_to_slot)
 
         payload = b"".join(tile.packed for tile in converted)
+        framebuffer = render_static_maze_framebuffer(payload, source_to_index)
         tiles_path = write_output("tiles_vdpb.bin", payload)
-        nametable_path = write_output("tile_nametable.bin", b"")
+        nametable_path = write_output("tile_nametable.bin", framebuffer)
         write_index(converted)
         render_tile_bank_png(converted, slot_rgb)
 
@@ -270,10 +361,11 @@ def main() -> int:
         print(f"conv_tiles: audited source references: {len(make_tile_sources())}")
         print(f"conv_tiles: unique maze tiles kept: {len(converted)}")
         print(f"conv_tiles: bytes written: {len(payload)}")
+        print(f"conv_tiles: static maze framebuffer bytes: {len(framebuffer)}")
         print(
             "conv_tiles: "
-            f"{len(payload)} + 0 bytes written to {asset_relpath(tiles_path)}, "
-            f"{asset_relpath(nametable_path)}"
+            f"{len(payload)} + {len(framebuffer)} bytes written to "
+            f"{asset_relpath(tiles_path)}, {asset_relpath(nametable_path)}"
         )
         print(f"conv_tiles: index written to {asset_relpath(TILE_INDEX_PATH)}")
         print(f"conv_tiles: evidence PNG written to {TILE_BANK_PNG_PATH.relative_to(REPO_ROOT)}")

@@ -1,3 +1,8 @@
+$ python3 tools/conv_palette.py
+conv_palette: 32 + 32 bytes written to assets/palette_a.bin, assets/palette_b.bin
+conv_palette: slot map written to assets/palette_slot_map.txt
+conv_palette: palette doc written to assets/src/palette_map.md
+$ python3 tools/conv_tiles.py
 conv_tiles: total source tiles decoded: 256
 conv_tiles: audited source references: 69
 conv_tiles: unique maze tiles kept: 40
@@ -35,3 +40,40 @@ conv_tiles warning: dedupe: source $FE maze_wall_fe matches tile 00 from source 
 conv_tiles warning: dedupe: source $FF maze_wall_ff matches tile 00 from source $C0
 conv_tiles warning: dedupe: source $1A blank_corridor matches tile 00 from source $C0
 conv_tiles warning: dedupe: source $2F ghost_gate_right matches tile 00 from source $C0
+$ python3 tools/conv_sprites.py
+conv_sprites: 0 + 0 bytes written to assets/sprites_patterns.bin, assets/sprites_colors.bin
+$ python3 tools/conv_hud_font.py
+conv_hud_font: 0 bytes written to assets/hud_font.bin
+$ python3 tools/conv_audio.py
+conv_audio: 0 + 0 bytes written to assets/wsg_instruments.bin, assets/music_data.bin
+$ sjasmplus --nologo --msg=war --raw=/home/djglxxii/src/pacman/vanguard8_port/build/pacman.rom --sym=/home/djglxxii/src/pacman/vanguard8_port/build/pacman-e9c5ndb7.sjasm.sym /home/djglxxii/src/pacman/vanguard8_port/src/main.asm
+data.asm(18): warning: include data: requested to include no data (length=0)
+data.asm(22): warning: include data: requested to include no data (length=0)
+data.asm(26): warning: include data: requested to include no data (length=0)
+data.asm(30): warning: include data: requested to include no data (length=0)
+data.asm(34): warning: include data: requested to include no data (length=0)
+ROM image: build/pacman.rom
+Symbol file: build/pacman.sym
+ROM size: 32768 bytes
+Symbol count: 17
+[2026-04-10 22:41:31.862] [info] Loaded config scaffold from /home/djglxxii/.config/vanguard8/config.toml
+[2026-04-10 22:41:31.866] [info] Launching deterministic headless runtime.
+Vanguard 8 Emulator 0.1.0
+Build: milestone 7
+Core status: deterministic video scheduler with integrated YM2151, AY-3-8910, and MSM5205 audio
+Headless status: deterministic runtime
+ROM size: 32768
+Controller 1 port: 0xFF
+Controller 2 port: 0xFF
+VCLK: off
+Frames completed: 60
+Master cycles: 14305200
+CPU T-states: 7152600
+Event log size: 12840
+Event log digest: 6563162820683566367
+Frame SHA-256 (60): 855ca25d699a8b1fe984aff1dc6ca3d1f505ebe8b01ce95a7786b0fbc6d45c49
+Frame dump source: runtime
+Frame dump path: tests/evidence/T006-maze/maze.ppm
+Frame dump size: 256x212
+Frame dump digest: 16185579071255626235
+check_maze_layout: 576 wall seams checked; 16 known arcade seam exceptions; 0 unexpected mismatches

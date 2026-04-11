@@ -40,6 +40,7 @@
     ENDM
 
     MACRO VDP_A_WRITE address, value
+        VDP_REG_A 14, (((address) >> 14) & 0x03)
         ld a, (address) & 0xFF
         out (0x81), a
         ld a, 0x40 | (((address) >> 8) & 0x3F)
@@ -49,6 +50,7 @@
     ENDM
 
     MACRO VDP_B_WRITE address, value
+        VDP_REG_B 14, (((address) >> 14) & 0x03)
         ld a, (address) & 0xFF
         out (0x85), a
         ld a, 0x40 | (((address) >> 8) & 0x3F)
