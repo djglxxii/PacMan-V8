@@ -1,0 +1,20 @@
+[2026-04-10 21:24:27.936] [info] Loaded config scaffold from /home/djglxxii/.config/vanguard8/config.toml
+[2026-04-10 21:24:27.939] [info] Launching deterministic headless runtime.
+Vanguard 8 Emulator 0.1.0
+Build: milestone 7
+Core status: deterministic video scheduler with integrated YM2151, AY-3-8910, and MSM5205 audio
+Headless status: deterministic runtime
+ROM size: 16384
+Controller 1 port: 0xFF
+Controller 2 port: 0xFF
+VCLK: off
+Frames completed: 60
+Master cycles: 14305200
+CPU T-states: 7152600
+Event log size: 12840
+Event log digest: 6563162820683566367
+Frame SHA-256 (60): 680738b26715e28175a12855123559974c36e55085cf19bffaf40fcfd22153c9
+Frame dump source: runtime
+Frame dump path: tests/evidence/T005-tiles/t004-regression.ppm
+Frame dump size: 256x212
+Frame dump digest: 10705714241307028355

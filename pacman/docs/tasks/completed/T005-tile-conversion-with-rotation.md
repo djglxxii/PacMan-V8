@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T005 |
-| State | planned |
+| State | completed |
 | Phase | 1 Visual |
 | Depends on | T004 |
 | Plan reference | `docs/VANGUARD8_PORT_PLAN.md` §2, §3.2 |
@@ -73,7 +73,13 @@ clear message so T004's slot map can be extended.
   copy of the index file produced by the converter.
 - `vanguard8_port/tests/evidence/T005-tiles/conversion_log.txt` — stdout
   of `conv_tiles.py` listing: total source tiles, unique maze tiles
-  kept, bytes written, any palette-mapping warnings.
+  kept, bytes written, any palette-mapping warnings. Current unique tile
+  count: `41`; current byte size: `1312`.
+- `vanguard8_port/tests/evidence/T005-tiles/build_log.txt` — clean
+  `pack_rom.py` regression build log.
+- `vanguard8_port/tests/evidence/T005-tiles/t004_regression_log.txt` —
+  T004 swatch regression capture. Current frame-60 SHA-256:
+  `680738b26715e28175a12855123559974c36e55085cf19bffaf40fcfd22153c9`.
 
 **Reviewer checklist:**
 
@@ -98,3 +104,19 @@ cd /home/djglxxii/src/pacman/vanguard8_port && python3 tools/conv_tiles.py
 ## Progress log
 
 - 2026-04-10 — created, state: planned.
+- 2026-04-10 — activated after T004 approval. Reviewed the T005 spec,
+  `docs/VANGUARD8_PORT_PLAN.md` §3.2, and the existing MAME tile decoder
+  before implementing real tile conversion.
+- 2026-04-10 — replaced `tools/conv_tiles.py` stub with real conversion:
+  MAME 2bpp tile decode, audited maze tile source list, CLUT-to-T004 palette
+  mapping, 90° CCW rotation, Graphic 4 4bpp packing, stable dedupe, index
+  output, and labeled PNG evidence rendering.
+- 2026-04-10 — captured acceptance evidence under
+  `vanguard8_port/tests/evidence/T005-tiles/`. Conversion keeps 41 unique
+  maze tiles (`1312` bytes), writes `assets/tiles_vdpb.bin` and
+  `assets/tiles_vdpb.index.txt`, and renders `tile_bank.png` with blue maze
+  walls, white dot, peach power pellet, and gate/blank primitives. Clean
+  `pack_rom.py` and T004 swatch regression both pass; T004 frame hash remains
+  `680738b26715e28175a12855123559974c36e55085cf19bffaf40fcfd22153c9`.
+- 2026-04-10 — approved by human reviewer and ready to move to
+  `docs/tasks/completed/`.
