@@ -8,9 +8,18 @@ conversation.
 
 A from-scratch port of arcade Pac-Man to the **Vanguard 8** fantasy console
 (`/home/djglxxii/src/Vanguard8/`). The goal is a cartridge ROM that runs on
-`vanguard8_frontend` and plays indistinguishably from the arcade original:
-identical maze, ghost personalities, frame-rule timing, Cruise Elroy, fruit
-schedule, intermissions, and the characteristic audio.
+`vanguard8_frontend` and preserves the arcade's **gameplay**: ghost
+personalities, frame-rule timing, Cruise Elroy, fruit schedule, intermissions,
+and the characteristic audio.
+
+The **visual presentation necessarily deviates** from the arcade original
+because the Vanguard 8's 256×212 landscape framebuffer cannot fit the
+arcade's 224×288 portrait playfield pixel-for-pixel in any orientation. The
+chosen compromise — maze rotated 90° CCW with sprites and HUD kept upright,
+outer tunnel-border rows clipped, HUD overlaid on decorative wall regions —
+is documented in `docs/VANGUARD8_PORT_PLAN.md` §2. Do not treat "pixel-
+perfect arcade match" as the target; treat "authentic gameplay on Vanguard
+8 within its display constraints" as the target.
 
 The design is captured in **`docs/VANGUARD8_PORT_PLAN.md`**. That document is
 the architectural source of truth. If you need to deviate from it, update it

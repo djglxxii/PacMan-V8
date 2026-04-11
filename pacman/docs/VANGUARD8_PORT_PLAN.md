@@ -1,8 +1,11 @@
 # Pac-Man → Vanguard 8 Port Plan
 
-A plan for building a faithful Pac-Man cartridge for the Vanguard 8 fantasy
-console, reusing graphics and audio waveforms already extracted from the MAME
-ROM set in `extracted/`.
+A plan for building a Pac-Man cartridge for the Vanguard 8 fantasy console,
+reusing graphics and audio waveforms already extracted from the MAME ROM set
+in `extracted/`. The port preserves arcade **gameplay** exactly (ghost AI,
+frame rules, audio character); the **visual presentation deviates** from the
+arcade because the Vanguard 8's landscape framebuffer cannot host the arcade's
+portrait playfield pixel-for-pixel. See §2 for the chosen display compromise.
 
 Target hardware reference: `/home/djglxxii/src/Vanguard8/docs/spec/`
 (00-overview, 01-cpu, 02-video, 03-audio, 04-io).
@@ -19,11 +22,35 @@ Agent operating rules live in `CLAUDE.md` at the repo root.
 
 ## 1. Scope and Philosophy
 
-**Goal.** Ship a cartridge that plays indistinguishably from arcade Pac-Man in
-everything the player can observe: maze layout, Pac-Man movement, dot/energizer
-placement, ghost personalities (Blinky, Pinky, Inky, Clyde), scatter/chase
-timing, Cruise Elroy escalation, fruit spawns, bonus life at 10 000, intermission
-cutscenes, and the "wakka-wakka" chomp / siren / death jingle.
+**Goal.** Ship a cartridge whose **gameplay** is authentic Pac-Man: Pac-Man
+movement and cornering, dot/energizer placement in a maze that matches the
+arcade's topology, ghost personalities (Blinky, Pinky, Inky, Clyde),
+scatter/chase timing, Cruise Elroy escalation, fruit spawns, bonus life at
+10 000, intermission cutscenes, and the "wakka-wakka" chomp / siren / death
+jingle. A player who knows arcade Pac-Man strategy should find every
+strategy still works.
+
+**Non-goal.** Pixel-perfect visual parity with the arcade. The arcade
+playfield is 224×288 portrait; the Vanguard 8 is 256×212 landscape. No
+rotation and no sub-pixel scaling makes that fit. We explicitly accept the
+following visual deviations — their rationale is in §2:
+
+- The maze is rendered rotated 90° CCW while sprites and HUD stay upright in
+  landscape screen-space (so the player sees Pac-Man and the ghosts in their
+  familiar orientation on a rotated maze).
+- The outermost ~18 px of the arcade maze's tunnel border is clipped at the
+  top and bottom of the landscape framebuffer (decorative wall only, no
+  dots/pellets lost).
+- Lives and fruit are stacked vertically in a left-side gutter rather than
+  displayed horizontally along the bottom.
+- Score and HIGH SCORE text are overlaid across the center-top and
+  center-bottom of the maze, in regions that the rotation leaves free of
+  dots, pellets, and the ghost house.
+- The current maze layout is a 30×28 clean-room **approximation** of the
+  rotated arcade tilemap, not a 1:1 rotation. It is visually very close to
+  the arcade and preserves the traversal graph; exact-tile fidelity may be
+  revisited in a later polish task if it is ever needed, but it is not
+  required for gameplay authenticity.
 
 **What we reuse.** Only the *data* that is already decoded and sitting in
 `extracted/`:
@@ -52,7 +79,7 @@ assets that we convert to Vanguard 8 native formats, not executable code.
 ## 2. Display Mapping — the Resolution Problem
 
 Arcade Pac-Man is a vertical (tate) game: 224 × 288 pixels = 28 × 36 tiles.
-The playfield is organized as:
+The arcade playfield is organized as:
 
 ```
 rows  0–1      top score strip (1UP / HIGH SCORE / 2UP)
@@ -62,40 +89,78 @@ rows  33       blank
 rows  34–35    bottom strip (lives + fruit carousel)
 ```
 
-Vanguard 8 Graphic 4 is **256 × 212 landscape**. Neither orientation fits
-directly:
+Vanguard 8 Graphic 4 is **256 × 212 landscape**. No orientation fits the
+full arcade display pixel-for-pixel:
 
 | Strategy | Fits? | Verdict |
 |---|---|---|
 | Upright, native 224×288 | 288 > 212 vertical | no |
-| Rotated 90° landscape 288×224 | 288 > 256, 224 > 212 | no |
+| Rotated 90° landscape, full arcade tilemap 288×224 | 288 > 256, 224 > 212 | no |
 | Uniform downscale (×0.74) | yes | destroys 8×8 tile crispness |
-| **Rotated landscape + HUD split** | **yes** | **chosen** |
+| **Rotated maze with upright sprites/HUD, clipped outer border, HUD overlay** | **yes** | **chosen** |
 
-### Chosen approach: rotated playfield + VDP-A HUD overlay
+### Chosen approach: rotated maze, upright sprites and HUD, overlaid HUD
 
-We rotate the *game world* 90° counter-clockwise so Pac-Man's "down" becomes
-screen-right, matching how an arcade cabinet would present its CRT if laid on
-its side. The 28×30 active maze becomes **30 × 28 tiles = 240 × 224 landscape**.
+We rotate the **maze geometry** 90° counter-clockwise while keeping the
+**sprites (Pac-Man, ghosts, fruit) and HUD text upright** in the landscape
+screen's coordinate system. The player sees familiar upright sprites
+navigating a rotated maze. Directional input from the controller maps
+directly to on-screen motion; the game logic translates between landscape
+screen-space and the rotated maze's internal coordinates.
 
-- **VDP-B — playfield layer.** Graphic 4 (256×212, 4bpp bitmap). The 240×224
-  rotated maze is centered horizontally (8 px border each side) and the top/
-  bottom 6 lines of the maze border (tunnel rows) are clipped, giving
-  240 × 212 visible playfield. The tunnel-row clipping only removes solid-
-  black border pixels; no active gameplay tiles are lost.
-- **VDP-A — HUD overlay.** Graphic 3 (tile mode, Sprite Mode 2), composited
-  over VDP-B. The HUD hosts:
-  - Left strip (8 px wide × 212 tall, corresponds to original "top score row"):
-    1UP, score digits, HIGH SCORE.
-  - Right strip (8 px wide × 212 tall, corresponds to original "life/fruit
-    row"): remaining Pac-Man lives + fruit carousel.
-  - Transparent elsewhere (palette index 0 with TP=1 on VDP-A), so VDP-B shows
-    through for the playfield.
+**Playfield bitmap (VDP-B, Graphic 4, 256×212, 4bpp):**
 
-This preserves every tile in the arcade's active play area, keeps the original
-8×8 / 16×16 pixel grid, and only reallocates the score/life margins into the
-screen's horizontal gutters. For the player, it plays identically; for the
-hashing/checkpoint infrastructure it is deterministic.
+- The active maze is authored as a **30×28 clean-room landscape grid**
+  (`assets/src/maze_layout.txt`), rotated CCW from the arcade 28×30
+  playfield. That grid packs to 240×224 px; it is centered horizontally
+  with an 8 px gutter on the right and an 8 px gutter on the left (the
+  left gutter hosts HUD — see below).
+- The top/bottom 6 px of the 224-tall rotated maze are clipped to fit
+  212 vertical lines. These clipped rows are the arcade's outer
+  left-right border (after rotation), which is pure decorative wall
+  with no dots, pellets, ghost-house tiles, or gameplay logic. The
+  tunnel wrap still works because it is gameplay-coordinate logic, not
+  pixel rendering.
+- The current layout is a clean-room approximation, not a literal
+  rotation of the arcade tilemap. See §4.1 for the authoring rationale.
+
+**Sprites (both VDPs, Sprite Mode 2):**
+
+- Pac-Man, ghosts, fruit, and the death-animation frames are drawn
+  upright in landscape screen-space, exactly as the player would
+  intuitively expect. No per-frame rotation of sprite art.
+- Sprite world-position is stored in rotated maze coordinates; a single
+  transform converts to landscape screen pixels at SAT commit time.
+- Controller input is read as landscape directions (up/down/left/right
+  relative to the display) and transformed into maze-local directions
+  before the movement routine consults the maze walkability bitmap.
+
+**HUD layout:**
+
+The HUD is split into three thin overlays whose placement was chosen so
+that each overlay covers only arcade wall pixels after rotation — no
+dots, no power pellets, no ghost-house tiles are occluded:
+
+1. **Left gutter — lives and fruit, stacked vertically.** An 8 px-wide
+   column along the left edge of the framebuffer. Remaining Pac-Man
+   lives are stacked top-to-bottom as 8×8 life icons; the current-level
+   fruit icon is drawn below the lives. This gutter is outside the
+   240 px maze render, so it occludes nothing.
+2. **Top-center strip — HIGH SCORE text.** A short horizontal text
+   strip centered along the very top row of the maze, at the
+   midpoint above the ghost-house column. After CCW rotation, this
+   region maps to the arcade's right-side outer border at mid-height —
+   pure decorative wall, no dots or pellets, no ghost-house tiles.
+3. **Bottom-center strip — current SCORE text.** Same treatment as the
+   high-score strip but centered along the very bottom row of the
+   maze. After rotation, this maps to the arcade's left-side outer
+   border at mid-height — again pure decorative wall.
+
+HUD overlay is handled by **VDP-A in Graphic 3** with transparent
+background (palette slot 0, TP=1), composited over VDP-B. Score and
+high-score digits are written as Pattern Name Table entries during
+VBlank; lives/fruit are updated only when they change. The exact pixel
+clearance for each strip is measured and pinned in the T007 HUD task.
 
 ### Why not single-VDP?
 
@@ -109,6 +174,16 @@ That works but:
 3. Using VDP-A for tile-mode HUD and VDP-B for bitmap playfield exercises the
    documented mixed-mode compositing path (`docs/spec/02-video.md`
    §Mixed-Mode Operation), which is a covered feature.
+
+### Why rotated maze with upright sprites?
+
+The alternative — rotating the entire display including sprites — makes
+Pac-Man and the ghosts move "sideways" on screen and forces the player to
+mentally rotate the game, which is a significant UX regression. Rotating
+only the maze keeps sprite orientation, HUD reading direction, and
+controller mapping all in landscape screen-space, which is how the player
+naturally interprets a landscape display. The price is a small transform
+between screen-space and maze-space in the movement code, which is cheap.
 
 ---
 
@@ -151,6 +226,12 @@ and the outputs land in a new `vanguard8_port/assets/` tree ready to be
 
 ### 3.3 Sprites (VDP-B, Sprite Mode 2)
 
+Sprites are **not rotated**. Per §2, Pac-Man, the ghosts, and the fruit are
+drawn upright in landscape screen-space while only the maze geometry is
+rotated. The sprite converter therefore emits arcade sprite frames in their
+original orientation; only the maze-to-screen coordinate transform (applied
+at SAT commit time) is rotation-aware.
+
 - Input: 64 × 16×16 sprites from `pacman.5f`.
 - Sprite Mode 2 stores a 1-bit pattern and a 16-entry row-color table per
   sprite. Convert each 2bpp arcade sprite into 16 bytes of pattern (one row
@@ -176,10 +257,20 @@ and the outputs land in a new `vanguard8_port/assets/` tree ready to be
 
 - Font comes from the same `pacman.5e` ROM: digits 0–9, letters A–Z,
   "UP", "HIGH SCORE", "CREDIT", "READY!", "GAME OVER". These are the
-  actual arcade font tiles, in their original 8×8 form (no rotation).
+  actual arcade font tiles, in their original 8×8 form (no rotation —
+  HUD text is drawn upright, see §2).
 - Stored in VDP-A's Pattern Generator Table at `0x0300`.
-- HUD Pattern Name Table at `0x0000` defines a 32×24 layout; only the left
-  and right columns are populated, the rest is pattern 0 (transparent).
+- HUD Pattern Name Table at `0x0000` defines a 32×24 layout. Populated
+  cells (per §2):
+  - Leftmost column (col 0): vertically-stacked life icons and fruit
+    icon.
+  - Top-center cells (row 0, cols ~11–21): HIGH SCORE text and digits.
+  - Bottom-center cells (row 23, cols ~11–21): current SCORE digits.
+  - All other cells are pattern 0 (transparent) so VDP-B shows through.
+- Lives and fruit are stored as additional font-style tile entries in
+  the same pattern generator table; they are scaled/shaped to fit the
+  8×8 grid rather than using 16×16 sprites, so the HUD is a single
+  tile-mode layer with no sprite contention against gameplay sprites.
 
 ### 3.5 Audio — waveforms and sequences
 
@@ -254,20 +345,41 @@ vanguard8_port/
 
 ### 4.1 Maze representation
 
-The maze is a fixed 28×31 tile grid (the arcade layout, minus the score row).
-It is authored once as a text file (`maze.txt`) mapping characters to tile
-indices, and `conv_tiles.py` emits `maze_layout.bin` as a packed 28×31 byte
-array. Each cell encodes:
+The maze is a fixed **30×28 landscape tile grid** authored as a clean-room
+rotation of the arcade 28×30 active playfield. The authored source is
+`vanguard8_port/assets/src/maze_layout.txt`, a token grid of explicit
+tile-bank source IDs (see T006). `conv_tiles.py` resolves each token
+against the generated tile index and emits `assets/tile_nametable.bin` as
+a packed byte array ready to blit to the VDP-B Graphic 4 framebuffer.
 
-```
-bits 7:5  tile type (wall / pellet / power / empty / tunnel / house)
-bits 4:0  tile pattern index into the rotated tile bank
-```
+Authoring rationale: the arcade wall tiles are asymmetric and designed to
+connect only to their arcade neighbors. We tried two naive approaches
+before settling on the current one:
 
-A separate 28×31 **dynamic dot bitmap** in SRAM tracks which dots remain;
+1. **Edge-mask auto-picking** — pick a wall tile per cell based on which
+   of its orthogonal neighbors are walls. Failed because the edge-mask
+   signature (`n`/`e`/`s`/`w` per edge) does not capture a tile's
+   interior pixel connectivity, and arcade tiles with the same mask
+   have wildly different shapes.
+2. **Full-fidelity rotation of the arcade tilemap** — reproduce the
+   arcade's own tile-ID grid, rotated. This would match the arcade's
+   own adjacency assumptions but requires either a MAME tilemap-viewer
+   transcription or a published reference, and the full rotated grid
+   (36×28) overflows the V8 horizontally.
+
+The current approach (explicit 30×28 grid authored against the T005 tile
+bank, iteratively verified visually) hits the sweet spot: traversable,
+close to the arcade, and fits the framebuffer without further clipping.
+
+The dot/pellet layout matches the arcade's effective dot topology
+(240 regular + 4 power pellets) so ghost-house dot counters, fruit spawn
+thresholds (70 and 170 dots), and level-complete detection all use the
+arcade's published values without adjustment.
+
+A separate 30×28 **dynamic dot bitmap** in SRAM tracks which dots remain;
 rendering a "dot eaten" is an 8×8 HMMV fill to the "empty corridor" tile.
-Total dots: 240 regular + 4 power. Global "dots eaten" counter drives fruit
-spawn thresholds (70 and 170) and level-complete.
+Global "dots eaten" counter drives fruit spawn thresholds and
+level-complete.
 
 ### 4.2 Pac-Man movement
 
@@ -280,6 +392,13 @@ spawn thresholds (70 and 170) and level-complete.
   arcade speeds are stored as "how many pixels to move per frame" lookup
   tables, and we store the same tables verbatim (`speed_tables.inc`), since
   the documented values are the behavior spec, not copyrighted code.
+- **Coordinate system.** Movement and walkability checks run in
+  maze-local coordinates (the 30×28 rotated grid). Controller input is
+  read as landscape screen-space directions and passed through a fixed
+  transform to maze-local directions before consulting the walkability
+  bitmap. Sprite render positions go through the inverse transform at
+  SAT-commit time. The transform is a single rotation constant — no
+  trig, no per-frame cost.
 
 ### 4.3 Ghost AI
 
@@ -335,6 +454,11 @@ Other ghost behaviors to replicate exactly:
   Galaxian 2000, bell 3000, key 5000). Tables baked into `data.asm`.
 - Score BCD in SRAM, rendered to VDP-A HUD tiles by pushing digit tile
   indices into the Graphic 3 Pattern Name Table during VBlank.
+- **HUD placement** (per §2): current score along a centered top-of-maze
+  strip, high score along a centered bottom-of-maze strip, lives and
+  fruit stacked vertically in the 8 px left gutter. All three overlays
+  are drawn on VDP-A with transparent-background tiles so VDP-B shows
+  through everywhere else.
 - High score persists in SRAM at `0xFF80–0xFF8F` (not battery-backed in
   this cartridge — resets on power cycle, matching arcade).
 - 10 000 point extra life: one-time check, plays the extra-life jingle
@@ -514,10 +638,20 @@ manual validation against arcade footage.
 3. **Per-frame HMMM budget for dot erasure.** Worst case is eating one dot
    per frame (one 8×8 HMMM); measured at ~160 master clocks, well inside
    VBlank. No risk.
-4. **Rotation visual verification.** After rotating tiles 90°, the
-   left-hand tunnel exit must align pixel-perfectly with the right-hand
-   one. Catch this with a boot-time frame hash against a reference capture.
-5. **Clean-room discipline.** Contributors must not read the arcade Z80
+4. **HUD overlay clearance.** The top-center and bottom-center HUD
+   strips overlay the maze in regions that current analysis (§2) says
+   are decorative wall only. T007 must empirically verify the exact
+   pixel clearance above/below the outermost dot lane before committing
+   to a strip height, and must handle the READY! / GAME OVER center
+   text that uses the same screen region without collision.
+5. **Maze-space ↔ screen-space transform correctness.** The rotation
+   transform between maze coordinates and landscape screen coordinates
+   must be consistent across movement, collision detection, SAT commit,
+   and debug overlays. A single buggy axis mapping will make sprites
+   appear in the wrong place or cause "wall detected" at the wrong
+   cell. Mitigation: unit-test the transform in `tools/` as a
+   standalone Python function and commit expected-value fixtures.
+6. **Clean-room discipline.** Contributors must not read the arcade Z80
    disassembly while writing game logic. Use only public behavioral
    documentation (ghost targeting rules, speed tables, frame counts) as
    specification input. This is both a correctness and a licensing
