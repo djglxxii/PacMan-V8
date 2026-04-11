@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T004 |
-| State | planned |
+| State | completed |
 | Phase | 1 Visual |
 | Depends on | T002, T003 |
 | Plan reference | `docs/VANGUARD8_PORT_PLAN.md` §3.1 |
@@ -66,8 +66,12 @@ nearest-match quantization collapses two distinct arcade colors into the
 same V9938 entry, print a warning and keep the distinguishing one — we
 have 16 slots and only 11–12 actually needed.
 
-Swatch rendering uses HMMV rectangles, one per slot, same pattern as the
-T002 background clear but parameterized by X.
+Swatch rendering originally targeted HMMV rectangles, one per slot, same
+pattern as the T002 background clear. The accepted implementation uses a
+direct Graphic 4 VRAM stream instead: each row writes 16 groups of 8 packed
+bytes (`0x00`, `0x11`, ..., `0xFF`) to produce 16 solid 16-pixel-wide bars.
+This keeps the review artifact independent of VDP command-completion behavior
+while still exercising the uploaded palette slots.
 
 ## Acceptance Evidence
 
@@ -80,7 +84,10 @@ T002 background clear but parameterized by X.
   RGB (hex) | v9938 RGB (0..7) | role`. This is the agent-authored
   checklist artifact the reviewer uses to confirm the quantization.
 - `vanguard8_port/tests/evidence/T004-palette/frame_hash.txt` — for
-  regression detection.
+  regression detection. Current frame-60 SHA-256:
+  `680738b26715e28175a12855123559974c36e55085cf19bffaf40fcfd22153c9`.
+- `vanguard8_port/tests/evidence/T004-palette/rerun_log.txt` — clean rerun
+  log for the documented command.
 
 **Reviewer checklist:**
 
@@ -98,11 +105,40 @@ T002 background clear but parameterized by X.
 
 ```
 cd /home/djglxxii/src/pacman/vanguard8_port && rm -rf build && python3 tools/pack_rom.py && \
-  /home/djglxxii/src/Vanguard8/build/vanguard8_frontend --headless \
-    --rom build/pacman.rom --capture 60 \
-    --out tests/evidence/T004-palette/
+  /home/djglxxii/src/Vanguard8/build/src/vanguard8_headless \
+    --rom build/pacman.rom --frames 60 \
+    --dump-frame tests/evidence/T004-palette/swatch.ppm \
+    --hash-frame 60
 ```
 
 ## Progress log
 
 - 2026-04-10 — created, state: planned.
+- 2026-04-10 — activated. Reviewed `docs/VANGUARD8_PORT_PLAN.md` §3.1,
+  `docs/spec/02-video.md` §Palette, and the current boot/converter path
+  before replacing the T002 test palette with generated palette assets.
+- 2026-04-10 — implemented `tools/conv_palette.py` with explicit slot
+  mapping, resistor-weight decoding, V9938 3-bit quantization,
+  `assets/palette_{a,b}.bin` generation, and the human-readable
+  `assets/src/palette_map.md` / `assets/palette_slot_map.txt` outputs.
+- 2026-04-10 — replaced the T002 hardcoded test palette in
+  `vanguard8_port/src/main.asm` with palette uploads sourced from the
+  `INCBIN` blobs and added a 16-bar VDP-B swatch path for review capture.
+- 2026-04-10 — blocked on the current emulator build. Narrowing the ROM-side
+  instruction set removed the earlier palette-upload crash, but the headless
+  timed path still aborts once the swatch renderer starts
+  (`tests/evidence/T004-palette/vclk_4000_run.txt`). The config-backed
+  `VCLK: off` mode runs deterministically and reproduces the same frame hash
+  `e46b5246bda293e09e199967b99ac352f931c04e2ad88e775b06a3b93ccb838c`, but
+  the captured frame remains solid black (`tests/evidence/T004-palette/swatch.png`),
+  so T004 cannot produce the required review artifact yet.
+- 2026-04-10 — resumed after user reported the emulator-side blocker fixed.
+  Moving T004 back to active and rerunning the build/capture path.
+- 2026-04-10 — captured acceptance evidence under
+  `vanguard8_port/tests/evidence/T004-palette/`. A clean rebuild and headless
+  run produced `swatch.png` with 16 visible vertical bars and frame-60 hash
+  `680738b26715e28175a12855123559974c36e55085cf19bffaf40fcfd22153c9`.
+  Pixel sampling at y=106 sees all expected slot colors, including maze blue,
+  Pac-Man yellow, Blinky red, Pinky pink, Inky cyan, and Clyde orange.
+- 2026-04-10 — approved by human reviewer and ready to move to
+  `docs/tasks/completed/`.

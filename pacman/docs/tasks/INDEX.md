@@ -13,8 +13,8 @@ human-approved before advancing.
 
 ## Current focus
 
-- Active: *(none — awaiting user to activate T004)*
-- Next proposed: **T004**
+- Active: *(none — awaiting user to activate T005)*
+- Next proposed: **T005**
 
 ## Phase 0 — Scaffolding
 
@@ -28,7 +28,7 @@ human-approved before advancing.
 
 | ID   | Title                                       | State   | Evidence type   |
 |------|---------------------------------------------|---------|-----------------|
-| T004 | Palette conversion + dual-VDP upload        | planned | frame capture   |
+| T004 | Palette conversion + dual-VDP upload        | completed | frame capture |
 | T005 | Tile conversion with 90° rotation           | planned | PNG diff        |
 | T006 | Static maze render on VDP-B                 | planned | frame capture   |
 | T007 | HUD overlay text on VDP-A                   | planned | frame capture   |

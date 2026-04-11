@@ -1,0 +1,17 @@
+slot | arcade RGB (hex) | v9938 RGB (0..7) | role
+00 | #000000 | 0,0,0 | maze backdrop / VDP-A transparent color
+01 | #2121FF | 1,1,7 | maze wall blue
+02 | #FFFF00 | 7,7,0 | Pac-Man yellow
+03 | #FF0000 | 7,0,0 | Blinky red
+04 | #FFB8FF | 7,5,7 | Pinky pink
+05 | #00FFFF | 0,7,7 | Inky cyan
+06 | #FFB851 | 7,5,2 | Clyde orange
+07 | #47B8FF | 2,5,7 | frightened blue
+08 | #DEDEFF | 6,6,7 | frightened white
+09 | #DE9751 | 6,4,2 | dot / pellet peach
+10 | #FF0000 | 7,0,0 | fruit red alias
+11 | #00FF00 | 0,7,0 | fruit stem green
+12 | #DEDEFF | 6,6,7 | HUD white alias
+13 | #FFB8AE | 7,5,5 | reserved warm peach
+14 | #47B8AE | 2,5,5 | reserved teal
+15 | #000000 | 0,0,0 | reserved black alias

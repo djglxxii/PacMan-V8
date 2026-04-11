@@ -45,140 +45,10 @@ reset:
         VDP_REG_A 9, 0x80          ; LN = 1
         VDP_REG_A 11, 0x00
 
-        ; Palette writes use one initial index byte and then stream entry data.
-        ld a, 0x00
-        out (0x86), a
-        ld a, 0x00
-        out (0x86), a
-        ld a, 0x03
-        out (0x86), a
-        ld a, 0x01
-        out (0x86), a
-        ld a, 0x00
-        out (0x86), a
-        ld a, 0x02
-        out (0x86), a
-        ld a, 0x01
-        out (0x86), a
-        ld a, 0x03
-        out (0x86), a
-        ld a, 0x02
-        out (0x86), a
-        ld a, 0x04
-        out (0x86), a
-        ld a, 0x03
-        out (0x86), a
-        ld a, 0x05
-        out (0x86), a
-        ld a, 0x04
-        out (0x86), a
-        ld a, 0x06
-        out (0x86), a
-        ld a, 0x05
-        out (0x86), a
-        ld a, 0x07
-        out (0x86), a
-        ld a, 0x06
-        out (0x86), a
-        ld a, 0x10
-        out (0x86), a
-        ld a, 0x07
-        out (0x86), a
-        ld a, 0x21
-        out (0x86), a
-        ld a, 0x06
-        out (0x86), a
-        ld a, 0x32
-        out (0x86), a
-        ld a, 0x05
-        out (0x86), a
-        ld a, 0x43
-        out (0x86), a
-        ld a, 0x04
-        out (0x86), a
-        ld a, 0x54
-        out (0x86), a
-        ld a, 0x03
-        out (0x86), a
-        ld a, 0x65
-        out (0x86), a
-        ld a, 0x02
-        out (0x86), a
-        ld a, 0x76
-        out (0x86), a
-        ld a, 0x01
-        out (0x86), a
-        ld a, 0x77
-        out (0x86), a
-        ld a, 0x07
-        out (0x86), a
-
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x70
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x07
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x07
-        out (0x82), a
-        ld a, 0x77
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x70
-        out (0x82), a
-        ld a, 0x07
-        out (0x82), a
-        ld a, 0x07
-        out (0x82), a
-        ld a, 0x07
-        out (0x82), a
-        ld a, 0x33
-        out (0x82), a
-        ld a, 0x03
-        out (0x82), a
-        ld a, 0x55
-        out (0x82), a
-        ld a, 0x05
-        out (0x82), a
-        ld a, 0x27
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x72
-        out (0x82), a
-        ld a, 0x00
-        out (0x82), a
-        ld a, 0x22
-        out (0x82), a
-        ld a, 0x07
-        out (0x82), a
-        ld a, 0x44
-        out (0x82), a
-        ld a, 0x01
-        out (0x82), a
-        ld a, 0x14
-        out (0x82), a
-        ld a, 0x05
-        out (0x82), a
-        ld a, 0x63
-        out (0x82), a
-        ld a, 0x01
-        out (0x82), a
-        ld a, 0x36
-        out (0x82), a
-        ld a, 0x06
-        out (0x82), a
+        ld hl, PALETTE_B_DATA
+        call upload_vdp_b_palette
+        ld hl, PALETTE_A_DATA
+        call upload_vdp_a_palette
 
         ; The emulator resets VRAM to zero, so one SAT sentinel byte is enough to
         ; terminate each sprite list and keep both layers sprite-free for T002.
@@ -188,9 +58,7 @@ reset:
         VDP_A_WRITE 0x4200, 0xD0
         VDP_B_WRITE 0x7C00, 0xD0
 
-        call wait_vdp_b_command_clear
-        VDP_CMD_B_HMMV 0, 0, 128, 212, 0x00
-        call wait_vdp_b_command_clear
+        call render_palette_swatch
 
         VDP_REG_B 1, 0x40          ; display on
         VDP_REG_A 1, 0x60          ; display on + V-blank IRQ
@@ -211,6 +79,266 @@ int0_handler:
         pop af
         ei
         db 0xED, 0x4D
+
+upload_vdp_a_palette:
+        xor a
+        out (0x82), a
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        inc hl
+        ld a, (hl)
+        out (0x82), a
+        ret
+
+upload_vdp_b_palette:
+        xor a
+        out (0x86), a
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        inc hl
+        ld a, (hl)
+        out (0x86), a
+        ret
+
+render_palette_swatch:
+        ld a, 0x00
+        out (0x85), a
+        ld a, 0x40
+        out (0x85), a
+        ld b, 212
+.row:
+        ld a, 0x00
+        call write_vdp_b_eight_bytes
+        ld a, 0x11
+        call write_vdp_b_eight_bytes
+        ld a, 0x22
+        call write_vdp_b_eight_bytes
+        ld a, 0x33
+        call write_vdp_b_eight_bytes
+        ld a, 0x44
+        call write_vdp_b_eight_bytes
+        ld a, 0x55
+        call write_vdp_b_eight_bytes
+        ld a, 0x66
+        call write_vdp_b_eight_bytes
+        ld a, 0x77
+        call write_vdp_b_eight_bytes
+        ld a, 0x88
+        call write_vdp_b_eight_bytes
+        ld a, 0x99
+        call write_vdp_b_eight_bytes
+        ld a, 0xAA
+        call write_vdp_b_eight_bytes
+        ld a, 0xBB
+        call write_vdp_b_eight_bytes
+        ld a, 0xCC
+        call write_vdp_b_eight_bytes
+        ld a, 0xDD
+        call write_vdp_b_eight_bytes
+        ld a, 0xEE
+        call write_vdp_b_eight_bytes
+        ld a, 0xFF
+        call write_vdp_b_eight_bytes
+        dec b
+        jr nz, .row
+        ret
+
+write_vdp_b_eight_bytes:
+        out (0x84), a
+        out (0x84), a
+        out (0x84), a
+        out (0x84), a
+        out (0x84), a
+        out (0x84), a
+        out (0x84), a
+        out (0x84), a
+        ret
 
 wait_vdp_b_command_clear:
         VDP_REG_B 15, 0x02
