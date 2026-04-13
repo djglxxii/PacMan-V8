@@ -14,7 +14,7 @@ human-approved before advancing.
 ## Current focus
 
 - Active: *(none)*
-- Next proposed: **T007**
+- Next proposed: **T008**
 
 ## Phase 0 — Scaffolding
 
@@ -31,7 +31,7 @@ human-approved before advancing.
 | T004 | Palette conversion + dual-VDP upload        | completed | frame capture |
 | T005 | Tile conversion with 90° rotation           | completed | PNG diff      |
 | T006 | Static maze render on VDP-B                 | completed | frame capture |
-| T007 | HUD overlay text on VDP-A                   | planned | frame capture   |
+| T007 | HUD overlay text on VDP-A                   | completed | frame capture |
 | T008 | Sprite pattern + color table conversion     | planned | PNG diff        |
 | T009 | Static sprite placement (Pac-Man + ghosts)  | planned | frame capture   |
 

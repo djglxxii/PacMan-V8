@@ -2,6 +2,7 @@
 
 FRAME_COUNTER_LO                EQU 0x8100
 FRAME_COUNTER_HI                EQU 0x8101
+HUD_GLYPH_SLICE_BYTES           EQU 168
 
         ORG 0x0000
         jp reset
@@ -54,9 +55,7 @@ reset:
 
         ; The emulator resets VRAM to zero, so one SAT sentinel byte is enough to
         ; terminate each sprite list and keep both layers sprite-free for T002.
-        VDP_A_WRITE 0x0000, 0x00
-        VDP_A_WRITE 0x0300, 0x00
-        VDP_A_WRITE 0x1800, 0x00
+        call upload_vdp_a_hud_tables
         VDP_A_WRITE 0x4200, 0xD0
         VDP_B_WRITE 0x7C00, 0xD0
 
@@ -64,7 +63,7 @@ reset:
         call render_static_maze
 
         VDP_REG_B 1, 0x40          ; display on
-        VDP_REG_A 1, 0x00          ; VDP-A overlay is unused for T006
+        VDP_REG_A 1, 0x40          ; display on with TP compositing from R#8
 
         im 1
         ei
@@ -287,6 +286,48 @@ upload_vdp_b_palette:
         inc hl
         ld a, (hl)
         out (0x86), a
+        ret
+
+upload_vdp_a_hud_tables:
+        ld hl, HUD_FONT_DATA
+
+        VDP_A_WRITE_ADDRESS 0x0000
+        REPT 6
+        call upload_vdp_a_128_bytes
+        ENDR
+
+        VDP_A_WRITE_ADDRESS 0x0300
+        call upload_vdp_a_hud_glyph_slice
+        VDP_A_WRITE_ADDRESS 0x0B00
+        call upload_vdp_a_hud_glyph_slice
+        VDP_A_WRITE_ADDRESS 0x1300
+        call upload_vdp_a_hud_glyph_slice
+
+        VDP_A_WRITE_ADDRESS 0x1800
+        call upload_vdp_a_hud_glyph_slice
+        VDP_A_WRITE_ADDRESS 0x2000
+        call upload_vdp_a_hud_glyph_slice
+        VDP_A_WRITE_ADDRESS 0x2800
+        call upload_vdp_a_hud_glyph_slice
+        ret
+
+upload_vdp_a_hud_glyph_slice:
+        ld b, HUD_GLYPH_SLICE_BYTES
+        call upload_vdp_a_b_bytes
+        ret
+
+upload_vdp_a_128_bytes:
+        ld b, 128
+        call upload_vdp_a_b_bytes
+        ret
+
+upload_vdp_a_b_bytes:
+.byte:
+        ld a, (hl)
+        out (0x80), a
+        inc hl
+        dec b
+        jr nz, .byte
         ret
 
 upload_vdp_b_tile_bank:
