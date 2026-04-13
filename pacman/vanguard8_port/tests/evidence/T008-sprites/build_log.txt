@@ -1,0 +1,63 @@
+$ python3 tools/conv_palette.py
+conv_palette: 32 + 32 bytes written to assets/palette_a.bin, assets/palette_b.bin
+conv_palette: slot map written to assets/palette_slot_map.txt
+conv_palette: palette doc written to assets/src/palette_map.md
+$ python3 tools/conv_tiles.py
+conv_tiles: total source tiles decoded: 256
+conv_tiles: audited source references: 69
+conv_tiles: unique maze tiles kept: 40
+conv_tiles: bytes written: 1280
+conv_tiles: static maze framebuffer bytes: 27136
+conv_tiles: 1280 + 27136 bytes written to assets/tiles_vdpb.bin, assets/tile_nametable.bin
+conv_tiles: index written to assets/tiles_vdpb.index.txt
+conv_tiles: evidence PNG written to tests/evidence/T005-tiles/tile_bank.png
+conv_tiles warning: dedupe: source $C1 maze_wall_c1 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C2 maze_wall_c2 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C3 maze_wall_c3 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C4 maze_wall_c4 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C5 maze_wall_c5 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C6 maze_wall_c6 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C7 maze_wall_c7 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C8 maze_wall_c8 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $C9 maze_wall_c9 matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $CA maze_wall_ca matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $CB maze_wall_cb matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $CC maze_wall_cc matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $CD maze_wall_cd matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $CE maze_wall_ce matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $CF maze_wall_cf matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $DB maze_wall_db matches tile 11 from source $DA
+conv_tiles warning: dedupe: source $DD maze_wall_dd matches tile 12 from source $DC
+conv_tiles warning: dedupe: source $DF maze_wall_df matches tile 13 from source $DE
+conv_tiles warning: dedupe: source $E5 maze_wall_e5 matches tile 18 from source $E4
+conv_tiles warning: dedupe: source $F6 maze_wall_f6 matches tile 19 from source $E6
+conv_tiles warning: dedupe: source $F7 maze_wall_f7 matches tile 20 from source $E7
+conv_tiles warning: dedupe: source $F8 maze_wall_f8 matches tile 23 from source $EA
+conv_tiles warning: dedupe: source $F9 maze_wall_f9 matches tile 24 from source $EB
+conv_tiles warning: dedupe: source $FC maze_wall_fc matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $FD maze_wall_fd matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $FE maze_wall_fe matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $FF maze_wall_ff matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $1A blank_corridor matches tile 00 from source $C0
+conv_tiles warning: dedupe: source $2F ghost_gate_right matches tile 00 from source $C0
+$ python3 tools/conv_sprites.py
+conv_sprites: total source sprites decoded: 64
+conv_sprites: bytes written: 2048 patterns + 512 colors
+conv_sprites: multi-color source rows flagged: 215
+conv_sprites: 2048 + 512 bytes written to assets/sprites_patterns.bin, assets/sprites_colors.bin
+conv_sprites: manifest written to assets/sprites_manifest.txt
+conv_sprites: evidence PNG written to tests/evidence/T008-sprites/sprite_diff.png
+$ python3 tools/conv_hud_font.py
+conv_hud_font: glyphs kept: 21
+conv_hud_font: static HUD occupied cells: 27
+conv_hud_font: 1776 bytes written to assets/hud_font.bin
+conv_hud_font: manifest written to assets/hud_font_manifest.txt
+$ python3 tools/conv_audio.py
+conv_audio: 0 + 0 bytes written to assets/wsg_instruments.bin, assets/music_data.bin
+$ sjasmplus --nologo --msg=war --raw=/home/djglxxii/src/pacman/vanguard8_port/build/pacman.rom --sym=/home/djglxxii/src/pacman/vanguard8_port/build/pacman-g7pgfrb0.sjasm.sym /home/djglxxii/src/pacman/vanguard8_port/src/main.asm
+data.asm(30): warning: include data: requested to include no data (length=0)
+data.asm(34): warning: include data: requested to include no data (length=0)
+ROM image: build/pacman.rom
+Symbol file: build/pacman.sym
+ROM size: 49152 bytes
+Symbol count: 25
