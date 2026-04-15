@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T005 |
-| State | planned |
+| State | completed |
 | Phase | Phase 1 — ROM Data Extraction |
 | Depends on | T002, T004 |
 | Plan reference | `docs/PLAN.md` Phase 1, section 1.5 Maze Data Extraction |
@@ -46,14 +46,14 @@ by later rendering and gameplay tasks.
 
 ## Pre-flight
 
-- [ ] T002 is completed and accepted.
-- [ ] T004 is completed and accepted.
-- [ ] `pacman/pacman.6e` through `pacman/pacman.6j` exist.
-- [ ] Confirm the source and address range of the maze tilemap/color tables
+- [x] T002 is completed and accepted.
+- [x] T004 is completed and accepted.
+- [x] `pacman/pacman.6e` through `pacman/pacman.6j` exist.
+- [x] Confirm the source and address range of the maze tilemap/color tables
   from public Pac-Man documentation before writing the extractor.
-- [ ] Confirm the extractor reads program ROM bytes only as data tables and
+- [x] Confirm the extractor reads program ROM bytes only as data tables and
   does not disassemble, emulate, or replicate program logic.
-- [ ] No other task is active.
+- [x] No other task is active.
 
 ## Implementation notes
 
@@ -105,11 +105,44 @@ cp assets/maze_manifest.txt tests/evidence/T005-maze-data-extraction/maze_manife
 cp assets/maze_summary.txt tests/evidence/T005-maze-data-extraction/maze_summary.txt
 ```
 
+**Observed values:**
+
+- Program ROM bytes: `16,384`
+- Concatenated program ROM SHA-256:
+  `e9d4817d70bf1931c25e39a3d626e05dd0d5902d9400097316248a52ff627b77`
+- Maze tile table source: `0x3435-0x35B1`
+- Maze tile table encoded bytes: `381`
+- Maze tile table expanded bytes: `448`
+- Maze color table source: `0x35B5-0x36A4`
+- Maze color table raw bytes: `240`
+- Maze color table raw SHA-256:
+  `cf6abcb9654a97baee39d1fe6e4b4e565eb3f9ea7ecca84ee083bb0819b1427c`
+- `assets/maze_nametable.bin` bytes: `1008`
+- `assets/maze_nametable.bin` SHA-256:
+  `3c2cd199a6c5e50ccc961d4a3960097df8fe4adf2b91ca24ba058f89d4bb029a`
+- `assets/maze_semantic.bin` bytes: `1008`
+- `assets/maze_semantic.bin` SHA-256:
+  `ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111`
+- `assets/maze_graph.bin` bytes: `2520`
+- `assets/maze_graph.bin` SHA-256:
+  `4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2`
+- Semantic counts: `WALL=488`, `PATH=104`, `PELLET=240`,
+  `ENERGIZER=4`, `GHOST_HOUSE=18`, `GHOST_DOOR=2`, `TUNNEL=12`,
+  `BLANK=140`
+- Movement graph: `132` nodes, `181` edges
+- Graph header validation: magic `PMVGRAF1`, version `1`, expected size
+  `2520` bytes
+- Regression check: `python3 tools/build.py` completed, ROM size `16,384`
+  bytes, symbol count `7`
+
 ## Progress log
 
 | Date | Entry |
 |------|-------|
 | 2026-04-15 | Created, state: planned. |
+| 2026-04-15 | Activated after user authorization; beginning pre-flight and plan review. |
+| 2026-04-15 | Implemented `tools/extract_maze.py`, generated maze nametable, semantic grid, movement graph, manifest, summary, and evidence. Verified with `py_compile`, evidence copy comparison, graph header/size validation, scoped restricted-source review, and the existing build. Stopping for human review. |
+| 2026-04-15 | Accepted by human reviewer and moved to completed. |
 
 ## Blocker (only if state = blocked)
 

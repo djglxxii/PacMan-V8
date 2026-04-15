@@ -1,0 +1,34 @@
+Pac-Man maze extraction summary
+Program ROM bytes: 16384
+Program ROM SHA-256: e9d4817d70bf1931c25e39a3d626e05dd0d5902d9400097316248a52ff627b77
+  pacman/pacman.6e SHA-256: fe1c3234df345855d30728637f361f79472cabfe2a892a7567c63eaf31a4217b
+  pacman/pacman.6f SHA-256: 09a723c9f84790e9019633e37761cfa4e9d7ab6db14f6fdb12738f51fec11065
+  pacman/pacman.6h SHA-256: 69347409739b64ed9d9b19713de0bc66627bd137687de649796b9d2ef88ed8e6
+  pacman/pacman.6j SHA-256: 03ee523c210e87fb8dd1d925b092ad269fdd753b5b7a20b3757b0ceee5f18679
+Maze tile table source: 0x3435-0x35B1
+Maze tile table encoded bytes: 381
+Maze tile table expanded bytes: 448
+Maze color table source: 0x35B5-0x36A4
+Maze color table raw bytes: 240
+Maze color table raw SHA-256: cf6abcb9654a97baee39d1fe6e4b4e565eb3f9ea7ecca84ee083bb0819b1427c
+Output nametable: assets/maze_nametable.bin
+Output nametable bytes: 1008
+Output nametable SHA-256: 3c2cd199a6c5e50ccc961d4a3960097df8fe4adf2b91ca24ba058f89d4bb029a
+Output semantic: assets/maze_semantic.bin
+Output semantic bytes: 1008
+Output semantic SHA-256: ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+Output graph: assets/maze_graph.bin
+Output graph bytes: 2520
+Output graph SHA-256: 4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2
+Semantic counts:
+  WALL: 488
+  PATH: 104
+  PELLET: 240
+  ENERGIZER: 4
+  GHOST_HOUSE: 18
+  GHOST_DOOR: 2
+  TUNNEL: 12
+  BLANK: 140
+Movement graph nodes: 132
+Movement graph edges: 181
+Restricted program ROM handling: data-table reads only; no disassembly/emulation.

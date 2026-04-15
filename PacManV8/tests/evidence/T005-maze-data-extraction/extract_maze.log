@@ -1,0 +1,12 @@
+Read 16384 bytes from pacman program ROMs
+Decoded maze tile table 0x3435-0x35B1 to 448 half-maze bytes
+Read raw maze color table 0x35B5-0x36A4 (240 bytes)
+Wrote 1008 bytes to assets/maze_nametable.bin
+Wrote 1008 bytes to assets/maze_semantic.bin
+Wrote 2520 bytes to assets/maze_graph.bin
+Movement graph: 132 nodes, 181 edges
+Wrote manifest to assets/maze_manifest.txt
+Wrote summary to assets/maze_summary.txt
+Nametable SHA-256: 3c2cd199a6c5e50ccc961d4a3960097df8fe4adf2b91ca24ba058f89d4bb029a
+Semantic SHA-256: ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+Graph SHA-256: 4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2

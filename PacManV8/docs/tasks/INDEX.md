@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T005 — Maze data extraction and semantic map
+- Next proposed: T006 — Maze tile re-authoring for 256x212
 
 ## Phase 0 — Project Setup
 
@@ -30,7 +30,7 @@ human-approved before advancing.
 | T002 | Tile extraction from character ROM  | completed | T001       | test output     |
 | T003 | Sprite extraction from sprite ROM   | completed | T001       | test output     |
 | T004 | Palette extraction and V8 conversion| completed | T001       | test output     |
-| T005 | Maze data extraction and semantic map| planned | T002, T004 | test output    |
+| T005 | Maze data extraction and semantic map| completed | T002, T004 | test output    |
 
 ## Phase 2 — Maze Reconstruction
 
