@@ -223,8 +223,11 @@ binary assets.
 ### 1.2 Sprite Extraction (`tools/extract_sprites.py`)
 
 - Read `pacman.5f` (sprite ROM, 64 sprites, 2bpp planar)
-- Decode: each 16x16 sprite is stored as two halves (upper 8x16 + lower 8x16),
-  2bpp planar, LSB-first pixels, bottom-to-top rows
+- Decode the Pac-Man sprite format from the MAME `spritelayout`: each 16x16
+  sprite is 64 bytes, 2bpp, with bitplanes packed into nibbles. Each row is
+  assembled from four 4-pixel groups, using source byte groups for x 0-3,
+  x 4-7, x 8-11, and x 12-15 as defined by the layout's x offsets. Rows 0-7
+  use bytes 0-31 and rows 8-15 use bytes 32-63.
 - Convert to V9938 Sprite Mode 2 format: 1-bit pattern (opaque/transparent)
   with per-row color table entries
 - Since arcade sprites are only 4 colors (2bpp), map to Mode 2's per-row

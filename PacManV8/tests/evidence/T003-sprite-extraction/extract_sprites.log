@@ -1,0 +1,8 @@
+Read 4096 bytes from pacman/pacman.5f
+Decoded 64 sprites
+Wrote 2048 pattern bytes to assets/sprites.bin
+Wrote 1024 color bytes to assets/sprite_colors.bin
+Wrote manifest to assets/sprites_manifest.txt
+Wrote summary to assets/sprites_summary.txt
+Pattern SHA-256: 0ffed3a88be1b88be0127f15a246cdf3b620aec58ebfef354dc39de7201b9fd4
+Color SHA-256: 4ef70c04ae89f37007266562cbb09d909a327686dde82a9613c0be0c90834f14

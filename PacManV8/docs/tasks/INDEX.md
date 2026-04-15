@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T003 — Sprite extraction from sprite ROM
+- Next proposed: T004 — Palette extraction and V8 conversion
 
 ## Phase 0 — Project Setup
 
@@ -28,7 +28,7 @@ human-approved before advancing.
 | ID   | Title                              | State   | Depends on | Evidence type   |
 |------|------------------------------------|---------|------------|-----------------|
 | T002 | Tile extraction from character ROM  | completed | T001       | test output     |
-| T003 | Sprite extraction from sprite ROM   | planned | T001       | test output     |
+| T003 | Sprite extraction from sprite ROM   | completed | T001       | test output     |
 | T004 | Palette extraction and V8 conversion| planned | T001       | test output     |
 | T005 | Maze data extraction and semantic map| planned | T002, T004 | test output    |
 
