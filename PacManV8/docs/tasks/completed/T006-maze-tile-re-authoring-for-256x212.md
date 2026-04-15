@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T006 |
-| State | active |
+| State | completed |
 | Phase | Phase 2 — Maze Reconstruction |
 | Depends on | T005 |
 | Plan reference | `docs/PLAN.md` Phase 2 — Maze Reconstruction for V8 |
@@ -146,6 +146,7 @@ python3 tools/reauthor_maze_v8.py | tee tests/evidence/T006-maze-tile-re-authori
 | 2026-04-15 | Created from the revised plan after discarding the prior rotated-layout T006 work; state: planned. |
 | 2026-04-15 | Activated after confirming no other active task; beginning T005 asset hash verification and portrait-fit implementation. |
 | 2026-04-15 | Implemented `tools/reauthor_maze_v8.py`, generated portrait V8 coordinate, drawlist, framebuffer, manifest, summary, and preview evidence. Verified deterministic rerun output, topology checks, `py_compile`, and existing ROM build. Stopping for human review. |
+| 2026-04-15 | Accepted by human reviewer and moved to completed. |
 
 ## Blocker (only if state = blocked)
 

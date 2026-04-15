@@ -13,7 +13,7 @@ human-approved before advancing.
 
 ## Current focus
 
-- Active: T006 — Portrait maze re-authoring for 256x212
+- Active: *(none)*
 - Blocked: *(none)*
 - Next proposed: T007 — VDP-B maze render and pellet display
 
@@ -36,7 +36,7 @@ human-approved before advancing.
 
 | ID   | Title                              | State   | Depends on | Evidence type   |
 |------|------------------------------------|---------|------------|-----------------|
-| T006 | Portrait maze re-authoring for 256x212 | active  | T005       | frame capture   |
+| T006 | Portrait maze re-authoring for 256x212 | completed | T005       | frame capture   |
 | T007 | VDP-B maze render and pellet display| planned | T006       | frame capture   |
 
 ## Phase 3 — Gameplay Core
