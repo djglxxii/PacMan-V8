@@ -23,7 +23,7 @@ Two cleanly separated layers:
               v
 +---------------------------+
 |   Render / Presentation   |   Vanguard 8 specific
-|   VDP-A + VDP-B + Audio   |   256x212, rotated coords, V9938
+|   VDP-A + VDP-B + Audio   |   256x212, fitted portrait, V9938
 +---------------------------+
 ```
 
@@ -159,24 +159,34 @@ music. MSM5205 is optional for higher-fidelity death sequence or fruit pickup.
 
 ### Orientation
 
-The arcade monitor is rotated 90° (portrait). The Vanguard 8 outputs standard
-NTSC landscape. The gameplay core runs in the original 28-column x 36-row
-tile coordinate system. The render layer performs the rotation:
+The arcade monitor is physically rotated 90° to display a portrait image.
+The player sees a tall maze with tunnels on the left and right. The
+Vanguard 8 outputs standard NTSC landscape (256x212), but the rendered
+maze preserves the portrait orientation the player sees at the arcade —
+taller than wide, centered horizontally on the landscape screen with
+black side margins.
 
 ```
-Arcade (portrait):          V8 (landscape):
-  28 tiles wide               36 tiles wide (x)
-  36 tiles tall               28 tiles tall (y)
+Arcade (player view):       V8 (landscape screen):
+  28 tiles wide               28 tiles wide (centered)
+  36 tiles tall               36 tiles tall (fitted)
 
-  arcade_x → v8_y (inverted)
-  arcade_y → v8_x
+  arcade_x → v8_x + horizontal offset (centering)
+  arcade_y → v8_y + vertical offset (HUD clearance)
 ```
 
-The arcade playfield (224x288 pixels) maps to 224x288 logical pixels. After
-rotation, this becomes 288x224. The V8 display is 256x212 — so the rotated
-image must be **fitted** into the available space, not scaled. The maze will
-be re-drawn at a resolution that fits within 256x212 while preserving the
-exact tile topology and movement graph.
+The gameplay core runs in the original 28-column x 36-row tile coordinate
+system — the same coordinate space the arcade hardware uses internally.
+This preserves timing, patterns, and ghost AI exactly. The render layer
+maps gameplay coordinates to V8 screen coordinates without rotation: the
+maze is fitted into the available portrait area within the landscape
+display, keeping the same visual orientation the arcade player sees.
+
+The arcade maze (excluding HUD rows) is 28x31 tiles = 224x248 pixels at
+native scale. The V8 display is 256x212 — the maze must be **fitted**
+into the available pixel area (subtracting HUD and status bands) while
+preserving the exact tile topology and movement graph. The vertical
+dimension is the constraining axis.
 
 ---
 
@@ -284,32 +294,38 @@ binary assets.
 **Objective:** Rebuild the maze visuals to fit 256x212 while preserving the
 exact topology and movement graph.
 
-### Screen Layout (after 90° rotation)
+### Screen Layout (portrait maze on landscape display)
 
 ```
 +------------------------------------------+  y=0
 |  1UP    HIGH SCORE    2UP                |  HUD row (8px)
 +------------------------------------------+  y=8
-|                                          |
-|              MAZE AREA                   |
-|           (240 x 196 px)                 |
-|                                          |
+|       |                        |         |
+|       |      MAZE AREA         |         |
+| black |   (portrait, fitted)   | black   |
+| margin|                        | margin  |
+|       |                        |         |
 +------------------------------------------+  y=204
 |  LIVES ●●    LEVEL FRUIT 🍒🍓           |  Status row (8px)
 +------------------------------------------+  y=212
           256 px wide
 ```
 
-The original maze is 28x31 tiles (excluding HUD rows) = 224x248 pixels in
-arcade orientation. After rotation this becomes 248x224. To fit 256x212:
-- Horizontal (248px rotated): fits in 256px with 8px margin
-- Vertical (224px rotated): must compress slightly to fit 212px minus HUD space
+The original maze is 28x31 tiles (excluding HUD rows) = 224x248 pixels at
+native 8x8 tile scale. The V8 display is 256x212 with 196 vertical pixels
+available for the maze after HUD (8px top) and status (8px bottom) bands.
+To fit the portrait maze:
+- Vertical (248px native): must compress to fit 196px — the constraining
+  axis. Cell heights will be non-uniform (mix of smaller sizes).
+- Horizontal (224px native): fits within 256px — centered with black
+  side margins.
 
-**Strategy:** Re-draw the maze using 8x8 tiles at the topology level. Each
-arcade tile position maps to a V8 tile position. Wall thickness and pellet
-size are adjusted to fit the available pixel grid while keeping path widths
-and intersections at exactly the right relative positions for the movement
-graph to remain valid.
+**Strategy:** Fit the 28x31 tile maze into the available portrait area by
+computing non-uniform cell dimensions that preserve the movement graph
+topology. Each arcade tile position maps to a V8 pixel rectangle. Wall
+thickness and pellet size are adjusted to fit the available pixel grid
+while keeping path widths and intersections at exactly the right relative
+positions for the movement graph to remain valid.
 
 The maze is rendered once to VDP-B's framebuffer at scene init using HMMM
 commands from the tile asset bank. Pellets are rendered as part of the initial
@@ -448,8 +464,8 @@ Each game entity maps to a VDP-A sprite:
 | Clyde       | 4        | 16x16 | Direction + animation frame |
 | Fruit/Score | 5        | 16x16 | Current fruit or point value|
 
-Sprite position = gameplay coordinate transformed through the rotation
-mapping, offset by the maze area origin on screen.
+Sprite position = gameplay coordinate mapped to V8 screen position via
+the coordinate mapping table, offset by the maze area origin on screen.
 
 Ghost sprite pattern changes based on state:
 - Normal: body pattern (direction-dependent) + per-row color for body + eyes
@@ -603,10 +619,12 @@ for build verification and regression testing.
 
 ## Known Constraints and Risks
 
-1. **Screen size reduction:** Arcade is 224x288 (rotated to 288x224). V8 is
-   256x212. The 32px horizontal deficit and 12px vertical deficit mean the
-   maze must be re-drawn at a slightly reduced scale. The movement graph
-   must be preserved exactly — only wall art is adjusted.
+1. **Screen size reduction:** Arcade maze area is 224x248 pixels (28x31
+   tiles at 8x8). V8 has 256x196 available pixels after HUD/status bands.
+   The maze fits horizontally (224 < 256) but must be compressed vertically
+   (248 → 196). This means non-uniform cell heights and a tighter vertical
+   fit. The movement graph must be preserved exactly — only wall art is
+   adjusted.
 
 2. **Frame rate difference:** Arcade runs at ~60.61 Hz, V8 at 59.94 Hz
    (NTSC). This is a ~1.1% speed difference. Gameplay timing must be

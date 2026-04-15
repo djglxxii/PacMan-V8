@@ -1,0 +1,15 @@
+Pac-Man Vanguard 8 portrait maze re-authoring summary
+Maze area: 224x196 at (16,8); display 256x212
+Side margins: left=16px, right=16px
+Mapped arcade maze rows: 3-33; columns: 0-27
+Column widths: 8px each
+Row heights: min=6, max=7, sequence=6,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7
+coordmap: assets/maze_v8_coordmap.bin bytes=8064 sha256=551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+drawlist: assets/maze_v8_drawlist.bin bytes=6128 sha256=ffc8a11f3cebefa7d925fae1417a8a70089ad64e1863ebfc33f97d5b0a7aeaa3
+framebuffer: assets/maze_v8_framebuffer.bin bytes=27136 sha256=78a7fedcb2f504a6f16ebb77aa196939a263a01c9a1d00a59ebff6a4656cb895
+Graph nodes mapped: 132/132
+Graph node center overlaps: 0
+Walkable adjacencies contiguous: 410/410
+Warp edges preserved as non-contiguous wrap links: 1
+Mapping bounds: x=16-239, y=8-203
+Preview: tests/evidence/T006-maze-tile-re-authoring/maze_v8_preview.ppm

@@ -1,0 +1,51 @@
+# Pac-Man Vanguard 8 portrait maze re-authoring manifest
+
+Layout:
+- Screen: 256x212
+- HUD band: y=0-7
+- Maze area: x=16-239, y=8-203
+- Side margins: left=16px, right=16px
+- Status band begins at y=204
+- Orientation: no render rotation; arcade player-view portrait maze is preserved.
+- Arcade maze rows mapped: 3-33
+- V8 column widths across arcade columns: 8px each
+- V8 row heights across arcade maze rows: min=6, max=7, sequence=6,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7,6,6,7
+
+Input hashes:
+- nametable: assets/maze_nametable.bin bytes=1008 sha256=3c2cd199a6c5e50ccc961d4a3960097df8fe4adf2b91ca24ba058f89d4bb029a
+- semantic: assets/maze_semantic.bin bytes=1008 sha256=ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+- graph: assets/maze_graph.bin bytes=2520 sha256=4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2
+- tiles: assets/tiles_vdpb.bin bytes=8192 sha256=ac43ac81d51248325ad510c2ef7b37b7fc56d77cd3efba016f3c055863b3e7c6
+- palette: assets/palette_b.bin bytes=32 sha256=99213a904be24a870047e41d1f2df48981fa9440c4e56959c7f74dd6fcd2a70e
+
+Output formats:
+- coordmap: 36*28 row-major records, 8 bytes each, <x,y,width,height,class,flags,source_tile_id>
+  flags: mapped=0x01, walkable=0x02, graph_node=0x04, pellet=0x08, warp_endpoint=0x10
+- drawlist: header <8s magic,u16 version,u16 count,u16 record_size,u16 reserved>, records <x,y,width,height,class,style,source_cell_index>
+- framebuffer: V9938 Graphic 4 packed pixels, 212 rows * 128 bytes
+
+Output hashes:
+- coordmap: assets/maze_v8_coordmap.bin bytes=8064 sha256=551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+- drawlist: assets/maze_v8_drawlist.bin bytes=6128 sha256=ffc8a11f3cebefa7d925fae1417a8a70089ad64e1863ebfc33f97d5b0a7aeaa3
+- framebuffer: assets/maze_v8_framebuffer.bin bytes=27136 sha256=78a7fedcb2f504a6f16ebb77aa196939a263a01c9a1d00a59ebff6a4656cb895
+
+Semantic counts:
+- WALL: 488
+- PATH: 104
+- PELLET: 240
+- ENERGIZER: 4
+- GHOST_HOUSE: 18
+- GHOST_DOOR: 2
+- TUNNEL: 12
+- BLANK: 140
+
+Topology checks:
+- graph_nodes: 132
+- mapped_graph_nodes: 132
+- graph_node_center_overlaps: 0
+- graph_edges: 181
+- walkable_adjacencies: 410
+- contiguous_adjacencies: 410
+- warp_edges: 1
+- mapping_bounds: x=16-239, y=8-203, width=224, height=196
+- preview: tests/evidence/T006-maze-tile-re-authoring/maze_v8_preview.ppm
