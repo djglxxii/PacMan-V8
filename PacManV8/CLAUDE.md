@@ -37,6 +37,8 @@ first — do not silently diverge.
 ├── tools/                            # Python extraction/conversion/build scripts
 ├── assets/                           # Converted binary assets for ROM inclusion
 ├── build/                            # Build output: ROM + symbols (gitignored)
+├── docs/
+│   └── field-manual/                 # Developer's field manual (accumulated learnings)
 └── tests/
     └── evidence/                     # Per-task acceptance artifacts
 ```
@@ -183,6 +185,63 @@ The character ROM (`pacman.5e`), sprite ROM (`pacman.5f`), and color PROMs
 (`82s123.7f`, `82s126.4a`) ARE permitted extraction sources — these contain
 graphical asset data, not program logic.
 
+### 9. Maintain the developer's field manual
+
+As you work, record non-obvious learnings, techniques, and gotchas in
+`docs/field-manual/`. This is a knowledge base that captures hard-won
+insights — things a future agent (or human) doing similar work would
+benefit from knowing but couldn't easily derive from reading the code alone.
+
+**What to record:**
+
+- **Hardware quirks** — VDP behavior that surprised you, register
+  interactions that aren't obvious from the spec, timing constraints
+  discovered empirically, DMA sequencing requirements.
+- **Asset pipeline techniques** — how source ROM formats were decoded,
+  bit-packing schemes, palette mapping strategies, coordinate transforms
+  between source and target screen geometry.
+- **Assembly patterns** — Z80/HD64180 idioms that worked well, pitfalls
+  with specific instructions or addressing modes, patterns for
+  VBlank-safe VRAM updates, interrupt handling techniques.
+- **Tooling lessons** — assembler behaviors, Python build script patterns,
+  headless emulator usage tricks, debugging techniques.
+- **Porting patterns** — general strategies for translating source hardware
+  concepts to the Vanguard 8 (e.g., mapping foreign sprite systems to
+  V8's dual-VDP setup, adapting different tile formats, handling resolution
+  or aspect ratio differences).
+- **Game logic techniques** — AI implementations, state machine patterns,
+  timing/frame-budget strategies, input handling approaches that proved
+  effective.
+
+**What NOT to record:**
+
+- Things obvious from reading the code or spec.
+- Task-specific progress notes (those belong in the task file).
+- Anything that duplicates `docs/PLAN.md`.
+
+**Format:** Each entry is a standalone markdown file in `docs/field-manual/`
+named descriptively (e.g., `vdp-sprite-overflow-workaround.md`,
+`color-prom-palette-mapping.md`). Each file should have:
+
+```markdown
+# Title
+
+**Context:** What task or problem prompted this discovery.
+**The insight:** What you learned, stated clearly enough to be actionable.
+**Example:** A concrete code snippet, register sequence, or before/after
+showing the technique in practice.
+```
+
+Keep entries concise and self-contained. A good field manual entry is
+something you'd want to grep for six months from now when doing similar
+work on a different project.
+
+**When to write entries:** At the end of each task, before reporting to
+the user, review your work and ask: "Did I learn anything here that wasn't
+obvious going in?" If yes, write a field manual entry. Also write entries
+whenever you encounter and resolve a surprising bug or hardware behavior,
+even mid-task.
+
 ## Session startup checklist
 
 At the start of every conversation:
@@ -205,5 +264,8 @@ When wrapping up a session:
 2. If you produced verifiable evidence, it's under
    `tests/evidence/T###-.../` and referenced from the task file.
 3. Update `docs/tasks/INDEX.md` if a task changed state.
-4. Report to the user with: (a) what you did, (b) where the evidence is,
-   (c) what decision you need from them.
+4. Review your work for field manual entries — write any non-obvious
+   learnings to `docs/field-manual/` before signing off.
+5. Report to the user with: (a) what you did, (b) where the evidence is,
+   (c) any new field manual entries written, (d) what decision you need
+   from them.
