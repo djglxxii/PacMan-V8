@@ -1,0 +1,11 @@
+STEP         PC    PHYS   BANK  BYTES        MNEMONIC
+000000000000  0000  00000     F  C3 3F 00     JP 0x003F  ; reset_entry  [entry_point]
+000000000001  003F  0003F     F  F3           DI  [reset_entry]
+000000000002  0040  00040     F  31 00 FF     LD SP,0xFF00  [reset_entry+0x1]
+000000000003  0043  00043     F  3E 48        LD A,0x48  [reset_entry+0x4]
+000000000004  0045  00045     F  ED 39 3A     OUT0 (0x3A),A  [reset_entry+0x6]
+000000000005  0048  00048     F  3E F0        LD A,0xF0  [reset_entry+0x9]
+000000000006  004A  0004A     F  ED 39 38     OUT0 (0x38),A  [reset_entry+0xB]
+000000000007  004D  0004D     F  3E 04        LD A,0x04  [reset_entry+0xE]
+000000000008  004F  0004F     F  ED 39 39     OUT0 (0x39),A  [reset_entry+0x10]
+000000000009  0052  00052     F  ED 56        DB 0xED,0x56  [reset_entry+0x13]

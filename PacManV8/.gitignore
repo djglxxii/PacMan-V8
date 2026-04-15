@@ -1,0 +1,26 @@
+build/*
+!build/.gitkeep
+
+# MAME ROM files — do not commit
+pacman/*.5e
+pacman/*.5f
+pacman/*.6e
+pacman/*.6f
+pacman/*.6h
+pacman/*.6j
+pacman/82s123.7f
+pacman/82s126.1m
+pacman/82s126.3m
+pacman/82s126.4a
+pacman/readme.html
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

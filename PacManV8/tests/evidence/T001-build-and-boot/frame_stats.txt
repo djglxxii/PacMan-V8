@@ -1,0 +1,8 @@
+file=tests/evidence/T001-build-and-boot/boot.ppm
+magic=P6
+width=256
+height=212
+maxval=255
+pixel_bytes=162816
+unique_colors=1
+color=#000049 count=54272

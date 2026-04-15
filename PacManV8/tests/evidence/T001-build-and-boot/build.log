@@ -1,0 +1,5 @@
+$ sjasmplus --nologo --msg=war --raw=/home/djglxxii/src/PacManV8/build/pacman.rom --sym=/home/djglxxii/src/PacManV8/build/pacman-aibc_rd7.sjasm.sym /home/djglxxii/src/PacManV8/src/main.asm
+ROM image: build/pacman.rom
+Symbol file: build/pacman.sym
+ROM size: 16384 bytes
+Symbol count: 7

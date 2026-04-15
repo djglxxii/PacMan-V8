@@ -1,0 +1,93 @@
+# Task Index
+
+Master list of all tasks for Pac-Man for Vanguard 8. The authoritative state of
+each task is the location of its file (`planned/` vs `active/` vs `blocked/`
+vs `completed/`), not this index — but this index should be kept in sync for
+quick scanning.
+
+See `README.md` for the workflow. See `../PLAN.md` for the architectural plan
+each task implements against.
+
+**Rule:** at most one task may be in `active/` at a time. Tasks must be
+human-approved before advancing.
+
+## Current focus
+
+- Active: *(none)*
+- Blocked: *(none)*
+- Next proposed: *(none)*
+
+## Phase 0 — Project Setup
+
+| ID   | Title                              | State   | Depends on | Evidence type   |
+|------|------------------------------------|---------|------------|-----------------|
+| T001 | Build system and minimal boot ROM  | completed | none       | frame capture   |
+
+## Phase 1 — ROM Data Extraction
+
+| ID   | Title                              | State   | Depends on | Evidence type   |
+|------|------------------------------------|---------|------------|-----------------|
+| T002 | Tile extraction from character ROM  | planned | T001       | test output     |
+| T003 | Sprite extraction from sprite ROM   | planned | T001       | test output     |
+| T004 | Palette extraction and V8 conversion| planned | T001       | test output     |
+| T005 | Maze data extraction and semantic map| planned | T002, T004 | test output    |
+
+## Phase 2 — Maze Reconstruction
+
+| ID   | Title                              | State   | Depends on | Evidence type   |
+|------|------------------------------------|---------|------------|-----------------|
+| T006 | Maze tile re-authoring for 256x212 | planned | T005       | frame capture   |
+| T007 | VDP-B maze render and pellet display| planned | T006       | frame capture   |
+
+## Phase 3 — Gameplay Core
+
+| ID   | Title                              | State   | Depends on | Evidence type   |
+|------|------------------------------------|---------|------------|-----------------|
+| T008 | Movement system and turn buffering | planned | T007       | test output     |
+| T009 | Ghost AI and targeting             | planned | T008       | test output     |
+| T010 | Scatter/chase timer and frightened mode| planned | T009    | checklist       |
+| T011 | Collision, pellets, and dot-stall  | planned | T008       | test output     |
+| T012 | Ghost house logic                  | planned | T009       | checklist       |
+
+## Phase 4 — Rendering Layer
+
+| ID   | Title                              | State   | Depends on   | Evidence type   |
+|------|------------------------------------|---------|--------------|-----------------|
+| T013 | Sprite rendering and animation     | planned | T003, T008   | frame capture   |
+| T014 | HUD rendering (score, lives, fruit)| planned | T013         | frame capture   |
+| T015 | Coordinate transform and rotation  | planned | T013         | frame capture   |
+
+## Phase 5 — Audio
+
+| ID   | Title                              | State   | Depends on | Evidence type   |
+|------|------------------------------------|---------|------------|-----------------|
+| T016 | PSG sound effects (waka, siren, etc)| planned | T011       | checklist       |
+| T017 | FM music (intro, intermission, death)| planned | T016      | checklist       |
+
+## Phase 6 — Game Flow
+
+| ID   | Title                              | State   | Depends on       | Evidence type   |
+|------|------------------------------------|---------|------------------|-----------------|
+| T018 | Game state machine and attract mode| planned | T014, T015, T016 | checklist       |
+| T019 | Level progression and speed tables | planned | T018             | test output     |
+| T020 | Intermission cutscenes             | planned | T019             | frame capture   |
+
+## Phase 7 — Validation
+
+| ID   | Title                              | State   | Depends on | Evidence type   |
+|------|------------------------------------|---------|------------|-----------------|
+| T021 | Pattern replay and fidelity testing| planned | T019       | test output     |
+
+## Phase 8 — Polish
+
+| ID   | Title                              | State   | Depends on | Evidence type   |
+|------|------------------------------------|---------|------------|-----------------|
+| T022 | Visual polish and palette refinement| planned | T021      | frame capture   |
+
+## Legend
+
+- **Evidence type** gives the reviewer a hint about what kind of artifact
+  they'll be checking. Each task file contains the full acceptance criteria.
+  - `frame capture` — PPM frame dump from headless emulator
+  - `test output` — stdout from extraction tool or headless run
+  - `checklist` — manual verification in frontend emulator
