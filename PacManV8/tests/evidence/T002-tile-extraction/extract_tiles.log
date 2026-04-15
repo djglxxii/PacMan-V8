@@ -1,0 +1,6 @@
+Read 4096 bytes from pacman/pacman.5e
+Decoded 256 tiles
+Wrote 8192 bytes to assets/tiles_vdpb.bin
+Wrote manifest to assets/tiles_manifest.txt
+Wrote summary to assets/tiles_summary.txt
+Output SHA-256: ac43ac81d51248325ad510c2ef7b37b7fc56d77cd3efba016f3c055863b3e7c6

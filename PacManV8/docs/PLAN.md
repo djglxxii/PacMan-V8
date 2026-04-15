@@ -210,9 +210,11 @@ binary assets.
 
 - Read `pacman.5e` (character ROM, 256 tiles, 2bpp planar)
 - Decode the Pac-Man tile format: each tile is 8x8 pixels, 2 bits per pixel,
-  stored in a planar layout (16 bytes per tile: 8 bytes plane 0, 8 bytes
-  plane 1). Pixel bit order within each byte is LSB-first (bit 0 = leftmost
-  pixel). Rows are stored bottom-to-top.
+  stored as 16 bytes per tile. Each row uses two bytes: byte `row` supplies
+  pixels 4-7 and byte `8 + row` supplies pixels 0-3. Within each byte, bits
+  0-3 are bitplane 0 and bits 4-7 are bitplane 1 for those four pixels. This
+  matches the MAME Pac-Man `tilelayout` definition, where the two bitplanes
+  for four pixels are packed into one byte.
 - Output each tile as 4bpp indexed data (V9938 Graphic 4 format: 2 pixels
   per byte, high nibble = left pixel)
 - Classify tiles: wall, pellet, energizer, blank, text character, fruit icon

@@ -1,0 +1,16 @@
+Pac-Man character tile extraction summary
+Source ROM: pacman/pacman.5e
+Source ROM bytes: 4096
+Source ROM SHA-256: 8d9a86c97fe94b1fd010b139672c330e3b257ba59b0d8df7a821592e30a77b4b
+Output tile bank: assets/tiles_vdpb.bin
+Output tile bank bytes: 8192
+Output tile bank SHA-256: ac43ac81d51248325ad510c2ef7b37b7fc56d77cd3efba016f3c055863b3e7c6
+Manifest: assets/tiles_manifest.txt
+Manifest tile rows: 256
+Classification counts:
+  blank: 61
+  pellet: 14
+  energizer: 2
+  wall: 168
+  text_character: 11
+  fruit_icon: 0
