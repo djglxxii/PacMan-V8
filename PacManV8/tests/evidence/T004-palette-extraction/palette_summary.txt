@@ -1,0 +1,20 @@
+Pac-Man palette extraction summary
+RGB palette PROM: pacman/82s123.7f
+RGB palette PROM bytes: 32
+RGB palette PROM SHA-256: 48fe0b01d68e3d702019ca715f7266c8e3261c769509b281720f53ca0a1cc8fb
+Color lookup PROM: pacman/82s126.4a
+Color lookup PROM bytes: 256
+Color lookup PROM SHA-256: ef8f7a3b0c10f787d9cc1cbc5cc266fcc1afadb24c3b4d610fe252b9c3df1d76
+Decoded RGB entries: 32
+Decoded lookup groups: 64
+Output VDP-A palette: assets/palette_a.bin
+Output VDP-A palette bytes: 32
+Output VDP-A palette SHA-256: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+Output VDP-B palette: assets/palette_b.bin
+Output VDP-B palette bytes: 32
+Output VDP-B palette SHA-256: 99213a904be24a870047e41d1f2df48981fa9440c4e56959c7f74dd6fcd2a70e
+Manifest: assets/palette_manifest.txt
+PROMs read:
+  pacman/82s123.7f
+  pacman/82s126.4a
+Restricted PROMs read: none

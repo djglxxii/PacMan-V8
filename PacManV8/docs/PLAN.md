@@ -84,8 +84,8 @@ The `pacman/` folder contains the standard MAME Pac-Man ROM split:
 | `pacman.6j`   | 4 KB   | Program ROM 4 (CPU 0x3000–0x3FFF)             |
 | `pacman.5e`   | 4 KB   | Character/tile ROM (256 8x8 tiles, 2bpp)       |
 | `pacman.5f`   | 4 KB   | Sprite ROM (64 16x16 sprites, 2bpp)            |
-| `82s123.7f`   | 32 B   | Color PROM — 4-color palette groups (16 entries)|
-| `82s126.4a`   | 256 B  | Color PROM — RGB values (32 entries)            |
+| `82s123.7f`   | 32 B   | Color PROM — RGB palette values (32 entries)    |
+| `82s126.4a`   | 256 B  | Color lookup PROM — 64 groups of 4 color indices|
 | `82s126.1m`   | 256 B  | Sound PROM — waveform table                    |
 | `82s126.3m`   | 256 B  | Sound PROM — waveform table (second half)       |
 
@@ -236,10 +236,10 @@ binary assets.
 
 ### 1.3 Palette Extraction (`tools/extract_palette.py`)
 
-- Read `82s126.4a` (32 RGB entries, arcade format) and `82s123.7f` (16
+- Read `82s123.7f` (32 RGB entries, arcade format) and `82s126.4a` (64
   palette group definitions, each selecting 4 colors from the 32)
-- Arcade color format: each byte in `82s126.4a` encodes R(bit 0), G(bit 1-2),
-  B(bit 3-4) with weighted resistor DAC values
+- Arcade color format: each byte in `82s123.7f` encodes R(bits 0-2),
+  G(bits 3-5), and B(bits 6-7) with weighted resistor DAC values
 - Convert to V9938 9-bit RGB: 3 bits R, 3 bits G, 3 bits B (512-color space)
 - Assign palette entries to VDP-A and VDP-B independently:
   - VDP-B: maze wall color, pellet color, background (black), energizer

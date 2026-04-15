@@ -1,0 +1,10 @@
+Read 32 bytes from pacman/82s123.7f
+Read 256 bytes from pacman/82s126.4a
+Decoded 32 RGB entries
+Decoded 64 lookup groups
+Wrote 32 bytes to assets/palette_a.bin
+Wrote 32 bytes to assets/palette_b.bin
+Wrote manifest to assets/palette_manifest.txt
+Wrote summary to assets/palette_summary.txt
+VDP-A palette SHA-256: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+VDP-B palette SHA-256: 99213a904be24a870047e41d1f2df48981fa9440c4e56959c7f74dd6fcd2a70e

@@ -1,0 +1,146 @@
+# Pac-Man palette extraction manifest
+# Source roles confirmed against MAME pacman_v.cpp pacman_palette().
+RGB palette PROM: pacman/82s123.7f
+RGB palette PROM bytes: 32
+RGB palette PROM SHA-256: 48fe0b01d68e3d702019ca715f7266c8e3261c769509b281720f53ca0a1cc8fb
+Color lookup PROM: pacman/82s126.4a
+Color lookup PROM bytes: 256
+Color lookup PROM SHA-256: ef8f7a3b0c10f787d9cc1cbc5cc266fcc1afadb24c3b4d610fe252b9c3df1d76
+
+Arcade RGB entries:
+00 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+01 prom=07 rgb888=255,000,000 v8rgb=7,0,0 packed=70 00
+02 prom=66 rgb888=222,151,081 v8rgb=6,4,2 packed=64 02
+03 prom=EF rgb888=255,184,255 v8rgb=7,5,7 packed=75 07
+04 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+05 prom=F8 rgb888=000,255,255 v8rgb=0,7,7 packed=07 07
+06 prom=EA rgb888=071,184,255 v8rgb=2,5,7 packed=25 07
+07 prom=6F rgb888=255,184,081 v8rgb=7,5,2 packed=75 02
+08 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+09 prom=3F rgb888=255,255,000 v8rgb=7,7,0 packed=77 00
+0A prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+0B prom=C9 rgb888=033,033,255 v8rgb=1,1,7 packed=11 07
+0C prom=38 rgb888=000,255,000 v8rgb=0,7,0 packed=07 00
+0D prom=AA rgb888=071,184,174 v8rgb=2,5,5 packed=25 05
+0E prom=AF rgb888=255,184,174 v8rgb=7,5,5 packed=75 05
+0F prom=F6 rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+10 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+11 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+12 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+13 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+14 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+15 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+16 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+17 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+18 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+19 prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+1A prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+1B prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+1C prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+1D prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+1E prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+1F prom=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+
+Arcade lookup groups:
+00: 00 00 00 00
+01: 00 0F 0B 01
+02: 00 00 00 00
+03: 00 0F 0B 03
+04: 00 00 00 00
+05: 00 0F 0B 05
+06: 00 00 00 00
+07: 00 0F 0B 07
+08: 00 00 00 00
+09: 00 0B 01 09
+0A: 00 00 00 00
+0B: 00 00 00 00
+0C: 00 00 00 00
+0D: 00 00 00 00
+0E: 00 0F 00 0E
+0F: 00 01 0C 0F
+10: 00 0E 00 0B
+11: 00 0C 0B 0E
+12: 00 0C 0F 01
+13: 00 00 00 00
+14: 00 01 02 0F
+15: 00 07 0C 02
+16: 00 09 06 0F
+17: 00 0D 0C 0F
+18: 00 05 03 09
+19: 00 0F 0B 00
+1A: 00 0E 00 0B
+1B: 00 0E 00 0B
+1C: 00 00 00 00
+1D: 00 0F 0E 01
+1E: 00 0F 0B 0E
+1F: 00 0E 00 0F
+20: 00 00 00 00
+21: 00 00 00 00
+22: 00 00 00 00
+23: 00 00 00 00
+24: 00 00 00 00
+25: 00 00 00 00
+26: 00 00 00 00
+27: 00 00 00 00
+28: 00 00 00 00
+29: 00 00 00 00
+2A: 00 00 00 00
+2B: 00 00 00 00
+2C: 00 00 00 00
+2D: 00 00 00 00
+2E: 00 00 00 00
+2F: 00 00 00 00
+30: 00 00 00 00
+31: 00 00 00 00
+32: 00 00 00 00
+33: 00 00 00 00
+34: 00 00 00 00
+35: 00 00 00 00
+36: 00 00 00 00
+37: 00 00 00 00
+38: 00 00 00 00
+39: 00 00 00 00
+3A: 00 00 00 00
+3B: 00 00 00 00
+3C: 00 00 00 00
+3D: 00 00 00 00
+3E: 00 00 00 00
+3F: 00 00 00 00
+
+VDP-A palette assignments:
+00 transparent_black        source=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+01 pacman_yellow            source=09 rgb888=255,255,000 v8rgb=7,7,0 packed=77 00
+02 ghost_blinky_red         source=01 rgb888=255,000,000 v8rgb=7,0,0 packed=70 00
+03 ghost_pinky_pink         source=03 rgb888=255,184,255 v8rgb=7,5,7 packed=75 07
+04 ghost_inky_cyan          source=05 rgb888=000,255,255 v8rgb=0,7,7 packed=07 07
+05 ghost_clyde_orange       source=07 rgb888=255,184,081 v8rgb=7,5,2 packed=75 02
+06 eyes_white               source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+07 eyes_blue                source=0B rgb888=033,033,255 v8rgb=1,1,7 packed=11 07
+08 frightened_blue          source=0B rgb888=033,033,255 v8rgb=1,1,7 packed=11 07
+09 frightened_flash_white   source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+0A hud_text_white           source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+0B hud_text_red             source=01 rgb888=255,000,000 v8rgb=7,0,0 packed=70 00
+0C hud_text_cyan            source=05 rgb888=000,255,255 v8rgb=0,7,7 packed=07 07
+0D fruit_green              source=0C rgb888=000,255,000 v8rgb=0,7,0 packed=07 00
+0E fruit_peach              source=0E rgb888=255,184,174 v8rgb=7,5,5 packed=75 05
+0F fruit_shadow             source=02 rgb888=222,151,081 v8rgb=6,4,2 packed=64 02
+VDP-A palette SHA-256: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+
+VDP-B palette assignments:
+00 background_black         source=00 rgb888=000,000,000 v8rgb=0,0,0 packed=00 00
+01 maze_wall_blue           source=0B rgb888=033,033,255 v8rgb=1,1,7 packed=11 07
+02 maze_wall_highlight      source=06 rgb888=071,184,255 v8rgb=2,5,7 packed=25 07
+03 pellet_white             source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+04 energizer_white          source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+05 ghost_house_door         source=03 rgb888=255,184,255 v8rgb=7,5,7 packed=75 07
+06 ready_text_yellow        source=09 rgb888=255,255,000 v8rgb=7,7,0 packed=77 00
+07 score_text_white         source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+08 bonus_text_red           source=01 rgb888=255,000,000 v8rgb=7,0,0 packed=70 00
+09 bonus_text_cyan          source=05 rgb888=000,255,255 v8rgb=0,7,7 packed=07 07
+0A maze_flash_white         source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+0B maze_flash_blue          source=0B rgb888=033,033,255 v8rgb=1,1,7 packed=11 07
+0C unused_green             source=0C rgb888=000,255,000 v8rgb=0,7,0 packed=07 00
+0D unused_teal              source=0D rgb888=071,184,174 v8rgb=2,5,5 packed=25 05
+0E unused_pink              source=0E rgb888=255,184,174 v8rgb=7,5,5 packed=75 05
+0F debug_white              source=0F rgb888=222,222,255 v8rgb=6,6,7 packed=66 07
+VDP-B palette SHA-256: 99213a904be24a870047e41d1f2df48981fa9440c4e56959c7f74dd6fcd2a70e
