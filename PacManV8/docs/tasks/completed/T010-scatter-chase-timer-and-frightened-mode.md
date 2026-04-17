@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T010 |
-| State | planned |
+| State | completed |
 | Phase | Phase 3 — Gameplay Core |
 | Depends on | T009 |
 | Plan reference | `docs/PLAN.md` Phase 3.3 Scatter/Chase Timer; Phase 3.5 Frightened Mode |
@@ -53,11 +53,11 @@ for later energizer, collision, and rendering tasks.
 
 ## Pre-flight
 
-- [ ] T009 is completed and accepted.
-- [ ] Review `docs/PLAN.md` Phase 3.3 and Phase 3.5 before implementation.
-- [ ] Review `docs/tasks/completed/T009-ghost-ai-and-targeting.md` for the
+- [x] T009 is completed and accepted.
+- [x] Review `docs/PLAN.md` Phase 3.3 and Phase 3.5 before implementation.
+- [x] Review `docs/tasks/completed/T009-ghost-ai-and-targeting.md` for the
   direction enum, tie order, ghost state layout, and evidence vectors.
-- [ ] Confirm no other task is active before activation.
+- [x] Confirm no other task is active before activation.
 
 ## Implementation notes
 
@@ -106,14 +106,38 @@ T009's direction enum and deterministic tie order remain authoritative:
 **Rerun command:**
 
 ```bash
-# To be finalized when T010 is implemented.
+python3 tools/mode_timer_tests.py --vectors-output tests/evidence/T010-scatter-chase-frightened/mode_timer_vectors.txt > tests/evidence/T010-scatter-chase-frightened/mode_timer_tests.txt
 ```
+
+**Observed evidence values:**
+
+- `mode_timer_tests.txt` SHA-256:
+  `659be192e657f1c90e1db5bea1bcfa7a140bd36c817f38d0d3fce019a4070f4c`
+- `mode_timer_vectors.txt` SHA-256:
+  `b52120410353d1d53295b8906b12ebdb473f6b5b7de4d1a1de1556636e0eb58d`
+- Mode timer/frightened test result: `5/5 passed`
+- Input asset hashes recorded by the test:
+  - `assets/maze_semantic.bin`:
+    `ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111`
+  - `assets/maze_graph.bin`:
+    `4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2`
+- Graph header recorded by the test: `nodes=132`, `edges=181`
+- Build verification: `python3 -m py_compile tools/mode_timer_tests.py tools/ghost_ai_tests.py`
+  and `python3 tools/build.py` both passed.
+- T009 regression verification:
+  `python3 tools/ghost_ai_tests.py --vectors-output tests/evidence/T009-ghost-ai-targeting/ghost_ai_vectors.txt > tests/evidence/T009-ghost-ai-targeting/ghost_ai_tests.txt`
+  passed and retained the accepted T009 evidence hashes.
+- Runtime smoke verification:
+  `/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 60`
+  completed 60 frames with event log digest `6563162820683566367`.
 
 ## Progress log
 
 | Date | Entry |
 |------|-------|
 | 2026-04-17 | Created after T009 acceptance; state: planned. |
+| 2026-04-17 | Activated after confirming no other active task; beginning plan/T009 review before implementation. |
+| 2026-04-17 | Implemented the level-1 scatter/chase frame schedule, global/per-ghost mode propagation, pending reversal mask, frightened entry/expiry with paused scatter/chase timing, and deterministic frightened direction-choice hook in `src/ghost_ai.asm`. Added `tools/mode_timer_tests.py`, generated evidence under `tests/evidence/T010-scatter-chase-frightened/`, verified Python compilation, ROM assembly, T009 regression, and a 60-frame headless smoke run. Added field manual entry `docs/field-manual/frightened-mode-pauses-global-timer.md`. Stopping for human review. |
 
 ## Blocker (only if state = blocked)
 

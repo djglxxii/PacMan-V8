@@ -1,0 +1,19 @@
+T010 mode timer and frightened tests
+====================================
+semantic: assets/maze_semantic.bin sha256=ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+graph: assets/maze_graph.bin sha256=4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2
+graph_header: nodes=132 edges=181
+frames_per_second: 60
+level1_boundaries: 420,1620,2040,3240,3540,4740,5040
+frightened_duration_frames: 360
+frightened_flash_frames: 120
+reversal_all_mask: 0x0F
+
+PASS level1_boundaries: level-1 scatter/chase changes at 420, 1620, 2040, 3240, 3540, 4740, and 5040 frames
+PASS target_mode_handoff: mode controller drives T009 target selection to scatter targets in scatter and chase targets in chase
+PASS frightened_entry_expiry_from_scatter: frightened pauses the global timer, restores scatter on expiry, then resumes the pending scatter phase
+PASS frightened_entry_expiry_from_chase: frightened records and restores chase mode without advancing the chase timer
+PASS frightened_choices: frightened intersection choices are deterministic for a seed and constrained to legal topology moves
+
+result: 5/5 passed
+wrote vectors: tests/evidence/T010-scatter-chase-frightened/mode_timer_vectors.txt

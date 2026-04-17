@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T010 — Scatter/chase timer and frightened mode
+- Next proposed: T011 — Collision, pellets, and dot-stall
 
 ## Phase 0 — Project Setup
 
@@ -45,7 +45,7 @@ human-approved before advancing.
 |------|------------------------------------|---------|------------|-----------------|
 | T008 | Movement system and turn buffering | completed | T007       | test output     |
 | T009 | Ghost AI and targeting             | completed | T008       | test output     |
-| T010 | Scatter/chase timer and frightened mode| planned | T009    | checklist       |
+| T010 | Scatter/chase timer and frightened mode| completed | T009    | checklist       |
 | T011 | Collision, pellets, and dot-stall  | planned | T008       | test output     |
 | T012 | Ghost house logic                  | planned | T009       | checklist       |
 

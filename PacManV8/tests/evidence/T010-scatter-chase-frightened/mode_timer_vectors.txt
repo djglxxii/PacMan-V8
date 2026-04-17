@@ -1,0 +1,63 @@
+# T010 Scatter/Chase and Frightened Mode Vectors
+
+Frame rate: 60 frames/second.
+Level 1 schedule: 7s scatter, 20s chase, 7s scatter, 20s chase, 5s scatter, 20s chase, 5s scatter, chase forever.
+Frame boundaries: 420, 1620, 2040, 3240, 3540, 4740, 5040.
+Level 1 frightened duration: 360 frames.
+Frightened flash reservation: 120 frames.
+Reversal mask: all ghosts = 0x0F.
+Topology inputs: semantic=assets/maze_semantic.bin, graph=assets/maze_graph.bin.
+Graph header: nodes=132, edges=181.
+
+## level1_boundaries
+status: PASS
+expected: level-1 scatter/chase changes at 420, 1620, 2040, 3240, 3540, 4740, and 5040 frames
+details:
+- frame=0 phase=0 mode=SCATTER phase_remaining=420 frightened_remaining=0 reversal_mask=0x00
+- frame=419 phase=0 mode=SCATTER phase_remaining=1 frightened_remaining=0 reversal_mask=0x00
+- frame=420 phase=1 mode=CHASE phase_remaining=1200 frightened_remaining=0 reversal_mask=0x0F
+- frame=1619 phase=1 mode=CHASE phase_remaining=1 frightened_remaining=0 reversal_mask=0x00
+- frame=1620 phase=2 mode=SCATTER phase_remaining=420 frightened_remaining=0 reversal_mask=0x0F
+- frame=2040 phase=3 mode=CHASE phase_remaining=1200 frightened_remaining=0 reversal_mask=0x0F
+- frame=3240 phase=4 mode=SCATTER phase_remaining=300 frightened_remaining=0 reversal_mask=0x0F
+- frame=3540 phase=5 mode=CHASE phase_remaining=1200 frightened_remaining=0 reversal_mask=0x0F
+- frame=4740 phase=6 mode=SCATTER phase_remaining=300 frightened_remaining=0 reversal_mask=0x0F
+- frame=5040 phase=7 mode=CHASE phase_remaining=forever frightened_remaining=0 reversal_mask=0x0F
+- frame=9000 phase=7 mode=CHASE phase_remaining=forever frightened_remaining=0 reversal_mask=0x00
+
+## target_mode_handoff
+status: PASS
+expected: mode controller drives T009 target selection to scatter targets in scatter and chase targets in chase
+details:
+- initial scatter targets={'blinky': (25, -3), 'pinky': (2, -3), 'inky': (27, 35), 'clyde': (0, 35)}
+- frame 420 chase targets={'blinky': (14, 26), 'pinky': (10, 22), 'inky': (12, 22), 'clyde': (14, 26)}
+
+## frightened_entry_expiry_from_scatter
+status: PASS
+expected: frightened pauses the global timer, restores scatter on expiry, then resumes the pending scatter phase
+details:
+- before: frame=100 phase=0 mode=SCATTER phase_remaining=320 frightened_remaining=0 reversal_mask=0x00
+- entry: frame=100 phase=0 mode=FRIGHTENED phase_remaining=320 frightened_remaining=360 reversal_mask=0x0F
+- almost_done: frame=459 phase=0 mode=FRIGHTENED phase_remaining=320 frightened_remaining=1 reversal_mask=0x00
+- expired: frame=460 phase=0 mode=SCATTER phase_remaining=320 frightened_remaining=0 reversal_mask=0x00
+- resumed_boundary: frame=780 phase=1 mode=CHASE phase_remaining=1200 frightened_remaining=0 reversal_mask=0x0F
+
+## frightened_entry_expiry_from_chase
+status: PASS
+expected: frightened records and restores chase mode without advancing the chase timer
+details:
+- before: frame=500 phase=1 mode=CHASE phase_remaining=1120 frightened_remaining=0 reversal_mask=0x0F
+- expired: frame=860 phase=1 mode=CHASE phase_remaining=1120 frightened_remaining=0 reversal_mask=0x00
+
+## frightened_choices
+status: PASS
+expected: frightened intersection choices are deterministic for a seed and constrained to legal topology moves
+details:
+- same-seed first run:
+- seed_in=0x33 seed_out=0x00 start_index=0
+- legal_choices_in_probe_order=UP, DOWN, RIGHT
+- chosen=UP
+- allow_reverse probe:
+- seed_in=0x32 seed_out=0xFB start_index=3
+- legal_choices_in_probe_order=RIGHT, UP, LEFT, DOWN
+- chosen=RIGHT
