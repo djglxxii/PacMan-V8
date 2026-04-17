@@ -216,6 +216,8 @@ copy_vdp_b_bytes:
         jr nz, .loop
         ret
 
+        INCLUDE "movement.asm"
+
 vdp_b_palette_data:
         INCBIN "../assets/palette_b.bin"
 

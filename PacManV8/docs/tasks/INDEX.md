@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T008 — Movement system and turn buffering
+- Next proposed: T009 — Ghost AI and targeting
 
 ## Phase 0 — Project Setup
 
@@ -43,7 +43,7 @@ human-approved before advancing.
 
 | ID   | Title                              | State   | Depends on | Evidence type   |
 |------|------------------------------------|---------|------------|-----------------|
-| T008 | Movement system and turn buffering | planned | T007       | test output     |
+| T008 | Movement system and turn buffering | completed | T007       | test output     |
 | T009 | Ghost AI and targeting             | planned | T008       | test output     |
 | T010 | Scatter/chase timer and frightened mode| planned | T009    | checklist       |
 | T011 | Collision, pellets, and dot-stall  | planned | T008       | test output     |

@@ -1,0 +1,16 @@
+T008 movement tests
+===================
+semantic: assets/maze_semantic.bin sha256=ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+graph: assets/maze_graph.bin sha256=4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2
+coordmap: assets/maze_v8_coordmap.bin sha256=551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+speed_fp=0x0100
+turn_window_fp=0x0400
+
+PASS straight_movement: x advances to 16.00px; y remains centered
+PASS wall_stop: position remains at tile (1,5) center and direction becomes NONE
+PASS early_turn_accept: DOWN is buffered inside the window, turns at tile (6,8), then advances down
+PASS early_turn_reject: one-frame request at distance 5 is rejected; Pac-Man continues RIGHT
+PASS tunnel_wrap: x wraps to 223.00px on tunnel row 17
+
+result: 5/5 passed
+wrote vectors: tests/evidence/T008-movement-turn-buffering/movement_vectors.txt

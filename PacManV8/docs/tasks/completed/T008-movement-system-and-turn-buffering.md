@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T008 |
-| State | planned |
+| State | completed |
 | Phase | Phase 3 — Gameplay Core |
 | Depends on | T007 |
 | Plan reference | `docs/PLAN.md` Phase 3.1 Movement System; Phase 3.7 Tunnel |
@@ -47,19 +47,31 @@ early turn buffering suitable for arcade pattern play.
 
 ## Pre-flight
 
-- [ ] T007 is completed and accepted.
-- [ ] `assets/maze_semantic.bin`, `assets/maze_graph.bin`, and
+- [x] T007 is completed and accepted.
+- [x] `assets/maze_semantic.bin`, `assets/maze_graph.bin`, and
   `assets/maze_v8_coordmap.bin` exist and match their manifest hashes.
-- [ ] Review `docs/PLAN.md` Phase 3.1 and 3.7 before implementation.
-- [ ] Confirm the intended fixed-point representation and direction enum in
+- [x] Review `docs/PLAN.md` Phase 3.1 and 3.7 before implementation.
+- [x] Confirm the intended fixed-point representation and direction enum in
   the active task notes before writing assembly.
-- [ ] Confirm no other task is active before activation.
+- [x] Confirm no other task is active before activation.
 
 ## Implementation notes
 
 Gameplay movement stays in the original arcade tile coordinate system, not the
 fitted V8 render coordinate system. Use the fitted coordinate map only for
 future rendering/debug display, not as the source of truth for collision.
+
+T008 movement contract:
+
+- Position representation: 8.8 fixed-point arcade pixels. A cell center is
+  `(tile_index * 8 + 4) << 8` on each axis.
+- Direction enum: `UP=0`, `LEFT=1`, `DOWN=2`, `RIGHT=3`, `NONE=4`.
+- T008 configured movement speed: `0x0100` fixed-point pixels per frame. Full
+  level-specific speed tables remain out of scope for this task.
+- Turn-buffer window: `0x0400` fixed-point pixels, matching the documented
+  approximate 4-pixel pre-turn window.
+- Pac-Man passable semantic classes for this slice: `PATH`, `PELLET`,
+  `ENERGIZER`, and `TUNNEL`.
 
 T005 generated the movement inputs:
 
@@ -112,14 +124,36 @@ semantic/graph assets.
 **Rerun command:**
 
 ```bash
-# To be finalized when T008 is implemented.
+python3 tools/movement_tests.py --vectors-output tests/evidence/T008-movement-turn-buffering/movement_vectors.txt > tests/evidence/T008-movement-turn-buffering/movement_tests.txt
 ```
+
+**Observed evidence values:**
+
+- `movement_tests.txt` SHA-256:
+  `f1b31650125a0d1c9cd70428a5fd534c0a5874fcba72520c9272d21a3b7acc22`
+- `movement_vectors.txt` SHA-256:
+  `4e082b5a07c6f6eb3543ea494a48b42b0a2571ceff17ec986a805eafbbb53af4`
+- Movement test result: `5/5 passed`
+- Input asset hashes recorded by the test:
+  - `assets/maze_semantic.bin`:
+    `ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111`
+  - `assets/maze_graph.bin`:
+    `4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2`
+  - `assets/maze_v8_coordmap.bin`:
+    `551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2`
+- Build verification: `python3 -m py_compile tools/movement_tests.py` and
+  `python3 tools/build.py` both passed.
+- Runtime smoke verification:
+  `/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 60`
+  completed 60 frames with event log digest `6563162820683566367`.
 
 ## Progress log
 
 | Date | Entry |
 |------|-------|
 | 2026-04-17 | Created after T007 acceptance; state: planned. |
+| 2026-04-17 | Activated after user request; beginning pre-flight checks, plan review, and movement-system implementation. |
+| 2026-04-17 | Implemented runtime movement state/routines in `src/movement.asm`, included them in the ROM build, and added `tools/movement_tests.py` covering straight movement, wall stops, early turn acceptance/rejection, and horizontal tunnel wrap. Generated evidence under `tests/evidence/T008-movement-turn-buffering/`, verified Python compilation, ROM assembly, and a 60-frame headless smoke run. Stopping for human review. |
 
 ## Blocker (only if state = blocked)
 

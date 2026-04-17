@@ -12,6 +12,15 @@ T007 ROM. Do not treat a PPM from `cmake-build-debug --dump-frame` as runtime
 evidence unless its output labels the source as runtime or changes with ROM
 content.
 
+For T008, the local `cmake-build-debug` headless binary rejected the older
+positional ROM form (`vanguard8_headless build/pacman.rom --frames 60`) with
+`Unsupported headless option: build/pacman.rom`. Use the explicit `--rom`
+argument form for smoke runs:
+
+```bash
+/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 60
+```
+
 **Example:** For T007, this command failed before producing runtime evidence:
 
 ```bash
