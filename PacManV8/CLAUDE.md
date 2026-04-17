@@ -139,6 +139,29 @@ exact opcode, PC, command, and minimal repro. Do not rewrite the ROM to avoid
 the opcode unless the opcode is clearly accidental or unimportant. Let the user
 patch the emulator when the missing opcode is important to the implementation.
 
+**Look ahead for additional missing opcodes before reporting.** Handling
+opcodes one at a time has proven slow and tedious — each round trip requires
+an emulator patch, rebuild, and re-run. Instead, when you encounter the first
+missing opcode:
+
+1. Scan the remaining code you expect to execute in the current task (the
+   active code paths, not the entire ROM) and identify any other opcodes
+   that are plausibly unimplemented — e.g., instructions from the same
+   family (ED-prefixed block ops, DD/FD index-register variants, bit
+   instructions on `(IX+d)`/`(IY+d)`, etc.) or unusual instructions you've
+   emitted that you haven't yet seen the emulator execute.
+2. If practical, probe for them (short test harness, targeted frame runs,
+   or static inspection of the assembled listing) to confirm which are
+   actually missing versus merely suspected.
+3. In the blocker task's **Blocker** section, list **all** anticipated
+   missing opcodes — the one that actually tripped, plus any others you
+   have strong reason to believe will trip next — so the user can patch
+   them in a single pass. Clearly mark which are confirmed-missing versus
+   suspected-missing, and include PC/context for the confirmed one.
+
+Do not fabricate opcode requests to pad the list — only include opcodes the
+current task genuinely needs.
+
 If any external-tool or emulator error prevents the active task from continuing,
 move the task file to `docs/tasks/blocked/`, add a precise **Blocker** section
 to the task file, update `docs/tasks/INDEX.md`, report the blocker, and stop.

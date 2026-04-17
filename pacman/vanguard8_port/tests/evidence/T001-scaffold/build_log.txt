@@ -1,5 +1,0 @@
-$ sjasmplus --nologo --msg=war --raw=/home/djglxxii/src/pacman/vanguard8_port/build/pacman.rom --sym=/home/djglxxii/src/pacman/vanguard8_port/build/pacman-icrzf7mk.sjasm.sym /home/djglxxii/src/pacman/vanguard8_port/src/main.asm
-ROM image: build/pacman.rom
-Symbol file: build/pacman.sym
-ROM size: 16384 bytes
-Symbol count: 2

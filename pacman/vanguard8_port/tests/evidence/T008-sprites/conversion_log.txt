@@ -1,6 +1,0 @@
-conv_sprites: total source sprites decoded: 64
-conv_sprites: bytes written: 2048 patterns + 512 colors
-conv_sprites: multi-color source rows flagged: 215
-conv_sprites: 2048 + 512 bytes written to assets/sprites_patterns.bin, assets/sprites_colors.bin
-conv_sprites: manifest written to assets/sprites_manifest.txt
-conv_sprites: evidence PNG written to tests/evidence/T008-sprites/sprite_diff.png
