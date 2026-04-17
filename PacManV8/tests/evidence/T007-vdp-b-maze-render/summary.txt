@@ -1,0 +1,77 @@
+# T007 VDP-B Maze Render Evidence Summary
+
+Rerun command:
+
+```bash
+python3 tools/build.py
+/home/djglxxii/src/Vanguard8/build/src/vanguard8_headless --rom build/pacman.rom --frames 60 --dump-frame tests/evidence/T007-vdp-b-maze-render/frame_060.ppm --hash-frame 60
+```
+
+Build output:
+
+```text
+$ sjasmplus --nologo --msg=war --raw=/home/djglxxii/src/PacManV8/build/pacman.rom --sym=/home/djglxxii/src/PacManV8/build/pacman-ql9z7jlc.sjasm.sym /home/djglxxii/src/PacManV8/src/main.asm
+ROM image: build/pacman.rom
+Symbol file: build/pacman.sym
+ROM size: 49152 bytes
+Symbol count: 14
+```
+
+Runtime dump output:
+
+```text
+Vanguard 8 Emulator 0.1.0
+Build: milestone 7
+Core status: deterministic video scheduler with integrated YM2151, AY-3-8910, and MSM5205 audio
+Headless status: deterministic runtime
+ROM size: 49152
+Controller 1 port: 0xFF
+Controller 2 port: 0xFF
+VCLK: off
+Frames completed: 60
+Master cycles: 14305200
+CPU T-states: 7152600
+Event log size: 12840
+Event log digest: 6563162820683566367
+Frame SHA-256 (60): e4da302bef57d0d47f14c8790b0f57dde5660ccb67357035f8c29c160e590c97
+Frame dump source: runtime
+Frame dump path: tests/evidence/T007-vdp-b-maze-render/frame_060.ppm
+Frame dump size: 256x212
+Frame dump digest: 3302080219446204037
+```
+
+Artifact hashes:
+
+```text
+03b97221eb793db6c28ffcaf61db39265324e6d6178b30b68a4a3279e01737db  build/pacman.rom
+ed2b2ca31ea62799d149fe50971f6142e68ab736d0468b256f7ccbd58b42acc6  tests/evidence/T007-vdp-b-maze-render/frame_060.ppm
+78a7fedcb2f504a6f16ebb77aa196939a263a01c9a1d00a59ebff6a4656cb895  assets/maze_v8_framebuffer.bin
+99213a904be24a870047e41d1f2df48981fa9440c4e56959c7f74dd6fcd2a70e  assets/palette_b.bin
+551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2  assets/maze_v8_coordmap.bin
+ffc8a11f3cebefa7d925fae1417a8a70089ad64e1863ebfc33f97d5b0a7aeaa3  assets/maze_v8_drawlist.bin
+b609fbf30aecfdfe8512d85d863fd1bdc565a40361c475c48b6c615f66f36a42  assets/maze_v8_manifest.txt
+```
+
+Artifact sizes:
+
+```text
+ 49152 build/pacman.rom
+162831 tests/evidence/T007-vdp-b-maze-render/frame_060.ppm
+ 27136 assets/maze_v8_framebuffer.bin
+    32 assets/palette_b.bin
+```
+
+Frame verification:
+
+```text
+tests/evidence/T007-vdp-b-maze-render/frame_060.ppm: Netpbm image data, size = 256 x 212, rawbits, pixmap
+sha256(T006 maze_v8_preview.ppm) = ed2b2ca31ea62799d149fe50971f6142e68ab736d0468b256f7ccbd58b42acc6
+sha256(T007 frame_060.ppm)       = ed2b2ca31ea62799d149fe50971f6142e68ab736d0468b256f7ccbd58b42acc6
+cmp(T006 preview, T007 frame)    = identical
+```
+
+Reviewer notes:
+
+- `frame_060.ppm` is the required runtime evidence and is byte-identical to the accepted T006 fitted-maze preview.
+- `frame_060.png` is a PNG conversion of the same PPM for easier local image viewing.
+- `t006_reference_preview.png` is a PNG conversion of the accepted T006 reference preview.

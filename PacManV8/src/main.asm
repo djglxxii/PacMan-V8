@@ -1,6 +1,7 @@
 ; Pac-Man for Vanguard 8 -- minimal boot ROM for T001.
 ; Boots the HD64180, initializes both V9938 chips to Graphic 4 / 212-line
-; mode, and shows VDP-B palette entry 0 through transparent VDP-A pixels.
+; mode, and shows the fitted Pac-Man maze framebuffer on VDP-B through
+; transparent VDP-A pixels.
 
         ORG 0x0000
 
@@ -10,6 +11,10 @@ VDP_A_PALETTE   EQU 0x82
 VDP_B_DATA      EQU 0x84
 VDP_B_CTRL      EQU 0x85
 VDP_B_PALETTE   EQU 0x86
+ROM_BANK_0      EQU 0x04
+ROM_BANK_1      EQU 0x08
+MAZE_FB_BANK0_SIZE EQU 0x4000
+MAZE_FB_BANK1_SIZE EQU 0x2A00
 
     MACRO OUT0_A port, value
         ld a, value
@@ -117,6 +122,7 @@ init_video:
         VDP_REG_A 8, 0x20          ; TP: color 0 is transparent on VDP-A.
         VDP_REG_A 9, 0x80          ; LN: 212-line display.
         VDP_REG_A 11, 0x00
+        VDP_REG_A 23, 0x00
         VDP_REG_A 15, 0x00
 
         VDP_REG_B 0, 0x06
@@ -127,14 +133,15 @@ init_video:
         VDP_REG_B 8, 0x00
         VDP_REG_B 9, 0x80
         VDP_REG_B 11, 0x00
+        VDP_REG_B 23, 0x00
         VDP_REG_B 15, 0x00
 
         ; Palette entry format: RRR0GGG then 00000BBB.
         VDP_PALETTE_A 0x00, 0x00, 0x00
-        VDP_PALETTE_B 0x00, 0x00, 0x02
+        call upload_vdp_b_palette
 
         call clear_vdp_a_framebuffer
-        call clear_vdp_b_framebuffer
+        call load_vdp_b_maze_framebuffer
 
         ; Enable display. VDP-A also enables V-blank IRQs to exercise the
         ; IM1 handler; VDP-B IRQ is not connected on Vanguard 8.
@@ -149,3 +156,79 @@ clear_vdp_a_framebuffer:
 clear_vdp_b_framebuffer:
         VDP_CMD_B_HMMV 0, 0, 128, 212, 0x00
         ret
+
+upload_vdp_b_palette:
+        ld a, 0x00
+        out (VDP_B_PALETTE), a
+        ld hl, vdp_b_palette_data
+        ld b, 32
+.loop:
+        ld a, (hl)
+        out (VDP_B_PALETTE), a
+        inc hl
+        dec b
+        jr nz, .loop
+        ret
+
+load_vdp_b_maze_framebuffer:
+        ; The 27,136-byte Graphic 4 framebuffer spans two cartridge banks.
+        ; Execute this routine from common ROM and read each bank at 0x4000.
+        VDP_REG_B 14, 0x00
+        ld bc, 0x0000
+        call vdp_b_seek_write_bc
+        OUT0_A 0x39, ROM_BANK_0
+        ld hl, 0x4000
+        ld de, MAZE_FB_BANK0_SIZE
+        call copy_vdp_b_bytes
+
+        VDP_REG_B 14, 0x01
+        ld bc, 0x0000
+        call vdp_b_seek_write_bc
+        OUT0_A 0x39, ROM_BANK_1
+        ld hl, 0x4000
+        ld de, MAZE_FB_BANK1_SIZE
+        call copy_vdp_b_bytes
+
+        OUT0_A 0x39, ROM_BANK_0
+        VDP_REG_B 14, 0x00
+        ret
+
+vdp_b_seek_write_bc:
+        ld a, c
+        out (VDP_B_CTRL), a
+        ld a, b
+        and 0x3F
+        or 0x40
+        out (VDP_B_CTRL), a
+        ret
+
+copy_vdp_b_bytes:
+        ld a, d
+        or e
+        ret z
+.loop:
+        ld a, (hl)
+        out (VDP_B_DATA), a
+        inc hl
+        dec de
+        ld a, d
+        or e
+        jr nz, .loop
+        ret
+
+vdp_b_palette_data:
+        INCBIN "../assets/palette_b.bin"
+
+        defs 0x4000 - $, 0xFF
+
+; Bank 0 page, mapped at logical 0x4000 when BBR=0x04.
+        ORG 0x4000
+maze_framebuffer_bank0:
+        INCBIN "../assets/maze_v8_framebuffer.bin", 0, MAZE_FB_BANK0_SIZE
+
+        defs 0x8000 - $, 0x00
+
+; Bank 1 page, mapped at logical 0x4000 when BBR=0x08.
+        ORG 0x8000
+maze_framebuffer_bank1:
+        INCBIN "../assets/maze_v8_framebuffer.bin", MAZE_FB_BANK0_SIZE, MAZE_FB_BANK1_SIZE

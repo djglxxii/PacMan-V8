@@ -1,0 +1,48 @@
+T007 runtime frame dump blocker after opcode 0xB3 retry
+
+Build command:
+$ python3 tools/build.py
+
+$ sjasmplus --nologo --msg=war --raw=/home/djglxxii/src/PacManV8/build/pacman.rom --sym=/home/djglxxii/src/PacManV8/build/pacman-2_5rxehi.sjasm.sym /home/djglxxii/src/PacManV8/src/main.asm
+ROM image: build/pacman.rom
+Symbol file: build/pacman.sym
+ROM size: 49152 bytes
+Symbol count: 14
+
+Runtime dump command:
+$ /home/djglxxii/src/Vanguard8/build/src/vanguard8_headless --rom build/pacman.rom --frames 60 --dump-frame tests/evidence/T007-vdp-b-maze-render/frame_060.ppm --hash-frame 60
+[2026-04-16 21:27:53.367] [info] Loaded config scaffold from /home/djglxxii/.config/vanguard8/config.toml
+[2026-04-16 21:27:53.371] [info] Launching deterministic headless runtime.
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  Unsupported timed Z180 opcode 0xC8 at PC 0x248
+/usr/bin/bash: line 20: 74216 Aborted                    (core dumped) /home/djglxxii/src/Vanguard8/build/src/vanguard8_headless --rom build/pacman.rom --frames 60 --dump-frame tests/evidence/T007-vdp-b-maze-render/frame_060.ppm --hash-frame 60
+exit=134
+
+Available headless binaries:
+/home/djglxxii/src/Vanguard8/build/src/vanguard8_headless 2026-04-16 21:19:02.0704719130
+/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless 2026-03-28 09:08:20.2917533360
+
+Vanguard8 git status:
+ M docs/emulator/07-implementation-plan.md
+ M docs/emulator/current-milestone.md
+ M src/core/cpu/z180_adapter.cpp
+ M tests/test_cpu.cpp
+ M tests/test_integration.cpp
+ M third_party/z180/z180_core.cpp
+ M third_party/z180/z180_core.hpp
+?? CLAUDE.md
+?? docs/emulator/milestones/22.md
+?? docs/emulator/milestones/23.md
+?? docs/emulator/milestones/24.md
+?? docs/emulator/milestones/25.md
+?? docs/emulator/milestones/26.md
+?? docs/emulator/milestones/27.md
+?? docs/emulator/milestones/28.md
+?? docs/tasks/completed/M22-T01-cover-missing-timed-hd64180-vdp-b-bring-up-opcode.md
+?? docs/tasks/completed/M23-T01-cover-missing-timed-hd64180-vdp-b-vram-seek-opcode.md
+?? docs/tasks/completed/M24-T01-cover-missing-timed-hd64180-vdp-b-vram-seek-ld-a-b-opcode.md
+?? docs/tasks/completed/M25-T01-cover-missing-timed-hd64180-vdp-b-vram-seek-or-n-opcode.md
+?? docs/tasks/completed/M26-T01-cover-missing-timed-hd64180-vdp-b-framebuffer-load-ld-de-nn-opcode.md
+?? docs/tasks/completed/M27-T01-cover-missing-timed-hd64180-vdp-b-framebuffer-copy-ld-a-d-opcode.md
+?? docs/tasks/completed/M28-T01-cover-missing-timed-hd64180-vdp-b-framebuffer-copy-or-e-opcode.md
+?? resume.txt

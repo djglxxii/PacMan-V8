@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T007 — VDP-B maze render and pellet display
+- Next proposed: T008 — Movement system and turn buffering
 
 ## Phase 0 — Project Setup
 
@@ -37,7 +37,7 @@ human-approved before advancing.
 | ID   | Title                              | State   | Depends on | Evidence type   |
 |------|------------------------------------|---------|------------|-----------------|
 | T006 | Portrait maze re-authoring for 256x212 | completed | T005       | frame capture   |
-| T007 | VDP-B maze render and pellet display| planned | T006       | frame capture   |
+| T007 | VDP-B maze render and pellet display| completed | T006       | frame capture   |
 
 ## Phase 3 — Gameplay Core
 
