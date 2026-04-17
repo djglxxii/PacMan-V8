@@ -1,0 +1,61 @@
+# T009 Ghost AI Test Vectors
+
+Direction enum and tie order: UP=0, LEFT=1, DOWN=2, RIGHT=3, NONE=4.
+Position format: signed arcade tile coordinates for targets; maze cells remain 0..27 by 0..35.
+Topology inputs: semantic=assets/maze_semantic.bin, graph=assets/maze_graph.bin.
+Graph header: nodes=132, edges=181.
+
+## chase_targets
+status: PASS
+expected: Blinky, Pinky, Inky, and Clyde chase targets match documented rules
+details:
+- Blinky chase: Pac-Man at (14,26), target=(14,26)
+- Pinky chase UP: Pac-Man at (14,26), target=(10,22)
+- Inky chase RIGHT: two-ahead pivot=(16,26), Blinky=(12,26), target=(20,26)
+- Clyde far: ghost=(1,8), distance squared >64, target=(14,26)
+- Clyde near: ghost=(10,26), distance squared <=64, target=(0,35)
+
+## scatter_targets
+status: PASS
+expected: all four scatter targets are stable and distinct
+details:
+- blinky: scatter target=(25, -3)
+- pinky: scatter target=(2, -3)
+- inky: scatter target=(27, 35)
+- clyde: scatter target=(0, 35)
+
+## direction_min_distance
+status: PASS
+expected: legal non-reversal direction with the smallest squared distance is chosen
+details:
+- tile=(6, 8) current=LEFT target=(6, 20) allow_reverse=False
+- legal choices in tie order:
+-   UP -> (6, 7), squared_distance=169
+-   LEFT -> (5, 8), squared_distance=145
+-   DOWN -> (6, 9), squared_distance=121
+- chosen=DOWN
+
+## direction_excludes_reversal_and_ties
+status: PASS
+expected: reversal is excluded and equal distances keep the first enum-order direction
+details:
+- tile=(6, 8) current=RIGHT target=(1, 8) allow_reverse=False
+- legal choices in tie order:
+-   UP -> (6, 7), squared_distance=26
+-   DOWN -> (6, 9), squared_distance=26
+-   RIGHT -> (7, 8), squared_distance=36
+- chosen=UP
+- LEFT would be closest but is excluded as the reversal of RIGHT
+- UP and DOWN tie at squared_distance=26; UP wins by enum order
+
+## direction_allows_reversal
+status: PASS
+expected: when reversal is explicitly allowed, the reverse direction can win
+details:
+- tile=(6, 8) current=RIGHT target=(1, 8) allow_reverse=True
+- legal choices in tie order:
+-   UP -> (6, 7), squared_distance=26
+-   LEFT -> (5, 8), squared_distance=16
+-   DOWN -> (6, 9), squared_distance=26
+-   RIGHT -> (7, 8), squared_distance=36
+- chosen=LEFT

@@ -1,0 +1,16 @@
+T009 ghost AI tests
+===================
+semantic: assets/maze_semantic.bin sha256=ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+graph: assets/maze_graph.bin sha256=4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2
+graph_header: nodes=132 edges=181
+direction_enum: UP=0 LEFT=1 DOWN=2 RIGHT=3 NONE=4
+tie_order: UP, LEFT, DOWN, RIGHT
+
+PASS chase_targets: Blinky, Pinky, Inky, and Clyde chase targets match documented rules
+PASS scatter_targets: all four scatter targets are stable and distinct
+PASS direction_min_distance: legal non-reversal direction with the smallest squared distance is chosen
+PASS direction_excludes_reversal_and_ties: reversal is excluded and equal distances keep the first enum-order direction
+PASS direction_allows_reversal: when reversal is explicitly allowed, the reverse direction can win
+
+result: 5/5 passed
+wrote vectors: tests/evidence/T009-ghost-ai-targeting/ghost_ai_vectors.txt
