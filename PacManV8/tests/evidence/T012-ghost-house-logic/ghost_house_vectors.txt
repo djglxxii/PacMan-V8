@@ -1,0 +1,55 @@
+# T012 Ghost House Logic Vectors
+
+State values: OUTSIDE=0, WAITING=1, PENDING_RELEASE=2, EXITING=3.
+Release order: Blinky is already outside; Pinky, Inky, then Clyde are releasable.
+Dot thresholds: Pinky=0, Inky=30, Clyde=60.
+Global fallback timer: 240 frames.
+Pellet and energizer consume events both count as dots; duplicate/no-consume frames use CONSUME_NONE and do not count.
+
+## initial_state
+status: PASS
+expected: Blinky starts outside; Pinky is immediately pending release; Inky and Clyde wait in the house
+details:
+- thresholds={PINKY:0, INKY:30, CLYDE:60}
+- fallback_frames=240
+- states[BLINKY=OUTSIDE, PINKY=PENDING_RELEASE, INKY=WAITING, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=0] next=PINKY timer=0 release_mask=0x02 exit_mask=0x00 last=PINKY/DOT
+
+## dot_release_order_and_duplicates
+status: PASS
+expected: real pellet/energizer events release Pinky, Inky, then Clyde; NONE events do not advance counters
+details:
+- initial: states[BLINKY=OUTSIDE, PINKY=PENDING_RELEASE, INKY=WAITING, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=0] next=PINKY timer=0 release_mask=0x02 exit_mask=0x00 last=PINKY/DOT
+- after_pinky_exit: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=WAITING, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=0] next=INKY timer=0 release_mask=0x00 exit_mask=0x02 last=PINKY/DOT
+- before_inky_threshold: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=WAITING, CLYDE=WAITING] dots[PINKY=0, INKY=29, CLYDE=0] next=INKY timer=0 release_mask=0x00 exit_mask=0x02 last=PINKY/DOT
+- inky_pending: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=PENDING_RELEASE, CLYDE=WAITING] dots[PINKY=0, INKY=30, CLYDE=0] next=INKY timer=0 release_mask=0x04 exit_mask=0x02 last=INKY/DOT
+- before_clyde_threshold: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=OUTSIDE, CLYDE=WAITING] dots[PINKY=0, INKY=30, CLYDE=59] next=CLYDE timer=0 release_mask=0x04 exit_mask=0x06 last=INKY/DOT
+- clyde_pending: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=OUTSIDE, CLYDE=PENDING_RELEASE] dots[PINKY=0, INKY=30, CLYDE=60] next=CLYDE timer=0 release_mask=0x0C exit_mask=0x06 last=CLYDE/DOT
+- release_log=['PINKY:DOT', 'INKY:DOT', 'CLYDE:DOT']
+- event_types: pellet=PELLET, energizer=ENERGIZER, ignored=NONE
+
+## global_timer_fallback
+status: PASS
+expected: when no qualifying dots arrive for 240 frames, the current waiting ghost becomes pending release
+details:
+- before_timer_threshold: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=WAITING, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=0] next=INKY timer=239 release_mask=0x00 exit_mask=0x02 last=PINKY/DOT
+- inky_timer_release: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=PENDING_RELEASE, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=0] next=INKY timer=0 release_mask=0x04 exit_mask=0x02 last=INKY/TIMER
+- after_one_dot_resets_timer: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=OUTSIDE, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=1] next=CLYDE timer=0 release_mask=0x04 exit_mask=0x06 last=INKY/TIMER
+- before_clyde_timer_release: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=OUTSIDE, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=1] next=CLYDE timer=239 release_mask=0x04 exit_mask=0x06 last=INKY/TIMER
+- clyde_timer_release: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=OUTSIDE, CLYDE=PENDING_RELEASE] dots[PINKY=0, INKY=0, CLYDE=1] next=CLYDE timer=0 release_mask=0x0C exit_mask=0x06 last=CLYDE/TIMER
+
+## life_loss_reset
+status: PASS
+expected: life-loss reset restores the deterministic starting house state and clears counters/timer
+details:
+- before_reset: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=WAITING, CLYDE=WAITING] dots[PINKY=0, INKY=12, CLYDE=0] next=INKY timer=37 release_mask=0x02 exit_mask=0x02 last=PINKY/DOT
+- after_reset: states[BLINKY=OUTSIDE, PINKY=PENDING_RELEASE, INKY=WAITING, CLYDE=WAITING] dots[PINKY=0, INKY=0, CLYDE=0] next=PINKY timer=0 release_mask=0x02 exit_mask=0x00 last=PINKY/DOT
+
+## mode_interaction_boundaries
+status: PASS
+expected: house release state coexists with scatter/chase/frightened mode state without owning mode changes
+details:
+- controller_mode_after_420=CHASE
+- after_house_release: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=PENDING_RELEASE, CLYDE=WAITING] dots[PINKY=0, INKY=30, CLYDE=0] next=INKY timer=0 release_mask=0x06 exit_mask=0x02 last=INKY/DOT
+- controller_mode_after_frightened_entry=FRIGHTENED
+- before_house_tick: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=PENDING_RELEASE, CLYDE=WAITING] dots[PINKY=0, INKY=30, CLYDE=0] next=INKY timer=0 release_mask=0x06 exit_mask=0x02 last=INKY/DOT
+- after_house_tick: states[BLINKY=OUTSIDE, PINKY=OUTSIDE, INKY=PENDING_RELEASE, CLYDE=WAITING] dots[PINKY=0, INKY=30, CLYDE=0] next=INKY timer=0 release_mask=0x06 exit_mask=0x02 last=INKY/DOT

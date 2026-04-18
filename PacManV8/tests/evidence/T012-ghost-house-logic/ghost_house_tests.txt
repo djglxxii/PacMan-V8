@@ -1,0 +1,15 @@
+T012 ghost house logic tests
+============================
+release_order: BLINKY already outside -> PINKY -> INKY -> CLYDE
+dot_thresholds: pinky=0 inky=30 clyde=60
+global_fallback_frames: 240
+states: outside=0 waiting=1 pending_release=2 exiting=3
+
+PASS initial_state: Blinky starts outside; Pinky is immediately pending release; Inky and Clyde wait in the house
+PASS dot_release_order_and_duplicates: real pellet/energizer events release Pinky, Inky, then Clyde; NONE events do not advance counters
+PASS global_timer_fallback: when no qualifying dots arrive for 240 frames, the current waiting ghost becomes pending release
+PASS life_loss_reset: life-loss reset restores the deterministic starting house state and clears counters/timer
+PASS mode_interaction_boundaries: house release state coexists with scatter/chase/frightened mode state without owning mode changes
+
+result: 5/5 passed
+wrote vectors: tests/evidence/T012-ghost-house-logic/ghost_house_vectors.txt

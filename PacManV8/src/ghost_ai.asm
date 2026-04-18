@@ -1,7 +1,6 @@
 ; Deterministic ghost targeting and mode control for T009/T010.
 ; The routines keep all positions in arcade tile coordinates. Higher-level
-; ghost-house release, collision, speed, and rendering are intentionally left
-; to later tasks.
+; collision, speed, and rendering are intentionally left to later tasks.
 
 GHOST_ID_BLINKY         EQU 0
 GHOST_ID_PINKY          EQU 1
@@ -170,6 +169,7 @@ ghost_init_state:
         ld a, GHOST_ID_CLYDE
         ld (GHOST_CLYDE_ID), a
         call ghost_mode_init
+        call ghost_house_init
         ret
 
 ghost_mode_init:

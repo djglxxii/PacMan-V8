@@ -183,6 +183,7 @@ collision_consume_tile:
         ld (COLLISION_DOT_STALL), a
         ld a, COLLISION_CONSUME_PELLET
         call collision_record_erase
+        call ghost_house_on_dot_event
         ld a, COLLISION_CONSUME_PELLET
         ld (COLLISION_LAST_CONSUME), a
         ret
@@ -197,6 +198,7 @@ collision_consume_tile:
         ld (COLLISION_DOT_STALL), a
         ld a, COLLISION_CONSUME_ENERGIZER
         call collision_record_erase
+        call ghost_house_on_dot_event
         call ghost_enter_frightened
         ld a, COLLISION_CONSUME_ENERGIZER
         ld (COLLISION_LAST_CONSUME), a

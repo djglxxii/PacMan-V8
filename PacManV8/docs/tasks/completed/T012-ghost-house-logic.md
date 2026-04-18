@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T012 |
-| State | planned |
+| State | completed |
 | Phase | Phase 3 — Gameplay Core |
 | Depends on | T009, T010, T011 |
 | Plan reference | `docs/PLAN.md` Phase 3.4 Ghost House Logic |
@@ -51,15 +51,15 @@ release state suitable for later ghost movement and game-flow integration.
 
 ## Pre-flight
 
-- [ ] T009, T010, and T011 are completed and accepted.
-- [ ] Review `docs/PLAN.md` Phase 3.4 before implementation.
-- [ ] Review `docs/tasks/completed/T009-ghost-ai-and-targeting.md` for ghost
+- [x] T009, T010, and T011 are completed and accepted.
+- [x] Review `docs/PLAN.md` Phase 3.4 before implementation.
+- [x] Review `docs/tasks/completed/T009-ghost-ai-and-targeting.md` for ghost
   IDs, record layout, direction enum, and target-selection boundaries.
-- [ ] Review `docs/tasks/completed/T010-scatter-chase-timer-and-frightened-mode.md`
+- [x] Review `docs/tasks/completed/T010-scatter-chase-timer-and-frightened-mode.md`
   for global/per-ghost mode fields and reversal-state ownership.
-- [ ] Review `docs/tasks/completed/T011-collision-pellets-and-dot-stall.md`
+- [x] Review `docs/tasks/completed/T011-collision-pellets-and-dot-stall.md`
   for pellet-consumption event state and dot-stall boundaries.
-- [ ] Confirm no other task is active before activation.
+- [x] Confirm no other task is active before activation.
 
 ## Implementation notes
 
@@ -111,14 +111,40 @@ return routing, or sprite rendering.
 **Rerun command:**
 
 ```bash
-# To be finalized when T012 is implemented.
+python3 tools/ghost_house_tests.py --vectors-output tests/evidence/T012-ghost-house-logic/ghost_house_vectors.txt > tests/evidence/T012-ghost-house-logic/ghost_house_tests.txt
 ```
+
+**Observed evidence values:**
+
+- `ghost_house_tests.txt` SHA-256:
+  `2c013e0bfc51f16e921f02741900eb5f6c644ab3cd418c719d57cc269749a732`
+- `ghost_house_vectors.txt` SHA-256:
+  `1c131dcab07bfe26f3e56448975811d7871f6b9fb402fbff1c46aaaa8b255735`
+- Ghost-house test result: `5/5 passed`
+- Release constants recorded by the evidence:
+  - State values: `OUTSIDE=0`, `WAITING=1`, `PENDING_RELEASE=2`, `EXITING=3`.
+  - Dot thresholds: Pinky `0`, Inky `30`, Clyde `60`.
+  - Global fallback release timer: `240` frames.
+  - Release order: Blinky starts outside, then Pinky, Inky, Clyde.
+- Build verification:
+  `python3 -m py_compile tools/ghost_house_tests.py tools/collision_tests.py tools/mode_timer_tests.py tools/ghost_ai_tests.py tools/movement_tests.py`
+  and `python3 tools/build.py` both passed.
+- Regression verification:
+  `tools/movement_tests.py`, `tools/ghost_ai_tests.py`,
+  `tools/mode_timer_tests.py`, `tools/collision_tests.py`, and
+  `tools/ghost_house_tests.py` all passed.
+- Runtime smoke verification:
+  `/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 60`
+  completed 60 frames with event log digest `6563162820683566367`.
 
 ## Progress log
 
 | Date | Entry |
 |------|-------|
 | 2026-04-18 | Created after T011 acceptance; state: planned. |
+| 2026-04-18 | Activated per user request; beginning pre-flight review and implementation. |
+| 2026-04-18 | Implemented data-level ghost-house release state in `src/ghost_house.asm`, initialized it from ghost runtime setup, and connected successful T011 pellet/energizer consumption to the house dot-event counter. Added `tools/ghost_house_tests.py`, generated evidence under `tests/evidence/T012-ghost-house-logic/`, verified Python compilation, ROM assembly, T008-T011 regressions plus T012, and a 60-frame headless smoke run. Added field manual entry `docs/field-manual/ghost-house-release-pending-state.md`. Stopping for human review. |
+| 2026-04-18 | Human approved deliverable; moved task to completed. |
 
 ## Blocker (only if state = blocked)
 
