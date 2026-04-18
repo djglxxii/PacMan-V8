@@ -143,6 +143,7 @@ init_video:
         call clear_vdp_a_framebuffer
         call load_vdp_b_maze_framebuffer
         call sprite_renderer_init
+        call hud_renderer_init
 
         ; Enable display. VDP-A also enables V-blank IRQs to exercise the
         ; IM1 handler; VDP-B IRQ is not connected on Vanguard 8.
@@ -151,7 +152,19 @@ init_video:
         ret
 
 clear_vdp_a_framebuffer:
-        VDP_CMD_A_HMMV 0, 0, 128, 212, 0x00
+        VDP_REG_A 14, 0x00
+        ld bc, 0x0000
+        call vdp_a_seek_write_bc
+        ld de, MAZE_FB_BANK0_SIZE
+        call fill_vdp_a_zeroes
+
+        VDP_REG_A 14, 0x01
+        ld bc, 0x0000
+        call vdp_a_seek_write_bc
+        ld de, MAZE_FB_BANK1_SIZE
+        call fill_vdp_a_zeroes
+
+        VDP_REG_A 14, 0x00
         ret
 
 clear_vdp_b_framebuffer:
@@ -230,11 +243,25 @@ copy_vdp_b_bytes:
         jr nz, .loop
         ret
 
+fill_vdp_a_zeroes:
+        ld a, d
+        or e
+        ret z
+.loop:
+        xor a
+        out (VDP_A_DATA), a
+        dec de
+        ld a, d
+        or e
+        jr nz, .loop
+        ret
+
         INCLUDE "movement.asm"
         INCLUDE "ghost_ai.asm"
         INCLUDE "collision.asm"
         INCLUDE "ghost_house.asm"
         INCLUDE "sprites.asm"
+        INCLUDE "hud.asm"
 
 vdp_a_palette_data:
         INCBIN "../assets/palette_a.bin"

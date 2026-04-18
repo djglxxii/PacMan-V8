@@ -1,0 +1,89 @@
+T014 HUD asset summary
+Atlas: assets/hud_tiles.bin bytes=1024 sha256=d16e7061eb9b043b88bc2ba8b11402f9bda728b59f5d216fb6ac4888a297165e
+Patch: assets/hud_patch.bin bytes=2048 sha256=80497cf90dae9f0d36e1fb0514efd27e86778570c0d3c6e5ba5583270bd3d043
+Patch placement: VDP-A framebuffer top band 0x0000 and bottom band 0x6600
+Reference atlas layout: source_y=212, one 32-tile row
+Top HUD string: '1UP 000120 HIGH SCORE 001000 2UP'
+Bottom HUD string: 'LIVES  @@@       FRUIT  #$%     '
+
+Palette indices:
+- transparent: 0
+- label text: 6
+- score digits and life icons: 1
+- fruit red/pink/green/orange: 2/3/13/15
+
+Tiles:
+- 00: SPACE sha256=66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925
+- 01: LABEL_0 sha256=9f75237a02dfc9e250ead6eb187ca3bbc21de9e4bccf28e4a589cad83d22808a
+- 02: SCORE_0 sha256=e518a2995698d3497a9465df93280d4183ebe7be14559bdbf7d37c3de6aa2417
+- 03: LABEL_1 sha256=42fcd94336476ad73fcaadb27a4fcd622c21c453c8f2af55d326038d2a4d2621
+- 04: SCORE_1 sha256=f4366cc95afa6e1e414c3aa40fdae116208466513beab3f53ad8189226a485e1
+- 05: LABEL_2 sha256=c61aa66017dcc898f344db19a00bdb0aafb775efa73eaa02063c5f06d73da343
+- 06: SCORE_2 sha256=b26512ef8f6b936e5225bfbae625cb980bc363fc3c52263048944ebaa597dd54
+- 07: LABEL_C sha256=6ce0da21375114157c332be879395801e0ca697ca60a6c330d3b88547d14b8f4
+- 08: LABEL_E sha256=18e1e02eb6dcbaa2753aafd44fb1570be231b77c5021d1ea1f48201813876b8c
+- 09: LABEL_F sha256=eda0f17746c232a21a35814ca0d8ae6142728e53a130fcb6503f71bc43b2e115
+- 10: LABEL_G sha256=070693e73f537f585ec30792fe2930f71374fbddbea1f87082649fdbdafae058
+- 11: LABEL_H sha256=0524ba5d63ce402d385e3765151ba178ea2ca83f0dfb1c224e5364c770b38277
+- 12: LABEL_I sha256=5997e8d03974e2174e53008f56e062db9a4451c5c42f88a1ce63e52978beb78a
+- 13: LABEL_L sha256=bced0ff23cc0a9f185bbc13d4994cb84e87bdade80fe554b2e23e3382bf1116c
+- 14: LABEL_O sha256=91d6d1245ab1b9cf9bd60ebc60340b9fb59248ee929be66c8e55050376e0f5ef
+- 15: LABEL_P sha256=a51f2fbc8e4f1522bb90bc9b1df119ae2111be4db935550bdc8538fa3aefb83f
+- 16: LABEL_R sha256=cbc51b340e7254c03d23af1e09b2d65423e95311d7f45164395bae643377c49d
+- 17: LABEL_S sha256=4792353d4bf9a383570de7e9bdf5cbb37cabc52fad8a6a6dfbc0afecc37eec68
+- 18: LABEL_T sha256=29f894b2cc98a6feb610f6229b896df1f05aaaac56e5d3262046cc9dadc575dc
+- 19: LABEL_U sha256=aefd8de9cb2e51ff5551de8e1c4ba5f3dfff47196d72b9077f647910c527d90b
+- 20: LABEL_V sha256=180e3e5c1da9daa1531dd0503de164fdcfe079d4dc5110684b3778a75220ff78
+- 21: ICON_LIFE sha256=b978adc6261802d07cb270e92eb3c117914e001da52b4b7e12cd2a8db53f8230
+- 22: ICON_CHERRY sha256=17148df564a3ecb5e2ace4ec68e6bb29dc49d025e5cbed9d506770db8043090c
+- 23: ICON_STRAWBERRY sha256=142b0144e0edd7d8be8a1e5b72bd94a13cedeb19d3a7a3b5b39dc0d9d75f63c3
+- 24: ICON_ORANGE sha256=05d06ec9b6acfc989c7bbef8ddfe9962fc479f6cf18f27dfb7c77340a3aea47e
+
+Dirty regions / CPU VRAM blits:
+- top band: dst=(0,0), bytes=128x8
+- bottom band: dst=(0,204), bytes=128x8
+
+Non-space glyph/icon placements:
+- LABEL_1: src=(24,212) dst=(0,0) bytes=4x8 col=0 token=1
+- LABEL_U: src=(152,212) dst=(8,0) bytes=4x8 col=1 token=U
+- LABEL_P: src=(120,212) dst=(16,0) bytes=4x8 col=2 token=P
+- SCORE_0: src=(16,212) dst=(32,0) bytes=4x8 col=4 token=0
+- SCORE_0: src=(16,212) dst=(40,0) bytes=4x8 col=5 token=0
+- SCORE_0: src=(16,212) dst=(48,0) bytes=4x8 col=6 token=0
+- SCORE_1: src=(32,212) dst=(56,0) bytes=4x8 col=7 token=1
+- SCORE_2: src=(48,212) dst=(64,0) bytes=4x8 col=8 token=2
+- SCORE_0: src=(16,212) dst=(72,0) bytes=4x8 col=9 token=0
+- LABEL_H: src=(88,212) dst=(88,0) bytes=4x8 col=11 token=H
+- LABEL_I: src=(96,212) dst=(96,0) bytes=4x8 col=12 token=I
+- LABEL_G: src=(80,212) dst=(104,0) bytes=4x8 col=13 token=G
+- LABEL_H: src=(88,212) dst=(112,0) bytes=4x8 col=14 token=H
+- LABEL_S: src=(136,212) dst=(128,0) bytes=4x8 col=16 token=S
+- LABEL_C: src=(56,212) dst=(136,0) bytes=4x8 col=17 token=C
+- LABEL_O: src=(112,212) dst=(144,0) bytes=4x8 col=18 token=O
+- LABEL_R: src=(128,212) dst=(152,0) bytes=4x8 col=19 token=R
+- LABEL_E: src=(64,212) dst=(160,0) bytes=4x8 col=20 token=E
+- SCORE_0: src=(16,212) dst=(176,0) bytes=4x8 col=22 token=0
+- SCORE_0: src=(16,212) dst=(184,0) bytes=4x8 col=23 token=0
+- SCORE_1: src=(32,212) dst=(192,0) bytes=4x8 col=24 token=1
+- SCORE_0: src=(16,212) dst=(200,0) bytes=4x8 col=25 token=0
+- SCORE_0: src=(16,212) dst=(208,0) bytes=4x8 col=26 token=0
+- SCORE_0: src=(16,212) dst=(216,0) bytes=4x8 col=27 token=0
+- LABEL_2: src=(40,212) dst=(232,0) bytes=4x8 col=29 token=2
+- LABEL_U: src=(152,212) dst=(240,0) bytes=4x8 col=30 token=U
+- LABEL_P: src=(120,212) dst=(248,0) bytes=4x8 col=31 token=P
+- LABEL_L: src=(104,212) dst=(0,204) bytes=4x8 col=0 token=L
+- LABEL_I: src=(96,212) dst=(8,204) bytes=4x8 col=1 token=I
+- LABEL_V: src=(160,212) dst=(16,204) bytes=4x8 col=2 token=V
+- LABEL_E: src=(64,212) dst=(24,204) bytes=4x8 col=3 token=E
+- LABEL_S: src=(136,212) dst=(32,204) bytes=4x8 col=4 token=S
+- ICON_LIFE: src=(168,212) dst=(56,204) bytes=4x8 col=7 token=@
+- ICON_LIFE: src=(168,212) dst=(64,204) bytes=4x8 col=8 token=@
+- ICON_LIFE: src=(168,212) dst=(72,204) bytes=4x8 col=9 token=@
+- LABEL_F: src=(72,212) dst=(136,204) bytes=4x8 col=17 token=F
+- LABEL_R: src=(128,212) dst=(144,204) bytes=4x8 col=18 token=R
+- LABEL_U: src=(152,212) dst=(152,204) bytes=4x8 col=19 token=U
+- LABEL_I: src=(96,212) dst=(160,204) bytes=4x8 col=20 token=I
+- LABEL_T: src=(144,212) dst=(168,204) bytes=4x8 col=21 token=T
+- ICON_CHERRY: src=(176,212) dst=(192,204) bytes=4x8 col=24 token=#
+- ICON_STRAWBERRY: src=(184,212) dst=(200,204) bytes=4x8 col=25 token=$
+- ICON_ORANGE: src=(192,212) dst=(208,204) bytes=4x8 col=26 token=%

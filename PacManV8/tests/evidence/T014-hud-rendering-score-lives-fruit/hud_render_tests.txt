@@ -1,0 +1,9 @@
+hud_render_tests: 11/11 passed
+hud_tiles.bin SHA-256: d16e7061eb9b043b88bc2ba8b11402f9bda728b59f5d216fb6ac4888a297165e
+hud_patch.bin SHA-256: 80497cf90dae9f0d36e1fb0514efd27e86778570c0d3c6e5ba5583270bd3d043
+hud_review_draw.inc SHA-256: 05473b631481b177a59b6e480c54962e44aa257a043d33e7cc7da3cced14ee46
+palette_a.bin SHA-256: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+Frame dump SHA-256: f484d6ec0574b67faa5c8f0f0089f7c79a0cee1b93451e6e58ef915e478d0506
+Top HUD nonblack pixels: 476
+Bottom HUD nonblack pixels: 317
+Vectors: tests/evidence/T014-hud-rendering-score-lives-fruit/hud_render_vectors.txt

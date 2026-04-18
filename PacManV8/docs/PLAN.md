@@ -117,7 +117,10 @@ Both VDPs run **Graphic 4** (Screen 5): 256x212, 4bpp bitmap, Sprite Mode 2.
 - Pac-Man sprite (16x16, Sprite Mode 2, per-row color for mouth animation)
 - 4 ghost sprites (16x16, per-row color for body + eyes + skirt)
 - Fruit sprite
-- HUD text (score, lives, level) rendered via HMMM from font tile bank
+- HUD text (score, lives, level) rendered via HMMM from font tile bank as
+  the target path. T014 acceptance uses generated CPU VRAM dirty-band uploads
+  for the fixed top/bottom HUD rows until the VDP-A command-engine evidence
+  path is reliable in the emulator.
 - Eyes-only sprites during ghost retreat
 
 **Compositing:** VDP-A's YS pin drives the 74LS257 mux. Wherever VDP-A
@@ -446,7 +449,8 @@ Level 1:  Scatter 7s → Chase 20s → Scatter 7s → Chase 20s →
 5. Update VDP-A:
    - Update sprite attribute table in SRAM shadow
    - DMA shadow SAT to VDP-A VRAM
-   - Update HUD text if score changed (HMMM font tiles)
+   - Update HUD text if score changed (HMMM font tiles target path; generated
+     CPU VRAM dirty-band upload is the T014 review fallback)
 6. Update audio state
 7. Return from interrupt
 ```

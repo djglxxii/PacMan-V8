@@ -1,0 +1,36 @@
+T014 HUD render vectors
+
+HUD values:
+- top row: 1UP 000120 HIGH SCORE 001000 2UP
+- bottom row: LIVES with 3 life icons; FRUIT with cherry/strawberry/orange icons
+
+VRAM layout:
+- VDP-A HUD patch: top 0x0000 and bottom 0x6600, 1024 bytes per band
+- VDP-A HUD tile atlas reference: source_y=212, 1024 bytes
+- VDP-A framebuffer bands: top y=0..7, bottom y=204..211
+- CPU VRAM dirty bands: 128 bytes x 8 rows each
+- sprite slots: slots 0..4 owned by T013 entities; slot 5 remains reserved terminator
+
+Palette indices:
+- 0 transparent
+- 1 score/life yellow
+- 2 red fruit
+- 3 pink fruit
+- 6 HUD label text
+- 13 fruit stem green
+- 15 orange fruit
+
+Asset hashes:
+- assets/hud_tiles.bin: d16e7061eb9b043b88bc2ba8b11402f9bda728b59f5d216fb6ac4888a297165e expected=d16e7061eb9b043b88bc2ba8b11402f9bda728b59f5d216fb6ac4888a297165e
+- assets/hud_patch.bin: 80497cf90dae9f0d36e1fb0514efd27e86778570c0d3c6e5ba5583270bd3d043 expected=80497cf90dae9f0d36e1fb0514efd27e86778570c0d3c6e5ba5583270bd3d043
+- src/hud_review_draw.inc: 05473b631481b177a59b6e480c54962e44aa257a043d33e7cc7da3cced14ee46
+- assets/hud_assets_summary.txt: c1f782821a0bac9f6eb457bbef24c2845e8921abd48d07402425acff79814b8e
+- assets/palette_a.bin: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+
+Dirty regions:
+- source non-space glyph/icon placements: 43
+- top band CPU VRAM blit: dst=(0,0), bytes=128x8
+- bottom band CPU VRAM blit: dst=(0,204), bytes=128x8
+- frame dump: 256x212 sha256=f484d6ec0574b67faa5c8f0f0089f7c79a0cee1b93451e6e58ef915e478d0506
+- nonblack pixels in top 8px band: 476
+- nonblack pixels in bottom 8px band: 317
