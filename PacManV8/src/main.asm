@@ -218,6 +218,7 @@ copy_vdp_b_bytes:
 
         INCLUDE "movement.asm"
         INCLUDE "ghost_ai.asm"
+        INCLUDE "collision.asm"
 
 vdp_b_palette_data:
         INCBIN "../assets/palette_b.bin"

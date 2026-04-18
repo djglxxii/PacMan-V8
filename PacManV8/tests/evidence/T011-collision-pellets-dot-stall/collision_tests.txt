@@ -1,0 +1,16 @@
+T011 collision, pellet, and dot-stall tests
+============================================
+semantic: assets/maze_semantic.bin sha256=ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+graph: assets/maze_graph.bin sha256=4b355ccce9f28ad8acab093f7726287140dbcdf3429554a46473103caa1405a2
+coordmap: assets/maze_v8_coordmap.bin sha256=551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+bitset_bytes: 126
+dot_stall_frames: pellet=1 energizer=3
+frightened_reversal_mask: 0x0F
+
+PASS initial_counts: semantic maze initializes 240 normal pellets and 4 energizers in the runtime bitset
+PASS pellet_consumption_and_duplicate: normal pellet consumes only at exact tile center, queues one erase, stalls for 1 frame, and cannot be consumed twice
+PASS energizer_frightened_and_stall: energizer consumes at center, queues erase, stalls for 3 frames, enters T010 frightened mode, and requests all reversals
+PASS ghost_collision_outcomes: same-tile normal ghosts kill Pac-Man, frightened ghosts are eaten, and different tiles do not collide
+
+result: 4/4 passed
+wrote vectors: tests/evidence/T011-collision-pellets-dot-stall/collision_vectors.txt

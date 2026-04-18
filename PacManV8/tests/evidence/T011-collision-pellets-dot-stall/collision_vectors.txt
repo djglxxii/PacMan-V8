@@ -1,0 +1,49 @@
+# T011 Collision, Pellet, and Dot-Stall Vectors
+
+Position format: 8.8 fixed-point arcade pixels.
+Tile center formula: (tile * 8 + 4) << 8.
+Semantic classes: pellet=2, energizer=3.
+Runtime consumable bitset bytes: 126.
+Dot-stall frames: pellet=1, energizer=3.
+Ghost collision modes: normal scatter/chase kills Pac-Man; frightened ghost is eaten.
+
+## initial_counts
+status: PASS
+expected: semantic maze initializes 240 normal pellets and 4 energizers in the runtime bitset
+details:
+- bitset_bytes=126
+- first_pellets=[(1, 4), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4)]
+- energizers=[(1, 6), (26, 6), (1, 26), (26, 26)]
+- snapshot: pellets=240 energizers=4 dot_stall=0 erase=none last_consume=NONE
+
+## pellet_consumption_and_duplicate
+status: PASS
+expected: normal pellet consumes only at exact tile center, queues one erase, stalls for 1 frame, and cannot be consumed twice
+details:
+- tile=(1, 4)
+- fixed_point_center=(0x0C00,0x2400)
+- off_center_result=NONE
+- after_center: pellets=239 energizers=4 dot_stall=1 erase=tile=(1, 4) kind=PELLET last_consume=PELLET
+- after_duplicate: pellets=239 energizers=4 dot_stall=1 erase=none last_consume=NONE
+- dot_stall_after_one_tick=0
+
+## energizer_frightened_and_stall
+status: PASS
+expected: energizer consumes at center, queues erase, stalls for 3 frames, enters T010 frightened mode, and requests all reversals
+details:
+- tile=(1, 6)
+- fixed_point_center=(0x0C00,0x3400)
+- after_consume: pellets=240 energizers=3 dot_stall=3 erase=tile=(1, 6) kind=ENERGIZER last_consume=ENERGIZER
+- mode=FRIGHTENED frightened_remaining=360
+- reversal_mask=0x0F
+- dot_stall_sequence=[3, 2, 1, 0]
+
+## ghost_collision_outcomes
+status: PASS
+expected: same-tile normal ghosts kill Pac-Man, frightened ghosts are eaten, and different tiles do not collide
+details:
+- pacman_tile=(14, 26)
+- CHASE same tile -> PACMAN_DIES
+- SCATTER same tile -> PACMAN_DIES
+- FRIGHTENED same tile -> GHOST_EATEN
+- FRIGHTENED at (14,25) -> NO_COLLISION
