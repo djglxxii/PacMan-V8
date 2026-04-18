@@ -4,18 +4,18 @@ Source ROM bytes: 4096
 Source ROM SHA-256: 49c8f656cb8ea1ae02fb64a2c09df98e7f06a034b43c6c8240032df417c6d36f
 Output pattern bank: assets/sprites.bin
 Output pattern bank bytes: 2048
-Output pattern bank SHA-256: 0ffed3a88be1b88be0127f15a246cdf3b620aec58ebfef354dc39de7201b9fd4
+Output pattern bank SHA-256: 28e586b9ff65658f94928b190aff143a514cace76a5c95409ad989666407304b
 Output color table: assets/sprite_colors.bin
 Output color table bytes: 1024
-Output color table SHA-256: 4ef70c04ae89f37007266562cbb09d909a327686dde82a9613c0be0c90834f14
+Output color table SHA-256: 8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308
 Manifest: assets/sprites_manifest.txt
 Manifest sprite rows: 64
 Total opaque pixels: 6431
 Blank sprites: 5
-Blank sprite rows: 260
-Rows with multiple non-transparent colors: 215
+Blank sprite rows: 342
+Rows with multiple non-transparent colors: 152
 Dominant row color counts:
-  0: 260
-  1: 303
-  2: 58
-  3: 403
+  0: 342
+  1: 80
+  2: 293
+  3: 309

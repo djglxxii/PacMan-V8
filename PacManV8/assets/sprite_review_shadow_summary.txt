@@ -1,0 +1,14 @@
+T013 sprite review shadow summary
+Source colors: assets/sprite_colors.bin bytes=1024 sha256=8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308
+SAT shadow bytes: 48 sha256=259b117ec038486ac171ba3465d978d0ea3cc3efcc2a8b8720c290339c1cfa53
+Color shadow bytes: 96 sha256=5d86eb101f66c814c0fb238448a80c0ae6a26193e62eace05398001198b5e87a
+
+Slots:
+- slot 0: Pac-Man state=normal mouth frame xy=(56,96) sprite_id=1 pattern=4 palette=1 sat=60 38 04 01 00 00 00 00 colors=00 00 01 01 01 01 01 01 01 01 01 01 01 01 00 00
+- slot 1: Blinky state=normal chase outside xy=(88,96) sprite_id=8 pattern=32 palette=2 sat=60 58 20 02 00 00 00 00 colors=00 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00
+- slot 2: Pinky state=frightened outside xy=(120,96) sprite_id=50 pattern=200 palette=8 sat=60 78 C8 08 00 00 00 00 colors=00 08 08 08 08 08 08 08 08 08 08 08 08 08 08 00
+- slot 3: Inky state=house waiting xy=(152,96) sprite_id=32 pattern=128 palette=4 sat=60 98 80 04 00 00 00 00 colors=00 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00
+- slot 4: Clyde state=house exiting xy=(184,96) sprite_id=9 pattern=36 palette=5 sat=60 B8 24 05 00 00 00 00 colors=00 05 05 05 05 05 05 05 05 05 05 05 05 05 05 00
+- slot 5: reserved terminator sat=D0 00 00 00 00 00 00 00
+
+Coordinate note: fixed T013 review positions, not final T015 transform output.

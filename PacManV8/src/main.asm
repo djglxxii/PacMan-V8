@@ -117,7 +117,7 @@ init_video:
         VDP_REG_A 0, 0x06
         VDP_REG_A 1, 0x00
         VDP_REG_A 5, 0xF8
-        VDP_REG_A 6, 0x07
+        VDP_REG_A 6, 0x0E
         VDP_REG_A 7, 0x00
         VDP_REG_A 8, 0x20          ; TP: color 0 is transparent on VDP-A.
         VDP_REG_A 9, 0x80          ; LN: 212-line display.
@@ -128,7 +128,7 @@ init_video:
         VDP_REG_B 0, 0x06
         VDP_REG_B 1, 0x00
         VDP_REG_B 5, 0xF8
-        VDP_REG_B 6, 0x07
+        VDP_REG_B 6, 0x0E
         VDP_REG_B 7, 0x00
         VDP_REG_B 8, 0x00
         VDP_REG_B 9, 0x80
@@ -137,15 +137,16 @@ init_video:
         VDP_REG_B 15, 0x00
 
         ; Palette entry format: RRR0GGG then 00000BBB.
-        VDP_PALETTE_A 0x00, 0x00, 0x00
+        call upload_vdp_a_palette
         call upload_vdp_b_palette
 
         call clear_vdp_a_framebuffer
         call load_vdp_b_maze_framebuffer
+        call sprite_renderer_init
 
         ; Enable display. VDP-A also enables V-blank IRQs to exercise the
         ; IM1 handler; VDP-B IRQ is not connected on Vanguard 8.
-        VDP_REG_A 1, 0x60
+        VDP_REG_A 1, 0x62          ; Display + VBlank IRQ + 16x16 sprites.
         VDP_REG_B 1, 0x40
         ret
 
@@ -165,6 +166,19 @@ upload_vdp_b_palette:
 .loop:
         ld a, (hl)
         out (VDP_B_PALETTE), a
+        inc hl
+        dec b
+        jr nz, .loop
+        ret
+
+upload_vdp_a_palette:
+        ld a, 0x00
+        out (VDP_A_PALETTE), a
+        ld hl, vdp_a_palette_data
+        ld b, 32
+.loop:
+        ld a, (hl)
+        out (VDP_A_PALETTE), a
         inc hl
         dec b
         jr nz, .loop
@@ -220,7 +234,10 @@ copy_vdp_b_bytes:
         INCLUDE "ghost_ai.asm"
         INCLUDE "collision.asm"
         INCLUDE "ghost_house.asm"
+        INCLUDE "sprites.asm"
 
+vdp_a_palette_data:
+        INCBIN "../assets/palette_a.bin"
 vdp_b_palette_data:
         INCBIN "../assets/palette_b.bin"
 

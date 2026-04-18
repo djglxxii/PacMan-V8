@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T013 — Sprite rendering and animation
+- Next proposed: T014 — HUD rendering (score, lives, fruit)
 
 ## Phase 0 — Project Setup
 
@@ -53,7 +53,7 @@ human-approved before advancing.
 
 | ID   | Title                              | State   | Depends on   | Evidence type   |
 |------|------------------------------------|---------|--------------|-----------------|
-| T013 | Sprite rendering and animation     | planned | T003, T008   | frame capture   |
+| T013 | Sprite rendering and animation     | completed | T003, T008, T009, T010, T012 | frame capture   |
 | T014 | HUD rendering (score, lives, fruit)| planned | T013         | frame capture   |
 | T015 | Coordinate transform and rotation  | planned | T013         | frame capture   |
 

@@ -33,7 +33,19 @@ sprite assets needed later for Pac-Man, ghosts, fruit, and animation evidence.
 
 ## Scope changes
 
-*(None.)*
+- 2026-04-18: Two defects in `tools/extract_sprites.py` surfaced when T013
+  first rendered sprites on VDP-A. (1) `X_BIT_OFFSETS` and `Y_BIT_OFFSETS`
+  had their contents assigned to the wrong variables — pacman.5f stores each
+  16x16 sprite column-first (one byte = 4 vertical pixels of one column),
+  so X must use the byte-level offsets and Y must use the bit-level offsets.
+  (2) `read_bit` indexed bytes LSB-first, but the MAME-style offset tables
+  are MSB-first. Both bugs combined to render sprites as transposed and
+  locally-mirrored garbage; fixed inside the T013 active task. See the T013
+  "Scope changes" section and progress log for the patch, the replacement
+  `assets/sprites.bin` and `assets/sprite_colors.bin` hashes, and the
+  regenerated render evidence. The original T003 evidence artifacts under
+  `tests/evidence/T003-sprite-extraction/` are left intact as the historical
+  record at acceptance time.
 
 ## Pre-flight
 

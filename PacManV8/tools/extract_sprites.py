@@ -23,25 +23,12 @@ COLOR_BYTES_PER_SPRITE = 16
 SPRITE_SIZE = 16
 EXPECTED_ROM_SIZE = SPRITE_COUNT * SOURCE_BYTES_PER_SPRITE
 
+# Pac-Man sprite ROM (pacman.5f) stores each 16x16 sprite column-first: each
+# byte encodes 4 pixels vertically within a single column, and columns march
+# across the sprite in groups of four. X therefore advances by one byte per
+# column group; Y advances by one bit within each byte (2bpp planes at bit
+# offsets 0 and 4). Bit offsets are MAME-style (MSB-first within each byte).
 X_BIT_OFFSETS = (
-    8 * 8 + 0,
-    8 * 8 + 1,
-    8 * 8 + 2,
-    8 * 8 + 3,
-    16 * 8 + 0,
-    16 * 8 + 1,
-    16 * 8 + 2,
-    16 * 8 + 3,
-    24 * 8 + 0,
-    24 * 8 + 1,
-    24 * 8 + 2,
-    24 * 8 + 3,
-    0,
-    1,
-    2,
-    3,
-)
-Y_BIT_OFFSETS = (
     0 * 8,
     1 * 8,
     2 * 8,
@@ -58,6 +45,24 @@ Y_BIT_OFFSETS = (
     37 * 8,
     38 * 8,
     39 * 8,
+)
+Y_BIT_OFFSETS = (
+    8 * 8 + 0,
+    8 * 8 + 1,
+    8 * 8 + 2,
+    8 * 8 + 3,
+    16 * 8 + 0,
+    16 * 8 + 1,
+    16 * 8 + 2,
+    16 * 8 + 3,
+    24 * 8 + 0,
+    24 * 8 + 1,
+    24 * 8 + 2,
+    24 * 8 + 3,
+    0,
+    1,
+    2,
+    3,
 )
 
 
@@ -76,8 +81,9 @@ class SpriteMetadata:
 
 
 def read_bit(data: bytes, bit_offset: int) -> int:
+    # MAME gfx_layout bit offsets count from the MSB of each byte, not the LSB.
     byte_index = bit_offset // 8
-    bit_index = bit_offset % 8
+    bit_index = 7 - (bit_offset % 8)
     return (data[byte_index] >> bit_index) & 0x01
 
 

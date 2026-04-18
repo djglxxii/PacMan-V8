@@ -1,0 +1,8 @@
+sprite_render_tests: 8/8 passed
+sprites.bin SHA-256: 28e586b9ff65658f94928b190aff143a514cace76a5c95409ad989666407304b
+sprite_colors.bin SHA-256: 8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308
+palette_a.bin SHA-256: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+SAT shadow SHA-256: 259b117ec038486ac171ba3465d978d0ea3cc3efcc2a8b8720c290339c1cfa53
+Color shadow SHA-256: 5d86eb101f66c814c0fb238448a80c0ae6a26193e62eace05398001198b5e87a
+Frame dump SHA-256: fdeeaa7dcb59fd710ecbd1a84d3083259c7f8a0986eded2a33b1f1bd785eba16
+Vectors: tests/evidence/T013-sprite-rendering-animation/sprite_render_vectors.txt

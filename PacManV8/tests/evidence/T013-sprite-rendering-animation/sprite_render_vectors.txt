@@ -1,0 +1,26 @@
+T013 sprite render vectors
+
+VRAM layout:
+- pattern generator: 0x7000, R#6=0x0E
+- color table: 0x7A00, SAT base minus 512 bytes
+- attribute table: 0x7C00, R#5=0xF8/R#11=0x00
+
+Asset hashes:
+- assets/sprites.bin: 28e586b9ff65658f94928b190aff143a514cace76a5c95409ad989666407304b expected=28e586b9ff65658f94928b190aff143a514cace76a5c95409ad989666407304b
+- assets/sprite_colors.bin: 8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308 expected=8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308
+- assets/palette_a.bin: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f expected=7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+- src/sprite_review_shadow.inc: a7f6038bbec3ea32a05eafbf128bc1b35d60aa8440c8f1ea5f90b4cbc8f151ac
+- assets/sprite_review_shadow_summary.txt: dc68c3e3ab1d9abbb18e5375f49f5ea89f80cdbb67c4c5d441ff8f4be5195771
+
+Slot assignments:
+- slot 0: Pac-Man state=normal mouth frame xy=(56,96) sprite_id=1 pattern=4 palette=1 sat=60 38 04 01 00 00 00 00 colors=00 00 01 01 01 01 01 01 01 01 01 01 01 01 00 00
+- slot 1: Blinky state=normal chase outside xy=(88,96) sprite_id=8 pattern=32 palette=2 sat=60 58 20 02 00 00 00 00 colors=00 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00
+- slot 2: Pinky state=frightened outside xy=(120,96) sprite_id=50 pattern=200 palette=8 sat=60 78 C8 08 00 00 00 00 colors=00 08 08 08 08 08 08 08 08 08 08 08 08 08 08 00
+- slot 3: Inky state=house waiting xy=(152,96) sprite_id=32 pattern=128 palette=4 sat=60 98 80 04 00 00 00 00 colors=00 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00
+- slot 4: Clyde state=house exiting xy=(184,96) sprite_id=9 pattern=36 palette=5 sat=60 B8 24 05 00 00 00 00 colors=00 05 05 05 05 05 05 05 05 05 05 05 05 05 05 00
+- slot 5: reserved terminator sat=D0 00 00 00 00 00 00 00
+
+Determinism:
+- animation source: fixed T013 review state, frame counter initialized to 0
+- coordinate source: fixed review positions, not final T015 transform output
+- frame dump: 256x212 sha256=fdeeaa7dcb59fd710ecbd1a84d3083259c7f8a0986eded2a33b1f1bd785eba16
