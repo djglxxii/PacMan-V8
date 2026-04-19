@@ -1,6 +1,6 @@
-; VDP-A sprite upload and deterministic T013 review placement.
-; This slice keeps final gameplay-to-screen mapping out of scope; T015 owns the
-; validated coordinate transform.
+; VDP-A sprite upload and deterministic T015 transform validation placement.
+; The generated shadow include maps 8.8 arcade gameplay positions through the
+; fitted V8 coordinate table before emitting Sprite Mode 2 SAT fields.
 
 SPRITE_PATTERN_VRAM_PAGE     EQU 0x01
 SPRITE_PATTERN_VRAM_OFFSET   EQU 0x3000      ; Absolute VRAM 0x7000.
@@ -44,12 +44,6 @@ SPRITE_PALETTE_INKY          EQU 4
 SPRITE_PALETTE_CLYDE         EQU 5
 SPRITE_PALETTE_FRIGHTENED    EQU 8
 
-SPRITE_REVIEW_Y              EQU 96
-SPRITE_REVIEW_X_PACMAN       EQU 56
-SPRITE_REVIEW_X_BLINKY       EQU 88
-SPRITE_REVIEW_X_PINKY        EQU 120
-SPRITE_REVIEW_X_INKY         EQU 152
-SPRITE_REVIEW_X_CLYDE        EQU 184
 SPRITE_TERMINATOR_Y          EQU 0xD0
 
 SPRITE_STATE_BASE            EQU 0x8300

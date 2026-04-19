@@ -1,14 +1,15 @@
-T013 sprite review shadow summary
+T015 sprite transform shadow summary
 Source colors: assets/sprite_colors.bin bytes=1024 sha256=8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308
-SAT shadow bytes: 48 sha256=259b117ec038486ac171ba3465d978d0ea3cc3efcc2a8b8720c290339c1cfa53
+Coordinate map: assets/maze_v8_coordmap.bin bytes=8064 sha256=551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+Transform: arcade 28x36 8.8 fixed-point, no rotation, maze area x=16-239, y=8-203
+Sprite anchor: transformed entity center minus 8 pixels in x/y for 16x16 Sprite Mode 2 patterns.
+SAT shadow bytes: 48 sha256=9297f195f528177eedae9478d1b7bf27f488a43491c591dc1940c8b16ce333b2
 Color shadow bytes: 96 sha256=5d86eb101f66c814c0fb238448a80c0ae6a26193e62eace05398001198b5e87a
 
 Slots:
-- slot 0: Pac-Man state=normal mouth frame xy=(56,96) sprite_id=1 pattern=4 palette=1 sat=60 38 04 01 00 00 00 00 colors=00 00 01 01 01 01 01 01 01 01 01 01 01 01 00 00
-- slot 1: Blinky state=normal chase outside xy=(88,96) sprite_id=8 pattern=32 palette=2 sat=60 58 20 02 00 00 00 00 colors=00 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00
-- slot 2: Pinky state=frightened outside xy=(120,96) sprite_id=50 pattern=200 palette=8 sat=60 78 C8 08 00 00 00 00 colors=00 08 08 08 08 08 08 08 08 08 08 08 08 08 08 00
-- slot 3: Inky state=house waiting xy=(152,96) sprite_id=32 pattern=128 palette=4 sat=60 98 80 04 00 00 00 00 colors=00 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00
-- slot 4: Clyde state=house exiting xy=(184,96) sprite_id=9 pattern=36 palette=5 sat=60 B8 24 05 00 00 00 00 colors=00 05 05 05 05 05 05 05 05 05 05 05 05 05 05 00
+- slot 0: Pac-Man state=start tile center arcade_tile=(14,26) fixed=0x7400,0xD400 cell=PATH center=(132,156) sprite_xy=(124,148) sprite_id=1 pattern=4 palette=1 sat=94 7C 04 01 00 00 00 00 colors=00 00 01 01 01 01 01 01 01 01 01 01 01 01 00 00
+- slot 1: Blinky state=ghost door approach arcade_tile=(14,14) fixed=0x7400,0x7400 cell=PATH center=(132,80) sprite_xy=(124,72) sprite_id=8 pattern=32 palette=2 sat=48 7C 20 02 00 00 00 00 colors=00 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00
+- slot 2: Pinky state=left tunnel anchor frightened arcade_tile=(0,17) fixed=0x0400,0x8C00 cell=TUNNEL center=(20,99) sprite_xy=(12,91) sprite_id=50 pattern=200 palette=8 sat=5B 0C C8 08 00 00 00 00 colors=00 08 08 08 08 08 08 08 08 08 08 08 08 08 08 00
+- slot 3: Inky state=ghost house center waiting arcade_tile=(14,17) fixed=0x7400,0x8C00 cell=GHOST_HOUSE center=(132,99) sprite_xy=(124,91) sprite_id=32 pattern=128 palette=4 sat=5B 7C 80 04 00 00 00 00 colors=00 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00
+- slot 4: Clyde state=lower-right energizer approach arcade_tile=(26,26) fixed=0xD400,0xD400 cell=ENERGIZER center=(228,156) sprite_xy=(220,148) sprite_id=9 pattern=36 palette=5 sat=94 DC 24 05 00 00 00 00 colors=00 05 05 05 05 05 05 05 05 05 05 05 05 05 05 00
 - slot 5: reserved terminator sat=D0 00 00 00 00 00 00 00
-
-Coordinate note: fixed T013 review positions, not final T015 transform output.

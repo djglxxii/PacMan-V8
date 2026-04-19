@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T015 — Coordinate transform and rotation
+- Next proposed: T016 — PSG sound effects
 
 ## Phase 0 — Project Setup
 
@@ -55,7 +55,7 @@ human-approved before advancing.
 |------|------------------------------------|---------|--------------|-----------------|
 | T013 | Sprite rendering and animation     | completed | T003, T008, T009, T010, T012 | frame capture   |
 | T014 | HUD rendering (score, lives, fruit)| completed | T013         | frame capture   |
-| T015 | Coordinate transform and rotation  | planned | T013, T014   | frame capture   |
+| T015 | Coordinate transform and rotation  | completed | T013, T014   | frame capture   |
 
 ## Phase 5 — Audio
 

@@ -5,10 +5,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import pathlib
+from dataclasses import dataclass
+
+import coordinate_transform as transform
 
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 SPRITE_COLOR_PATH = REPO_ROOT / "assets" / "sprite_colors.bin"
+COORDMAP_PATH = transform.COORDMAP_PATH
 OUTPUT_PATH = REPO_ROOT / "src" / "sprite_review_shadow.inc"
 SUMMARY_PATH = REPO_ROOT / "assets" / "sprite_review_shadow_summary.txt"
 
@@ -16,57 +20,28 @@ SPRITE_SAT_SHADOW = 0x8300
 SPRITE_COLOR_SHADOW = 0x8330
 SPRITE_COLOR_STRIDE = 16
 
-SPRITES = [
-    {
-        "slot": 0,
-        "name": "Pac-Man",
-        "state": "normal mouth frame",
-        "x": 56,
-        "y": 96,
-        "sprite_id": 1,
-        "pattern": 1 * 4,
-        "palette": 1,
-    },
-    {
-        "slot": 1,
-        "name": "Blinky",
-        "state": "normal chase outside",
-        "x": 88,
-        "y": 96,
-        "sprite_id": 8,
-        "pattern": 8 * 4,
-        "palette": 2,
-    },
-    {
-        "slot": 2,
-        "name": "Pinky",
-        "state": "frightened outside",
-        "x": 120,
-        "y": 96,
-        "sprite_id": 50,
-        "pattern": 50 * 4,
-        "palette": 8,
-    },
-    {
-        "slot": 3,
-        "name": "Inky",
-        "state": "house waiting",
-        "x": 152,
-        "y": 96,
-        "sprite_id": 32,
-        "pattern": 32 * 4,
-        "palette": 4,
-    },
-    {
-        "slot": 4,
-        "name": "Clyde",
-        "state": "house exiting",
-        "x": 184,
-        "y": 96,
-        "sprite_id": 9,
-        "pattern": 9 * 4,
-        "palette": 5,
-    },
+
+@dataclass(frozen=True)
+class SpriteSpec:
+    slot: int
+    name: str
+    state: str
+    tile_x: int
+    tile_y: int
+    sprite_id: int
+    palette: int
+
+    @property
+    def pattern(self) -> int:
+        return self.sprite_id * 4
+
+
+SPRITE_SPECS = [
+    SpriteSpec(0, "Pac-Man", "start tile center", 14, 26, 1, 1),
+    SpriteSpec(1, "Blinky", "ghost door approach", 14, 14, 8, 2),
+    SpriteSpec(2, "Pinky", "left tunnel anchor frightened", 0, 17, 50, 8),
+    SpriteSpec(3, "Inky", "ghost house center waiting", 14, 17, 32, 4),
+    SpriteSpec(4, "Clyde", "lower-right energizer approach", 26, 26, 9, 5),
 ]
 
 
@@ -85,17 +60,54 @@ def overridden_rows(source_colors: bytes, sprite_id: int, palette: int) -> list[
     return [0 if value == 0 else palette for value in source_rows]
 
 
-def build_sat_bytes() -> list[int]:
+def build_sprite_records(coordmap: bytes) -> list[dict[str, int | str]]:
+    records: list[dict[str, int | str]] = []
+    for spec in SPRITE_SPECS:
+        result = transform.transform_tile_center(coordmap, spec.tile_x, spec.tile_y)
+        records.append(
+            {
+                "slot": spec.slot,
+                "name": spec.name,
+                "state": spec.state,
+                "tile_x": spec.tile_x,
+                "tile_y": spec.tile_y,
+                "arcade_x_fp": result.arcade_x_fp,
+                "arcade_y_fp": result.arcade_y_fp,
+                "screen_center_x": result.screen_center_x,
+                "screen_center_y": result.screen_center_y,
+                "x": result.sprite_x,
+                "y": result.sprite_y,
+                "cell_class": result.cell.class_name,
+                "sprite_id": spec.sprite_id,
+                "pattern": spec.pattern,
+                "palette": spec.palette,
+            }
+        )
+    return records
+
+
+def build_sat_bytes(sprite_records: list[dict[str, int | str]]) -> list[int]:
     sat: list[int] = []
-    for sprite in SPRITES:
-        sat.extend([sprite["y"], sprite["x"], sprite["pattern"], sprite["palette"], 0, 0, 0, 0])
+    for sprite in sprite_records:
+        sat.extend(
+            [
+                int(sprite["y"]),
+                int(sprite["x"]),
+                int(sprite["pattern"]),
+                int(sprite["palette"]),
+                0,
+                0,
+                0,
+                0,
+            ]
+        )
     sat.extend([0xD0, 0, 0, 0, 0, 0, 0, 0])
     return sat
 
 
-def build_color_bytes(source_colors: bytes) -> list[int]:
+def build_color_bytes(source_colors: bytes, sprite_records: list[dict[str, int | str]]) -> list[int]:
     color_bytes: list[int] = []
-    for sprite in SPRITES:
+    for sprite in sprite_records:
         color_bytes.extend(
             overridden_rows(source_colors, int(sprite["sprite_id"]), int(sprite["palette"]))
         )
@@ -103,14 +115,19 @@ def build_color_bytes(source_colors: bytes) -> list[int]:
     return color_bytes
 
 
-def build_review_shadow(source_colors: bytes) -> tuple[list[int], list[int]]:
-    sat = build_sat_bytes()
-    colors = build_color_bytes(source_colors)
+def build_review_shadow(
+    source_colors: bytes, coordmap: bytes | None = None
+) -> tuple[list[int], list[int], list[dict[str, int | str]]]:
+    if coordmap is None:
+        coordmap = transform.load_coordmap(COORDMAP_PATH)
+    sprite_records = build_sprite_records(coordmap)
+    sat = build_sat_bytes(sprite_records)
+    colors = build_color_bytes(source_colors, sprite_records)
     if len(sat) != 48:
         raise ValueError(f"SAT shadow must be 48 bytes; got {len(sat)}")
     if len(colors) != 96:
         raise ValueError(f"Color shadow must be 96 bytes; got {len(colors)}")
-    return sat, colors
+    return sat, colors, sprite_records
 
 
 def store_lines(base: int, values: list[int]) -> list[str]:
@@ -121,10 +138,10 @@ def store_lines(base: int, values: list[int]) -> list[str]:
     return lines
 
 
-def write_include(path: pathlib.Path, sat: list[int], colors: list[int]) -> None:
+def include_lines(sat: list[int], colors: list[int]) -> list[str]:
     lines = [
         "; Generated by tools/generate_sprite_review_shadow.py.",
-        "; Source: assets/sprite_colors.bin plus deterministic T013 review slots.",
+        "; Source: assets/sprite_colors.bin plus T015 coordinate transform review slots.",
         "",
         "; Sprite Mode 2 SAT shadow at 0x8300.",
     ]
@@ -132,51 +149,70 @@ def write_include(path: pathlib.Path, sat: list[int], colors: list[int]) -> None
     lines.extend(["", "; Sprite Mode 2 per-slot color shadow at 0x8330."])
     lines.extend(store_lines(SPRITE_COLOR_SHADOW, colors))
     lines.append("")
-    path.write_text("\n".join(lines), encoding="ascii")
+    return lines
+
+
+def write_include(path: pathlib.Path, sat: list[int], colors: list[int]) -> None:
+    path.write_text("\n".join(include_lines(sat, colors)), encoding="ascii")
 
 
 def format_hex(values: list[int]) -> str:
     return " ".join(f"{value:02X}" for value in values)
 
 
-def write_summary(path: pathlib.Path, source_colors: bytes, sat: list[int], colors: list[int]) -> None:
+def write_summary(
+    path: pathlib.Path,
+    source_colors: bytes,
+    coordmap: bytes,
+    sat: list[int],
+    colors: list[int],
+    sprite_records: list[dict[str, int | str]],
+) -> None:
     lines = [
-        "T013 sprite review shadow summary",
+        "T015 sprite transform shadow summary",
         f"Source colors: assets/sprite_colors.bin bytes={len(source_colors)} "
         f"sha256={hashlib.sha256(source_colors).hexdigest()}",
+        f"Coordinate map: assets/maze_v8_coordmap.bin bytes={len(coordmap)} "
+        f"sha256={hashlib.sha256(coordmap).hexdigest()}",
+        f"Transform: arcade 28x36 8.8 fixed-point, no rotation, maze area "
+        f"x={transform.MAZE_X}-{transform.MAZE_X + transform.MAZE_WIDTH - 1}, "
+        f"y={transform.MAZE_Y}-{transform.MAZE_Y + transform.MAZE_HEIGHT - 1}",
+        "Sprite anchor: transformed entity center minus 8 pixels in x/y for 16x16 Sprite Mode 2 patterns.",
         f"SAT shadow bytes: {len(sat)} sha256={hashlib.sha256(bytes(sat)).hexdigest()}",
         f"Color shadow bytes: {len(colors)} sha256={hashlib.sha256(bytes(colors)).hexdigest()}",
         "",
         "Slots:",
     ]
-    for sprite in SPRITES:
+    for sprite in sprite_records:
         slot = int(sprite["slot"])
         color_start = slot * SPRITE_COLOR_STRIDE
         lines.append(
             f"- slot {slot}: {sprite['name']} state={sprite['state']} "
-            f"xy=({sprite['x']},{sprite['y']}) sprite_id={sprite['sprite_id']} "
+            f"arcade_tile=({sprite['tile_x']},{sprite['tile_y']}) "
+            f"fixed=0x{int(sprite['arcade_x_fp']):04X},0x{int(sprite['arcade_y_fp']):04X} "
+            f"cell={sprite['cell_class']} center=({sprite['screen_center_x']},{sprite['screen_center_y']}) "
+            f"sprite_xy=({sprite['x']},{sprite['y']}) sprite_id={sprite['sprite_id']} "
             f"pattern={sprite['pattern']} palette={sprite['palette']} "
             f"sat={format_hex(sat[slot * 8 : slot * 8 + 8])} "
             f"colors={format_hex(colors[color_start : color_start + SPRITE_COLOR_STRIDE])}"
         )
     lines.append(f"- slot 5: reserved terminator sat={format_hex(sat[40:48])}")
-    lines.append("")
-    lines.append("Coordinate note: fixed T013 review positions, not final T015 transform output.")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Generate deterministic T013 sprite SAT/color shadow include."
+        description="Generate deterministic T015 transformed sprite SAT/color shadow include."
     )
     parser.add_argument("--output", type=pathlib.Path, default=OUTPUT_PATH)
     parser.add_argument("--summary-output", type=pathlib.Path, default=SUMMARY_PATH)
     args = parser.parse_args()
 
     source_colors = load_source_colors(SPRITE_COLOR_PATH)
-    sat, colors = build_review_shadow(source_colors)
+    coordmap = transform.load_coordmap(COORDMAP_PATH)
+    sat, colors, sprite_records = build_review_shadow(source_colors, coordmap)
     write_include(args.output, sat, colors)
-    write_summary(args.summary_output, source_colors, sat, colors)
+    write_summary(args.summary_output, source_colors, coordmap, sat, colors, sprite_records)
 
     print(f"Wrote {args.output.relative_to(REPO_ROOT)}")
     print(f"Wrote {args.summary_output.relative_to(REPO_ROOT)}")

@@ -16,6 +16,7 @@ OUTPUT_DIR = REPO_ROOT / "build"
 ROM_PATH = OUTPUT_DIR / "pacman.rom"
 SYM_PATH = OUTPUT_DIR / "pacman.sym"
 HUD_GENERATOR_PATH = REPO_ROOT / "tools" / "generate_hud_assets.py"
+SPRITE_GENERATOR_PATH = REPO_ROOT / "tools" / "generate_sprite_review_shadow.py"
 CARTRIDGE_PAGE_SIZE = 0x4000
 SYMBOL_PATTERN = re.compile(
     r"^([A-Za-z_.$][A-Za-z0-9_.$]*):\s+EQU\s+0x([0-9A-Fa-f]+)\s*$"
@@ -78,6 +79,7 @@ def main() -> int:
         raise FileNotFoundError(f"Source file not found: {SOURCE_PATH}")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    run_command([sys.executable, str(SPRITE_GENERATOR_PATH)])
     run_command([sys.executable, str(HUD_GENERATOR_PATH)])
 
     with tempfile.NamedTemporaryFile(

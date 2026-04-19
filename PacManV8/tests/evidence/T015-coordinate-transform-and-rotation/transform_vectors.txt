@@ -1,0 +1,51 @@
+T015 coordinate transform vectors
+
+Transform constants:
+- screen: 256x212
+- arcade grid: 28x36 tiles, 8.8 fixed-point pixels
+- mapped maze rows: 3-33
+- maze area: x=16-239, y=8-203
+- HUD bands: top y=0-7, bottom y=204-211
+- orientation: no rotation; arcade x maps to V8 x and arcade y maps to fitted V8 y
+- sprite anchor: transformed entity center minus 8 pixels on each axis
+
+Asset hashes:
+- assets/maze_semantic.bin: ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111 expected=ca8c00e7b76da593a4fc2e9c8f064dde3ac0d062ee5cce1687500850325db111
+- assets/maze_v8_coordmap.bin: 551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2 expected=551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+- assets/sprite_colors.bin: 8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308 expected=8795faea939d4fffaef5cb60fbf94bfaade78540deafb919564b17eec9bb5308
+- assets/palette_a.bin: 7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f expected=7e821cb405d1d30ae6ef29bf75fde5a87637c7e381566eaf750f895dc834b78f
+- assets/palette_b.bin: 99213a904be24a870047e41d1f2df48981fa9440c4e56959c7f74dd6fcd2a70e expected=99213a904be24a870047e41d1f2df48981fa9440c4e56959c7f74dd6fcd2a70e
+- src/sprite_review_shadow.inc: 463580f518328186a00fe2b5dc251b55a37b9b7d7466c268630116e47d1585be
+- assets/sprite_review_shadow_summary.txt: 9c02a918b3ca17bfc135dfc541ef166c55ef92643d32002cf7d2061c9819cfe5
+- SAT shadow: 9297f195f528177eedae9478d1b7bf27f488a43491c591dc1940c8b16ce333b2
+- color shadow: 5d86eb101f66c814c0fb238448a80c0ae6a26193e62eace05398001198b5e87a
+
+Sprite slots:
+- slot 0: Pac-Man state=start tile center arcade_tile=(14,26) fixed=0x7400,0xD400 cell=PATH center=(132,156) sprite_xy=(124,148) sat=94 7C 04 01 00 00 00 00 colors=00 00 01 01 01 01 01 01 01 01 01 01 01 01 00 00
+- slot 1: Blinky state=ghost door approach arcade_tile=(14,14) fixed=0x7400,0x7400 cell=PATH center=(132,80) sprite_xy=(124,72) sat=48 7C 20 02 00 00 00 00 colors=00 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00
+- slot 2: Pinky state=left tunnel anchor frightened arcade_tile=(0,17) fixed=0x0400,0x8C00 cell=TUNNEL center=(20,99) sprite_xy=(12,91) sat=5B 0C C8 08 00 00 00 00 colors=00 08 08 08 08 08 08 08 08 08 08 08 08 08 08 00
+- slot 3: Inky state=ghost house center waiting arcade_tile=(14,17) fixed=0x7400,0x8C00 cell=GHOST_HOUSE center=(132,99) sprite_xy=(124,91) sat=5B 7C 80 04 00 00 00 00 colors=00 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00
+- slot 4: Clyde state=lower-right energizer approach arcade_tile=(26,26) fixed=0xD400,0xD400 cell=ENERGIZER center=(228,156) sprite_xy=(220,148) sat=94 DC 24 05 00 00 00 00 colors=00 05 05 05 05 05 05 05 05 05 05 05 05 05 05 00
+- slot 5: reserved terminator sat=D0 00 00 00 00 00 00 00
+
+Anchor samples:
+- left_tunnel_exit: tile=(0,17) class=TUNNEL expected_class=TUNNEL center=(20,99) rect=(16,96,8,6) flags=0x17
+- right_tunnel_exit: tile=(27,17) class=TUNNEL expected_class=TUNNEL center=(236,99) rect=(232,96,8,6) flags=0x17
+- ghost_house_door_left: tile=(13,15) class=GHOST_DOOR expected_class=GHOST_DOOR center=(124,86) rect=(120,83,8,7) flags=0x07
+- ghost_house_door_right: tile=(14,15) class=GHOST_DOOR expected_class=GHOST_DOOR center=(132,86) rect=(128,83,8,7) flags=0x07
+- upper_left_pellet_corner: tile=(1,4) class=PELLET expected_class=PELLET center=(28,17) rect=(24,14,8,6) flags=0x0F
+- upper_right_pellet_corner: tile=(26,4) class=PELLET expected_class=PELLET center=(228,17) rect=(224,14,8,6) flags=0x0F
+- lower_left_pellet_corner: tile=(1,32) class=PELLET expected_class=PELLET center=(28,194) rect=(24,191,8,6) flags=0x0F
+- lower_right_pellet_corner: tile=(26,32) class=PELLET expected_class=PELLET center=(228,194) rect=(224,191,8,6) flags=0x0F
+- upper_left_energizer: tile=(1,6) class=ENERGIZER expected_class=ENERGIZER center=(28,29) rect=(24,26,8,7) flags=0x0F
+- upper_right_energizer: tile=(26,6) class=ENERGIZER expected_class=ENERGIZER center=(228,29) rect=(224,26,8,7) flags=0x0F
+- lower_left_energizer: tile=(1,26) class=ENERGIZER expected_class=ENERGIZER center=(28,156) rect=(24,153,8,6) flags=0x0F
+- lower_right_energizer: tile=(26,26) class=ENERGIZER expected_class=ENERGIZER center=(228,156) rect=(224,153,8,6) flags=0x0F
+
+8.8 sub-tile samples:
+- pacman_start_center: fixed=0x7400,0xD400 tile=(14,26) center=(132,156) sprite_xy=(124,148)
+- one_pixel_right: fixed=0x7500,0xD400 tile=(14,26) center=(133,156) sprite_xy=(125,148)
+- two_pixels_down: fixed=0x7400,0xD600 tile=(14,26) center=(132,157) sprite_xy=(124,149)
+- left_tunnel_wrap_input: fixed=0xE000,0x8C00 tile=(0,17) center=(16,99) sprite_xy=(8,91)
+
+Frame dump: 256x212 sha256=c0a29b0596a4b01ab1fb061291d74664bb3eed6b3e27342f156450eca5989281
