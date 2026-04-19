@@ -88,7 +88,14 @@ entry_point:
 
 im1_handler:
         push af
+        push bc
+        push de
+        push hl
         in a, (VDP_A_CTRL)          ; Read S#0 to clear VDP-A V-blank.
+        call audio_update_frame
+        pop hl
+        pop de
+        pop bc
         pop af
         ei
         db 0xED, 0x4D              ; RETI
@@ -104,6 +111,7 @@ reset_entry:
 
         im 1
 
+        call audio_init
         call init_video
 
 idle_loop:
@@ -262,6 +270,7 @@ fill_vdp_a_zeroes:
         INCLUDE "ghost_house.asm"
         INCLUDE "sprites.asm"
         INCLUDE "hud.asm"
+        INCLUDE "audio.asm"
 
 vdp_a_palette_data:
         INCBIN "../assets/palette_a.bin"

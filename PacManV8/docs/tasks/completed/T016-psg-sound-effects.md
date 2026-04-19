@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T016 |
-| State | planned |
+| State | completed |
 | Phase | Phase 5 — Audio |
 | Depends on | T011 |
 | Plan reference | `docs/PLAN.md` Phase 5 — Audio; Sound Effects (AY-3-8910 PSG) |
@@ -48,18 +48,18 @@ ghost siren, ghost eaten, and extra life.
 
 ## Pre-flight
 
-- [ ] T011 is completed and accepted.
-- [ ] Confirm no other task is active before activation.
-- [ ] Review `docs/PLAN.md` Phase 5 audio sections and the audio-fidelity risk
+- [x] T011 is completed and accepted.
+- [x] Confirm no other task is active before activation.
+- [x] Review `docs/PLAN.md` Phase 5 audio sections and the audio-fidelity risk
   note before implementation.
-- [ ] Consult `/home/djglxxii/src/Vanguard8/docs/spec/` for AY-3-8910 ports,
+- [x] Consult `/home/djglxxii/src/Vanguard8/docs/spec/` for AY-3-8910 ports,
   register layout, mixer semantics, and interrupt wiring.
-- [ ] Consult `/home/djglxxii/src/Vanguard8/docs/emulator/` for headless audio
+- [x] Consult `/home/djglxxii/src/Vanguard8/docs/emulator/` for headless audio
   hash or audio dump support.
-- [ ] Review `docs/tasks/completed/T011-collision-pellets-and-dot-stall.md`
+- [x] Review `docs/tasks/completed/T011-collision-pellets-and-dot-stall.md`
   so pellet/dot-stall hooks can later drive sound without changing those
   gameplay rules in this task.
-- [ ] Review current `src/main.asm` frame loop and interrupt handler before
+- [x] Review current `src/main.asm` frame loop and interrupt handler before
   adding audio update calls.
 
 ## Implementation notes
@@ -112,15 +112,51 @@ or replicate waveform data directly.
 
 ```bash
 python3 tools/build.py
-/home/djglxxii/src/Vanguard8/build/src/vanguard8_headless --rom build/pacman.rom --frames 180 --expect-audio-hash <filled-after-implementation>
+/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 180 --hash-audio --expect-audio-hash a8d5a5c921628a88b12a4b95e1294af3ddd79620bd940b0702300098af341483
 python3 tools/psg_sound_tests.py --vectors-output tests/evidence/T016-psg-sound-effects/psg_sound_vectors.txt > tests/evidence/T016-psg-sound-effects/psg_sound_tests.txt
 ```
+
+**Observed evidence values:**
+
+- `psg_sound_tests.txt` SHA-256:
+  `333331eb4087dbde29336dd736e308a4b683757ebe49c4fdbf2e5a5f4e7da7e0`
+- `psg_sound_vectors.txt` SHA-256:
+  `3f02e1e682c9682fc6a8cbb40de16bca9c2f69228a4473a56dad9c14ad4f32fb`
+- `psg_audio_summary.txt` SHA-256:
+  `70aa217e8e46f4a9ad659e07a16bb8bedd5ae80402b2696296e7bee7d8a40a21`
+- PSG register/effect validation result: `16/16 passed`
+- `src/audio.asm` SHA-256:
+  `7f923ecea8ff6fc756b228e6d4aad8a5b3e5b8109288fef7954856cc1cd4a55b`
+- Deterministic register trace SHA-256:
+  `5b42f187966ed3e89d0ac19c1d06fb9bc28c732aea7cc62b71db6214bf26fbaf`
+- Review trigger schedule:
+  frame `0` ghost siren, frame `12` pellet eat, frame `36` waka-waka,
+  frame `72` ghost eaten, frame `112` extra life.
+- Headless audio verification:
+  `/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 180 --hash-audio --expect-audio-hash a8d5a5c921628a88b12a4b95e1294af3ddd79620bd940b0702300098af341483`
+  passed with audio hash
+  `a8d5a5c921628a88b12a4b95e1294af3ddd79620bd940b0702300098af341483`
+  and event log digest `6306466758261423191`.
+- Build verification:
+  `python3 -m py_compile tools/psg_sound_tests.py` and
+  `python3 tools/build.py` both passed.
+- Emulator version note:
+  `/home/djglxxii/src/Vanguard8/build/src/vanguard8_headless` aborted on
+  `Unsupported timed Z180 opcode 0xC5 at PC 0x39` in the widened VBlank
+  handler, so evidence uses the repo-documented `cmake-build-debug` binary.
+  Related stack opcodes in the same active handler that may need the same
+  timed-path coverage are `0xD5` at `PC 0x003A`, `0xE5` at `PC 0x003B`,
+  `0xE1` at `PC 0x0040`, `0xD1` at `PC 0x0041`, and `0xC1` at `PC 0x0042`.
 
 ## Progress log
 
 | Date | Entry |
 |------|-------|
 | 2026-04-19 | Created, state: planned. |
+| 2026-04-19 | Activated task after confirming no other task was active; starting pre-flight review. |
+| 2026-04-19 | Implemented `src/audio.asm` with PSG initialization, channel A/B effect trigger routines, a VBlank-driven update path, and deterministic review triggers for siren, pellet, waka-waka, ghost-eaten, and extra-life cues. Wired `audio_init` and `audio_update_frame` into `src/main.asm`, added `tools/psg_sound_tests.py`, generated evidence under `tests/evidence/T016-psg-sound-effects/`, verified Python compilation, ROM assembly, deterministic register vectors, and a 180-frame headless audio hash. Updated `docs/field-manual/headless-runtime-dump-version-skew.md` with the current `build` binary opcode gap. Stopping for human review. |
+| 2026-04-19 | Added `docs/field-manual/vanguard8-build-directory-skew-and-timed-opcodes.md` as a focused handoff for the separate Vanguard8 emulator session: explains the two CMake build directories, the confirmed `0xC5` timed opcode failure, likely adjacent stack opcodes, and the recommended emulator-side fix/verification path. |
+| 2026-04-19 | Human accepted T016; moved task to completed and updated the task index. |
 
 ## Blocker (only if state = blocked)
 

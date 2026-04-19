@@ -21,6 +21,22 @@ argument form for smoke runs:
 /home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 60
 ```
 
+For T016, `cmake-build-debug` was also the working binary for audio hashing.
+The newer `build/src/vanguard8_headless` binary aborted in the VBlank handler
+after the audio update path widened register preservation:
+
+```text
+Unsupported timed Z180 opcode 0xC5 at PC 0x39
+```
+
+That PC is the `PUSH BC` in the IM1 handler. Use the `cmake-build-debug`
+binary for T016 audio evidence unless the timed path in the newer build has
+explicitly gained `PUSH BC` support. The same widened handler immediately uses
+`PUSH DE` (`0xD5`, `PC 0x003A`), `PUSH HL` (`0xE5`, `PC 0x003B`), `POP HL`
+(`0xE1`, `PC 0x0040`), `POP DE` (`0xD1`, `PC 0x0041`), and `POP BC` (`0xC1`,
+`PC 0x0042`), so those are likely next if the newer timed path is patched one
+opcode at a time.
+
 **Example:** For T007, this command failed before producing runtime evidence:
 
 ```bash

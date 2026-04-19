@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T016 — PSG sound effects
+- Next proposed: T017 — FM music
 
 ## Phase 0 — Project Setup
 
@@ -61,7 +61,7 @@ human-approved before advancing.
 
 | ID   | Title                              | State   | Depends on | Evidence type   |
 |------|------------------------------------|---------|------------|-----------------|
-| T016 | PSG sound effects (waka, siren, etc)| planned | T011       | checklist       |
+| T016 | PSG sound effects (waka, siren, etc)| completed | T011       | checklist       |
 | T017 | FM music (intro, intermission, death)| planned | T016      | checklist       |
 
 ## Phase 6 — Game Flow
