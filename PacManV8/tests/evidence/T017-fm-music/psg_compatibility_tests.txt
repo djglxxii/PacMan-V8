@@ -1,0 +1,6 @@
+psg_sound_tests: 16/16 passed
+src/audio.asm SHA-256: 55587dfa152087001240bb394f02a54c9a6ccd426ca2ad0ba5a3bde297acaee6
+Register trace SHA-256: 5b42f187966ed3e89d0ac19c1d06fb9bc28c732aea7cc62b71db6214bf26fbaf
+Frames simulated: 180
+Register writes: 128
+Vectors: tests/evidence/T017-fm-music/psg_compatibility_vectors.txt
