@@ -1,0 +1,206 @@
+T016 PSG sound-effect vectors
+
+Hardware surface:
+- AY-3-8910 address latch: port 0x50
+- AY-3-8910 register data: port 0x51
+- AY clock: 1,789,772.5 Hz
+- Mixer value: 0x3C (tone A+B enabled; tone C and all noise disabled)
+
+Initialization writes:
+- R00=0x01
+- R01=0x00
+- R02=0x01
+- R03=0x00
+- R04=0x01
+- R05=0x00
+- R06=0x1F
+- R07=0x3C
+- R08=0x00
+- R09=0x00
+- R10=0x00
+- R11=0x00
+- R12=0x00
+- R13=0x00
+
+Review trigger schedule:
+- frame 000: siren
+- frame 012: pellet
+- frame 036: waka
+- frame 072: ghost_eaten
+- frame 112: extra_life
+
+Effect definitions:
+- waka: channel A, label audio_waka_steps, 4 steps, 16 frames
+  step 00: duration=04 period=0x0F0 frequency=466.1Hz volume=0xD
+  step 01: duration=04 period=0x0B4 frequency=621.4Hz volume=0xF
+  step 02: duration=04 period=0x0F0 frequency=466.1Hz volume=0xC
+  step 03: duration=04 period=0x0B4 frequency=621.4Hz volume=0xE
+- pellet: channel A, label audio_pellet_steps, 4 steps, 8 frames
+  step 00: duration=02 period=0x180 frequency=291.3Hz volume=0xA
+  step 01: duration=02 period=0x120 frequency=388.4Hz volume=0xC
+  step 02: duration=02 period=0x0D8 frequency=517.9Hz volume=0xB
+  step 03: duration=02 period=0x0A8 frequency=665.8Hz volume=0x9
+- siren: channel B, label audio_siren_steps, 12 steps, 96 frames
+  step 00: duration=08 period=0x140 frequency=349.6Hz volume=0x8
+  step 01: duration=08 period=0x118 frequency=399.5Hz volume=0x9
+  step 02: duration=08 period=0x0F0 frequency=466.1Hz volume=0xA
+  step 03: duration=08 period=0x118 frequency=399.5Hz volume=0x9
+  step 04: duration=08 period=0x140 frequency=349.6Hz volume=0x8
+  step 05: duration=08 period=0x168 frequency=310.7Hz volume=0x9
+  step 06: duration=08 period=0x190 frequency=279.7Hz volume=0xA
+  step 07: duration=08 period=0x168 frequency=310.7Hz volume=0x9
+  step 08: duration=08 period=0x140 frequency=349.6Hz volume=0x8
+  step 09: duration=08 period=0x118 frequency=399.5Hz volume=0x9
+  step 10: duration=08 period=0x0F0 frequency=466.1Hz volume=0xA
+  step 11: duration=08 period=0x118 frequency=399.5Hz volume=0x8
+- ghost_eaten: channel A, label audio_ghost_eaten_steps, 6 steps, 18 frames
+  step 00: duration=03 period=0x080 frequency=873.9Hz volume=0xF
+  step 01: duration=03 period=0x0A0 frequency=699.1Hz volume=0xF
+  step 02: duration=03 period=0x0C8 frequency=559.3Hz volume=0xE
+  step 03: duration=03 period=0x0F8 frequency=451.1Hz volume=0xD
+  step 04: duration=03 period=0x130 frequency=368.0Hz volume=0xB
+  step 05: duration=03 period=0x180 frequency=291.3Hz volume=0x9
+- extra_life_a: channel A, label audio_extra_life_a_steps, 5 steps, 25 frames
+  step 00: duration=05 period=0x1C0 frequency=249.7Hz volume=0xC
+  step 01: duration=05 period=0x160 frequency=317.8Hz volume=0xD
+  step 02: duration=05 period=0x100 frequency=437.0Hz volume=0xF
+  step 03: duration=05 period=0x0C0 frequency=582.6Hz volume=0xE
+  step 04: duration=05 period=0x090 frequency=776.8Hz volume=0xC
+- extra_life_b: channel B, label audio_extra_life_b_steps, 5 steps, 25 frames
+  step 00: duration=05 period=0x150 frequency=332.9Hz volume=0x8
+  step 01: duration=05 period=0x108 frequency=423.7Hz volume=0x9
+  step 02: duration=05 period=0x0C0 frequency=582.6Hz volume=0xA
+  step 03: duration=05 period=0x090 frequency=776.8Hz volume=0x9
+  step 04: duration=05 period=0x06C frequency=1035.7Hz volume=0x8
+
+Deterministic register trace:
+- writes: 128
+- trace SHA-256: 5b42f187966ed3e89d0ac19c1d06fb9bc28c732aea7cc62b71db6214bf26fbaf
+init init psg_init     R00=0x01
+init init psg_init     R01=0x00
+init init psg_init     R02=0x01
+init init psg_init     R03=0x00
+init init psg_init     R04=0x01
+init init psg_init     R05=0x00
+init init psg_init     R06=0x1F
+init init psg_init     R07=0x3C
+init init psg_init     R08=0x00
+init init psg_init     R09=0x00
+init init psg_init     R10=0x00
+init init psg_init     R11=0x00
+init init psg_init     R12=0x00
+init init psg_init     R13=0x00
+000 B    siren        R02=0x40
+000 B    siren        R03=0x01
+000 B    siren        R09=0x08
+008 B    siren        R02=0x18
+008 B    siren        R03=0x01
+008 B    siren        R09=0x09
+012 A    pellet       R00=0x80
+012 A    pellet       R01=0x01
+012 A    pellet       R08=0x0A
+014 A    pellet       R00=0x20
+014 A    pellet       R01=0x01
+014 A    pellet       R08=0x0C
+016 A    pellet       R00=0xD8
+016 A    pellet       R01=0x00
+016 A    pellet       R08=0x0B
+016 B    siren        R02=0xF0
+016 B    siren        R03=0x00
+016 B    siren        R09=0x0A
+018 A    pellet       R00=0xA8
+018 A    pellet       R01=0x00
+018 A    pellet       R08=0x09
+020 A    pellet       R08=0x00
+024 B    siren        R02=0x18
+024 B    siren        R03=0x01
+024 B    siren        R09=0x09
+032 B    siren        R02=0x40
+032 B    siren        R03=0x01
+032 B    siren        R09=0x08
+036 A    waka         R00=0xF0
+036 A    waka         R01=0x00
+036 A    waka         R08=0x0D
+040 A    waka         R00=0xB4
+040 A    waka         R01=0x00
+040 A    waka         R08=0x0F
+040 B    siren        R02=0x68
+040 B    siren        R03=0x01
+040 B    siren        R09=0x09
+044 A    waka         R00=0xF0
+044 A    waka         R01=0x00
+044 A    waka         R08=0x0C
+048 A    waka         R00=0xB4
+048 A    waka         R01=0x00
+048 A    waka         R08=0x0E
+048 B    siren        R02=0x90
+048 B    siren        R03=0x01
+048 B    siren        R09=0x0A
+052 A    waka         R08=0x00
+056 B    siren        R02=0x68
+056 B    siren        R03=0x01
+056 B    siren        R09=0x09
+064 B    siren        R02=0x40
+064 B    siren        R03=0x01
+064 B    siren        R09=0x08
+072 A    ghost_eaten  R00=0x80
+072 A    ghost_eaten  R01=0x00
+072 A    ghost_eaten  R08=0x0F
+072 B    siren        R02=0x18
+072 B    siren        R03=0x01
+072 B    siren        R09=0x09
+075 A    ghost_eaten  R00=0xA0
+075 A    ghost_eaten  R01=0x00
+075 A    ghost_eaten  R08=0x0F
+078 A    ghost_eaten  R00=0xC8
+078 A    ghost_eaten  R01=0x00
+078 A    ghost_eaten  R08=0x0E
+080 B    siren        R02=0xF0
+080 B    siren        R03=0x00
+080 B    siren        R09=0x0A
+081 A    ghost_eaten  R00=0xF8
+081 A    ghost_eaten  R01=0x00
+081 A    ghost_eaten  R08=0x0D
+084 A    ghost_eaten  R00=0x30
+084 A    ghost_eaten  R01=0x01
+084 A    ghost_eaten  R08=0x0B
+087 A    ghost_eaten  R00=0x80
+087 A    ghost_eaten  R01=0x01
+087 A    ghost_eaten  R08=0x09
+088 B    siren        R02=0x18
+088 B    siren        R03=0x01
+088 B    siren        R09=0x08
+090 A    ghost_eaten  R08=0x00
+096 B    siren        R09=0x00
+112 A    extra_life   R00=0xC0
+112 A    extra_life   R01=0x01
+112 A    extra_life   R08=0x0C
+112 B    extra_life   R02=0x50
+112 B    extra_life   R03=0x01
+112 B    extra_life   R09=0x08
+117 A    extra_life   R00=0x60
+117 A    extra_life   R01=0x01
+117 A    extra_life   R08=0x0D
+117 B    extra_life   R02=0x08
+117 B    extra_life   R03=0x01
+117 B    extra_life   R09=0x09
+122 A    extra_life   R00=0x00
+122 A    extra_life   R01=0x01
+122 A    extra_life   R08=0x0F
+122 B    extra_life   R02=0xC0
+122 B    extra_life   R03=0x00
+122 B    extra_life   R09=0x0A
+127 A    extra_life   R00=0xC0
+127 A    extra_life   R01=0x00
+127 A    extra_life   R08=0x0E
+127 B    extra_life   R02=0x90
+127 B    extra_life   R03=0x00
+127 B    extra_life   R09=0x09
+132 A    extra_life   R00=0x90
+132 A    extra_life   R01=0x00
+132 A    extra_life   R08=0x0C
+132 B    extra_life   R02=0x6C
+132 B    extra_life   R03=0x00
+132 B    extra_life   R09=0x08
+137 A    extra_life   R08=0x00
+137 B    extra_life   R09=0x00

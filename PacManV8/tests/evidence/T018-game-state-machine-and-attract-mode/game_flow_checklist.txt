@@ -1,0 +1,58 @@
+T018 game-flow manual review checklist
+=====================================
+
+Primary state-machine evidence:
+- tests/evidence/T018-game-state-machine-and-attract-mode/game_flow_tests.txt
+  SHA-256: 787339cba4ffec0bed7102ce1e35a6c412105c87b6f08953409cac5713ea9dd0
+- tests/evidence/T018-game-state-machine-and-attract-mode/game_flow_vectors.txt
+  SHA-256: 549b063aa38f19b48120c3c767663a6efaada762421da5d68d25f46beee64d94
+- Result: 5/5 passed.
+
+Runtime frame evidence:
+- Command:
+  /home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 960 --dump-frame tests/evidence/T018-game-state-machine-and-attract-mode/game_flow_frame_960.ppm --hash-frame 960
+- Frame SHA-256 at frame 960:
+  4a63cec305375edd4b20e85ba9830d83888e2eaf4327a29c229cfc7ce7a79693
+- Frame dump:
+  tests/evidence/T018-game-state-machine-and-attract-mode/game_flow_frame_960.ppm
+- Frame dump file SHA-256:
+  c0a29b0596a4b01ab1fb061291d74664bb3eed6b3e27342f156450eca5989281
+- Frame dump source: runtime
+- Frame dump size: 256x212
+- Event log digest: 12325614728164139587
+
+Audio compatibility evidence:
+- PSG command:
+  python3 tools/psg_sound_tests.py --vectors-output tests/evidence/T018-game-state-machine-and-attract-mode/psg_compatibility_vectors.txt > tests/evidence/T018-game-state-machine-and-attract-mode/psg_compatibility_tests.txt
+- PSG result: 16/16 passed
+- PSG register trace SHA-256:
+  5b42f187966ed3e89d0ac19c1d06fb9bc28c732aea7cc62b71db6214bf26fbaf
+- FM command:
+  python3 tools/fm_music_tests.py --vectors-output tests/evidence/T018-game-state-machine-and-attract-mode/fm_compatibility_vectors.txt > tests/evidence/T018-game-state-machine-and-attract-mode/fm_compatibility_tests.txt
+- FM result: 29/29 passed
+- FM register trace SHA-256:
+  1c00bb874e1db7356288b22048409153a43338e52c01e53405bf11f21ec9a51f
+- 300-frame T018 PCM audio SHA-256:
+  d99a8a94607436a8024330893ea4c8fca66de6029f2353c0feb9736e3689578e
+- 300-frame audio event log digest:
+  793085328687964239
+- Note: the T017 300-frame PCM expectation no longer applies bit-for-bit after
+  T018 because the ROM now performs additional boot/frame-loop CPU work. The
+  PSG/FM register-trace schedules remain unchanged, and the audio event log
+  digest still matches the T017 evidence value.
+
+Reviewer checks:
+- [ ] Inspect game_flow_vectors.txt and confirm state IDs are ATTRACT=0,
+  READY=1, PLAYING=2, DYING=3, LEVEL_COMPLETE=4, CONTINUE=5, NEXT_LEVEL=6,
+  INTERMISSION=7.
+- [ ] Confirm the deterministic transition frames are 120, 360, 480, 570,
+  630, 810, 900, and 960.
+- [ ] Confirm review flags reach 0xFF, proving every Phase 6 state was visited.
+- [ ] Confirm INTERMISSION is a handoff state only; no T019 speed-table or
+  T020 cutscene behavior is introduced.
+- [ ] Confirm src/main.asm keeps audio_update_frame in IM1 and runs
+  game_flow_update_frame after HALT in the frame loop.
+- [ ] Confirm PSG and FM compatibility harnesses pass and their register trace
+  hashes match the accepted T016/T017 values listed above.
+- [ ] Optionally inspect game_flow_frame_960.ppm to confirm the accepted
+  T015/T014 runtime scene still renders at 256x212.

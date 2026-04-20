@@ -1,0 +1,84 @@
+# T018 Game Flow State Machine Vectors
+
+State IDs:
+- ATTRACT=0
+- READY=1
+- PLAYING=2
+- DYING=3
+- LEVEL_COMPLETE=4
+- CONTINUE=5
+- NEXT_LEVEL=6
+- INTERMISSION=7
+
+Review durations:
+- ATTRACT=120 frames
+- READY=240 frames
+- PLAYING before DYING=120 frames
+- DYING=90 frames
+- CONTINUE=60 frames
+- PLAYING before LEVEL_COMPLETE=180 frames
+- LEVEL_COMPLETE=90 frames
+- NEXT_LEVEL=60 frames
+- INTERMISSION=handoff state with no T020 cutscene content
+
+File hashes:
+- src/main.asm sha256=324b42ffdd00ea04385a8e4710d6697c170e8cb9fc46c5c945208397ed115827
+- src/game_flow.asm sha256=dcf5e2adf0b74c2ca428e6e87812f258a29e66aa56ca40e1b92cd2d14f2b6006
+- tools/game_flow_tests.py sha256=d5eef172e0bec79d0380ea8d50acbe45299ec44be4b8f1ea5c97760e51814979
+- build/pacman.rom sha256=16d1dc626a6c93cf581f5607269e88c118d437266e3fa818a9717d06afefd9ac
+- build/pacman.sym sha256=9ee88772581c24245a18b5997e28ae2607b4d1ad8392a628bf629be441581ece
+
+Case results:
+## declared_states_and_flags
+status: PASS
+expected: state IDs are contiguous and review flags map one bit per Phase 6 state
+details:
+- states=ATTRACT:0, READY:1, PLAYING:2, DYING:3, LEVEL_COMPLETE:4, CONTINUE:5, NEXT_LEVEL:6, INTERMISSION:7
+- flags=ATTRACT:0x01, READY:0x02, PLAYING:0x04, DYING:0x08, LEVEL_COMPLETE:0x10, CONTINUE:0x20, NEXT_LEVEL:0x40, INTERMISSION:0x80
+
+## transition_schedule
+status: PASS
+expected: boot review path reaches ATTRACT, READY, PLAYING, DYING, CONTINUE, LEVEL_COMPLETE, NEXT_LEVEL, and INTERMISSION at fixed frames
+details:
+- frame 0120: ATTRACT -> READY timer=240 script=DEATH_REVIEW flags=0x03
+- frame 0360: READY -> PLAYING timer=120 script=DEATH_REVIEW flags=0x07
+- frame 0480: PLAYING -> DYING timer=90 script=LEVEL_COMPLETE_REVIEW flags=0x0F
+- frame 0570: DYING -> CONTINUE timer=60 script=LEVEL_COMPLETE_REVIEW flags=0x2F
+- frame 0630: CONTINUE -> PLAYING timer=180 script=LEVEL_COMPLETE_REVIEW flags=0x2F
+- frame 0810: PLAYING -> LEVEL_COMPLETE timer=90 script=INTERMISSION_HANDOFF flags=0x3F
+- frame 0900: LEVEL_COMPLETE -> NEXT_LEVEL timer=60 script=INTERMISSION_HANDOFF flags=0x7F
+- frame 0960: NEXT_LEVEL -> INTERMISSION timer=0 script=INTERMISSION_HANDOFF flags=0xFF
+
+## boundary_snapshots
+status: PASS
+expected: state timer boundaries match the documented review schedule
+details:
+- frame 0000: state=ATTRACT timer=120 entry=0 last_transition=65535 count=0
+- frame 0119: state=ATTRACT timer=1 entry=0 last_transition=65535 count=0
+- frame 0120: state=READY timer=240 entry=120 last_transition=120 count=1
+- frame 0359: state=READY timer=1 entry=120 last_transition=120 count=1
+- frame 0360: state=PLAYING timer=120 entry=360 last_transition=360 count=2
+- frame 0480: state=DYING timer=90 entry=480 last_transition=480 count=3
+- frame 0630: state=PLAYING timer=180 entry=630 last_transition=630 count=5
+- frame 0810: state=LEVEL_COMPLETE timer=90 entry=810 last_transition=810 count=6
+- frame 0960: state=INTERMISSION timer=0 entry=960 last_transition=960 count=8
+- frame 1080: state=INTERMISSION timer=0 entry=960 last_transition=960 count=8
+
+## review_flags_cover_all_states
+status: PASS
+expected: the textual review flag byte records that every Phase 6 state was visited exactly by the scripted path
+details:
+- flags=0xFF
+- script_step=INTERMISSION_HANDOFF
+- visited=ATTRACT, READY, PLAYING, DYING, LEVEL_COMPLETE, CONTINUE, NEXT_LEVEL, INTERMISSION
+
+## assembly_wiring
+status: PASS
+expected: game-flow init/update are wired from the frame loop, while accepted audio timing and gameplay/rendering slices remain untouched by the review script
+details:
+- main_include=src/game_flow.asm
+- reset_call=game_flow_init
+- vblank_audio_path=audio_update_frame only
+- frame_loop=HALT then game_flow_update_frame
+- no direct movement/collision/audio cue hooks in game_flow.asm
+- symbols_present=game_flow_init, game_flow_load_state_timer, game_flow_transition_to, game_flow_update_frame

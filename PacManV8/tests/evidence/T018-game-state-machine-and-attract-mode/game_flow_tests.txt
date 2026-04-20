@@ -1,0 +1,14 @@
+T018 game flow state machine tests
+==================================
+states: ATTRACT=0 READY=1 PLAYING=2 DYING=3 LEVEL_COMPLETE=4 CONTINUE=5 NEXT_LEVEL=6 INTERMISSION=7
+review_schedule: 120,360,480,570,630,810,900,960
+intermission: handoff only; no T019 speed tables or T020 cutscene content
+
+PASS declared_states_and_flags: state IDs are contiguous and review flags map one bit per Phase 6 state
+PASS transition_schedule: boot review path reaches ATTRACT, READY, PLAYING, DYING, CONTINUE, LEVEL_COMPLETE, NEXT_LEVEL, and INTERMISSION at fixed frames
+PASS boundary_snapshots: state timer boundaries match the documented review schedule
+PASS review_flags_cover_all_states: the textual review flag byte records that every Phase 6 state was visited exactly by the scripted path
+PASS assembly_wiring: game-flow init/update are wired from the frame loop, while accepted audio timing and gameplay/rendering slices remain untouched by the review script
+
+result: 5/5 passed
+wrote vectors: tests/evidence/T018-game-state-machine-and-attract-mode/game_flow_vectors.txt

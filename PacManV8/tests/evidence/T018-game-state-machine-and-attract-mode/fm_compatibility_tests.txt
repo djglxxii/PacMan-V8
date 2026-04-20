@@ -1,0 +1,6 @@
+fm_music_tests: 29/29 passed
+src/audio.asm SHA-256: 55587dfa152087001240bb394f02a54c9a6ccd426ca2ad0ba5a3bde297acaee6
+Register trace SHA-256: 1c00bb874e1db7356288b22048409153a43338e52c01e53405bf11f21ec9a51f
+Frames simulated: 300
+Register writes: 929
+Vectors: tests/evidence/T018-game-state-machine-and-attract-mode/fm_compatibility_vectors.txt
