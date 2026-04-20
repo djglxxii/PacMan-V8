@@ -1,0 +1,48 @@
+# T019 Manual Review Checklist
+
+Review artifacts:
+
+- tests/evidence/T019-level-progression-and-speed-tables/level_progression_tests.txt
+- tests/evidence/T019-level-progression-and-speed-tables/level_progression_vectors.txt
+
+Rerun commands:
+
+python3 tools/build.py
+python3 tools/level_progression_tests.py --vectors-output tests/evidence/T019-level-progression-and-speed-tables/level_progression_vectors.txt > tests/evidence/T019-level-progression-and-speed-tables/level_progression_tests.txt
+/home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 960 --hash-frame 960
+
+Human review checks:
+
+- [ ] `level_progression_tests.txt` reports `result: 6/6 passed`.
+- [ ] `level_progression_vectors.txt` records source `https://pacman.holenet.info/`
+      and table hash `4196b73a68bb8a0ce30e3c66bb4455e8cbb5352b18787296f400746d65c02202`.
+- [ ] Level `1`, `2`, `5`, `9`, `21`, and `256` boundary lookups match
+      the documented fruit, speed, Elroy, frightened, and schedule families.
+- [ ] Scatter/chase families are recorded as:
+      `LEVEL1`: 420,1200,420,1200,300,1200,300,forever.
+      `LEVEL2_4`: 420,1200,420,1200,300,61980,1,forever.
+      `LEVEL5P`: 300,1200,300,1200,300,62220,1,forever.
+- [ ] Frightened timing records nonzero durations for early levels and zero
+      blue-time behavior for levels `17`, `19`, `20`, `21+`, and `256`.
+- [ ] Progression decisions record intermission requests after completed
+      levels `2`, `5`, and `9`, kill-screen handoff after completed level
+      `255`, and wrap after completed level `256`.
+- [ ] Headless runtime completes 960 frames with frame hash
+      `4a63cec305375edd4b20e85ba9830d83888e2eaf4327a29c229cfc7ce7a79693`
+      and event log digest `12325614728164139587`.
+- [ ] No T020 intermission cutscene content, T021 pattern replay validation,
+      visual kill-screen corruption, or unrelated gameplay/rendering/audio
+      changes are introduced.
+
+Regression checks run during preparation:
+
+- `python3 tools/game_flow_tests.py --vectors-output /tmp/t019_game_flow_vectors_repo.txt`
+  passed `5/5`.
+- `python3 tools/mode_timer_tests.py --vectors-output build/t019-regressions/mode_timer_vectors.txt`
+  passed `5/5`.
+- `python3 tools/ghost_ai_tests.py --vectors-output build/t019-regressions/ghost_ai_vectors.txt`
+  passed `5/5`.
+- `python3 tools/ghost_house_tests.py --vectors-output build/t019-regressions/ghost_house_vectors.txt`
+  passed `5/5`.
+- `python3 tools/movement_tests.py` and `python3 tools/collision_tests.py`
+  were rerun successfully before final evidence generation.

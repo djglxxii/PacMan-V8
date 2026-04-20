@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T019 — Level progression and speed tables
+- Next proposed: T020 — Intermission cutscenes
 
 ## Phase 0 — Project Setup
 
@@ -69,7 +69,7 @@ human-approved before advancing.
 | ID   | Title                              | State   | Depends on       | Evidence type   |
 |------|------------------------------------|---------|------------------|-----------------|
 | T018 | Game state machine and attract mode| completed | T014, T015, T016 | checklist       |
-| T019 | Level progression and speed tables | planned | T018             | test output     |
+| T019 | Level progression and speed tables | completed | T018             | test output     |
 | T020 | Intermission cutscenes             | planned | T019             | frame capture   |
 
 ## Phase 7 — Validation

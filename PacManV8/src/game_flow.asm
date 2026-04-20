@@ -45,6 +45,7 @@ GAME_FLOW_REVIEW_FLAGS          EQU GAME_FLOW_STATE_BASE + 11
 GAME_FLOW_SCRIPT_STEP           EQU GAME_FLOW_STATE_BASE + 12
 
 game_flow_init:
+        call level_progression_init
         xor a
         ld (GAME_FLOW_FRAME_COUNTER), a
         ld (GAME_FLOW_FRAME_COUNTER + 1), a
@@ -119,12 +120,19 @@ game_flow_elapsed_transition:
         ld a, GAME_FLOW_STATE_CONTINUE
         jp game_flow_transition_to
 .to_next_level:
+        call level_progression_complete_current_level
         ld a, GAME_FLOW_STATE_NEXT_LEVEL
         jp game_flow_transition_to
 .to_intermission:
+        call level_progression_completed_requests_intermission
+        or a
+        jr z, .to_ready_after_next_level
         ld a, GAME_FLOW_SCRIPT_HANDOFF
         ld (GAME_FLOW_SCRIPT_STEP), a
         ld a, GAME_FLOW_STATE_INTERMISSION
+        jp game_flow_transition_to
+.to_ready_after_next_level:
+        ld a, GAME_FLOW_STATE_READY
         jp game_flow_transition_to
 
 .from_playing:
@@ -136,6 +144,7 @@ game_flow_elapsed_transition:
         ld a, GAME_FLOW_STATE_DYING
         jp game_flow_transition_to
 .playing_to_level_complete:
+        call level_progression_set_current_level_2_for_review
         ld a, GAME_FLOW_SCRIPT_HANDOFF
         ld (GAME_FLOW_SCRIPT_STEP), a
         ld a, GAME_FLOW_STATE_LEVEL_COMPLETE

@@ -1,0 +1,16 @@
+T019 level progression and speed table tests
+============================================
+source: Pac-Man Dossier Table A.1 plus scatter/chase timing summary (https://pacman.holenet.info/)
+speed_scale: 100%=75.75757625 px/sec, fp8.8 per frame
+table_hash: 4196b73a68bb8a0ce30e3c66bb4455e8cbb5352b18787296f400746d65c02202
+boundary_levels: 1,2,5,9,21,256
+
+PASS table_lengths_and_values: assembly table columns match Dossier-derived level rows 1-20 plus the 21+ family
+PASS boundary_level_lookups: levels 1, 2, 5, 9, 21, and 256 resolve to documented table families
+PASS scatter_chase_schedules: schedule family constants cover level 1, levels 2-4, and level 5+ without changing level-1 timings
+PASS frightened_tables_and_zero_duration: frightened duration, flash count, and zero-duration families are exposed through the table owner
+PASS progression_decisions: level completion increments deterministically and marks intermission, kill-screen, and wrap decisions
+PASS assembly_symbols_and_wiring: level progression owner is assembled, exported, and queried by game-flow and ghost timing owners
+
+result: 6/6 passed
+wrote vectors: tests/evidence/T019-level-progression-and-speed-tables/level_progression_vectors.txt

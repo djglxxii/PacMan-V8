@@ -1,0 +1,120 @@
+# T019 Level Progression and Speed Table Vectors
+
+Source: Pac-Man Dossier Table A.1 plus scatter/chase timing summary
+Source URL: https://pacman.holenet.info/
+Speed scale: 100% = 75.75757625 pixels/sec, 60 frames/sec, 8.8 fixed point pixels/frame
+Deterministic table hash: 4196b73a68bb8a0ce30e3c66bb4455e8cbb5352b18787296f400746d65c02202
+
+Speed fixed-point values:
+- 0% => 0x0000
+- 40% => 0x0081
+- 45% => 0x0091
+- 50% => 0x00A2
+- 55% => 0x00B2
+- 60% => 0x00C2
+- 75% => 0x00F2
+- 80% => 0x0103
+- 85% => 0x0113
+- 90% => 0x0123
+- 95% => 0x0133
+- 100% => 0x0143
+- 105% => 0x0153
+
+Boundary lookups:
+- level=1 table=1 schedule=LEVEL1 fruit=Cherries/100 pac=80% ghost=75% tunnel=40% elroy=20@80%,10@85% fright=6s/5 flashes
+- level=2 table=2 schedule=LEVEL2_4 fruit=Strawberry/300 pac=90% ghost=85% tunnel=45% elroy=30@90%,15@95% fright=5s/5 flashes
+- level=5 table=5 schedule=LEVEL5P fruit=Apple/700 pac=100% ghost=95% tunnel=50% elroy=40@100%,20@105% fright=2s/5 flashes
+- level=9 table=9 schedule=LEVEL5P fruit=Galaxian/2000 pac=100% ghost=95% tunnel=50% elroy=60@100%,30@105% fright=1s/3 flashes
+- level=21 table=21+ schedule=LEVEL5P fruit=Key/5000 pac=90% ghost=95% tunnel=50% elroy=120@100%,60@105% fright=0s/0 flashes
+- level=256 table=21+ schedule=LEVEL5P fruit=Key/5000 pac=90% ghost=95% tunnel=50% elroy=120@100%,60@105% fright=0s/0 flashes
+
+Progression boundary decisions:
+- complete 1: next=2 intermission=False kill_screen=False wrap=False
+- complete 2: next=3 intermission=True kill_screen=False wrap=False
+- complete 5: next=6 intermission=True kill_screen=False wrap=False
+- complete 9: next=10 intermission=True kill_screen=False wrap=False
+- complete 255: next=256 intermission=False kill_screen=True wrap=False
+- complete 256: next=1 intermission=False kill_screen=False wrap=True
+
+Scatter/chase schedules:
+- LEVEL1: SCATTER:420 -> CHASE:1200 -> SCATTER:420 -> CHASE:1200 -> SCATTER:300 -> CHASE:1200 -> SCATTER:300 -> CHASE:forever
+- LEVEL2_4: SCATTER:420 -> CHASE:1200 -> SCATTER:420 -> CHASE:1200 -> SCATTER:300 -> CHASE:61980 -> SCATTER:1 -> CHASE:forever
+- LEVEL5P: SCATTER:300 -> CHASE:1200 -> SCATTER:300 -> CHASE:1200 -> SCATTER:300 -> CHASE:62220 -> SCATTER:1 -> CHASE:forever
+
+File hashes:
+- src/main.asm sha256=bce0862022fc6fae05e1f6a8b374d059b63f0e8586ea3fc253fd161a3fbbda74
+- src/level_progression.asm sha256=2fa2c065a1a0900f991717f24f204576b1d5b12ba4847eb8059f1bd91bc53596
+- src/ghost_ai.asm sha256=8d3d478dac3dd6a32f6596982a4f869482e3093475c6666a95ba30ef6337d00c
+- src/game_flow.asm sha256=31345359b3c204ec026f1625f711f03b2fea35ded15fcbed35d3722df29c90df
+- tools/level_progression_tests.py sha256=ae2213013cd04dec76f6abca1fb92a60e16b57519b94431681e9f5d2547eb58f
+- build/pacman.rom sha256=3dcebfbcb8b55ea6f909b0d476ffb1206bf6d0033d06500b5723eb8d56d65973
+- build/pacman.sym sha256=e9bee73bfd3167b04ea7d421ce53d18a7c48f7c68cafc6cf677c18ec94b4acc1
+
+Case results:
+## table_lengths_and_values
+status: PASS
+expected: assembly table columns match Dossier-derived level rows 1-20 plus the 21+ family
+details:
+- level=1 table=1 schedule=LEVEL1 fruit=Cherries/100 pac=80% ghost=75% tunnel=40% elroy=20@80%,10@85% fright=6s/5 flashes
+- level=2 table=2 schedule=LEVEL2_4 fruit=Strawberry/300 pac=90% ghost=85% tunnel=45% elroy=30@90%,15@95% fright=5s/5 flashes
+- level=5 table=5 schedule=LEVEL5P fruit=Apple/700 pac=100% ghost=95% tunnel=50% elroy=40@100%,20@105% fright=2s/5 flashes
+- level=9 table=9 schedule=LEVEL5P fruit=Galaxian/2000 pac=100% ghost=95% tunnel=50% elroy=60@100%,30@105% fright=1s/3 flashes
+- level=21 table=21+ schedule=LEVEL5P fruit=Key/5000 pac=90% ghost=95% tunnel=50% elroy=120@100%,60@105% fright=0s/0 flashes
+- table_hash=4196b73a68bb8a0ce30e3c66bb4455e8cbb5352b18787296f400746d65c02202
+
+## boundary_level_lookups
+status: PASS
+expected: levels 1, 2, 5, 9, 21, and 256 resolve to documented table families
+details:
+- level=1 table=1 schedule=LEVEL1 fruit=Cherries/100 pac=80% ghost=75% tunnel=40% elroy=20@80%,10@85% fright=6s/5 flashes
+- level=2 table=2 schedule=LEVEL2_4 fruit=Strawberry/300 pac=90% ghost=85% tunnel=45% elroy=30@90%,15@95% fright=5s/5 flashes
+- level=5 table=5 schedule=LEVEL5P fruit=Apple/700 pac=100% ghost=95% tunnel=50% elroy=40@100%,20@105% fright=2s/5 flashes
+- level=9 table=9 schedule=LEVEL5P fruit=Galaxian/2000 pac=100% ghost=95% tunnel=50% elroy=60@100%,30@105% fright=1s/3 flashes
+- level=21 table=21+ schedule=LEVEL5P fruit=Key/5000 pac=90% ghost=95% tunnel=50% elroy=120@100%,60@105% fright=0s/0 flashes
+- level=256 table=21+ schedule=LEVEL5P fruit=Key/5000 pac=90% ghost=95% tunnel=50% elroy=120@100%,60@105% fright=0s/0 flashes
+
+## scatter_chase_schedules
+status: PASS
+expected: schedule family constants cover level 1, levels 2-4, and level 5+ without changing level-1 timings
+details:
+- LEVEL1: SCATTER:420 -> CHASE:1200 -> SCATTER:420 -> CHASE:1200 -> SCATTER:300 -> CHASE:1200 -> SCATTER:300 -> CHASE:forever
+- LEVEL2_4: SCATTER:420 -> CHASE:1200 -> SCATTER:420 -> CHASE:1200 -> SCATTER:300 -> CHASE:61980 -> SCATTER:1 -> CHASE:forever
+- LEVEL5P: SCATTER:300 -> CHASE:1200 -> SCATTER:300 -> CHASE:1200 -> SCATTER:300 -> CHASE:62220 -> SCATTER:1 -> CHASE:forever
+
+## frightened_tables_and_zero_duration
+status: PASS
+expected: frightened duration, flash count, and zero-duration families are exposed through the table owner
+details:
+- level 1: frightened=360 frames flashes=5 pac=90% ghost=50%
+- level 2: frightened=300 frames flashes=5 pac=95% ghost=55%
+- level 5: frightened=120 frames flashes=5 pac=100% ghost=60%
+- level 9: frightened=60 frames flashes=3 pac=100% ghost=60%
+- level 14: frightened=180 frames flashes=5 pac=100% ghost=60%
+- level 18: frightened=60 frames flashes=3 pac=100% ghost=60%
+- level 17: no blue time; energizer still reverses via ghost_enter_frightened_common
+- level 19: no blue time; energizer still reverses via ghost_enter_frightened_common
+- level 20: no blue time; energizer still reverses via ghost_enter_frightened_common
+- level 21: no blue time; energizer still reverses via ghost_enter_frightened_common
+- level 256: no blue time; energizer still reverses via ghost_enter_frightened_common
+
+## progression_decisions
+status: PASS
+expected: level completion increments deterministically and marks intermission, kill-screen, and wrap decisions
+details:
+- complete 1: next=2 intermission=False kill_screen=False wrap=False
+- complete 2: next=3 intermission=True kill_screen=False wrap=False
+- complete 5: next=6 intermission=True kill_screen=False wrap=False
+- complete 9: next=10 intermission=True kill_screen=False wrap=False
+- complete 20: next=21 intermission=False kill_screen=False wrap=False
+- complete 21: next=22 intermission=False kill_screen=False wrap=False
+- complete 255: next=256 intermission=False kill_screen=True wrap=False
+- complete 256: next=1 intermission=False kill_screen=False wrap=True
+
+## assembly_symbols_and_wiring
+status: PASS
+expected: level progression owner is assembled, exported, and queried by game-flow and ghost timing owners
+details:
+- main_include_order=movement -> level_progression -> ghost_ai
+- game_flow_init=level_progression_init
+- ghost_mode_init=level_progression_get_current_schedule_kind
+- symbols_present=level_progression_complete_current_level, level_progression_get_bonus_points, level_progression_get_current_frightened_frames, level_progression_get_current_schedule_kind, level_progression_get_elroy2_dots, level_progression_get_ghost_tunnel_fp, level_progression_get_pacman_normal_fp, level_progression_init

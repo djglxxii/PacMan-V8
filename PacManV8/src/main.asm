@@ -267,6 +267,7 @@ fill_vdp_a_zeroes:
         ret
 
         INCLUDE "movement.asm"
+        INCLUDE "level_progression.asm"
         INCLUDE "ghost_ai.asm"
         INCLUDE "collision.asm"
         INCLUDE "ghost_house.asm"

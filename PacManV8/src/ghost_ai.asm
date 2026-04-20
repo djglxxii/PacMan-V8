@@ -11,11 +11,13 @@ GHOST_MODE_CHASE        EQU 0
 GHOST_MODE_SCATTER      EQU 1
 GHOST_MODE_FRIGHTENED   EQU 2
 
-GHOST_FRAMES_PER_SECOND EQU 60
-GHOST_SCATTER_7_FRAMES  EQU 420
-GHOST_SCATTER_5_FRAMES  EQU 300
-GHOST_CHASE_20_FRAMES   EQU 1200
-GHOST_FRIGHT_L1_FRAMES  EQU 360
+GHOST_FRAMES_PER_SECOND EQU LEVEL_FRAMES_PER_SECOND
+GHOST_SCATTER_7_FRAMES  EQU LEVEL_SCATTER_7_FRAMES
+GHOST_SCATTER_5_FRAMES  EQU LEVEL_SCATTER_5_FRAMES
+GHOST_CHASE_20_FRAMES   EQU LEVEL_CHASE_20_FRAMES
+GHOST_CHASE_1033_FRAMES EQU LEVEL_CHASE_1033_FRAMES
+GHOST_CHASE_1037_FRAMES EQU LEVEL_CHASE_1037_FRAMES
+GHOST_SCATTER_1_FRAME   EQU LEVEL_SCATTER_1_FRAME
 
 GHOST_PHASE_S1          EQU 0
 GHOST_PHASE_C1          EQU 1
@@ -26,9 +28,9 @@ GHOST_PHASE_C3          EQU 5
 GHOST_PHASE_S4          EQU 6
 GHOST_PHASE_C_FOREVER   EQU 7
 
-GHOST_SCHEDULE_LEVEL1   EQU 0
-GHOST_SCHEDULE_LEVEL2_4 EQU 1
-GHOST_SCHEDULE_LEVEL5P  EQU 2
+GHOST_SCHEDULE_LEVEL1   EQU LEVEL_SCHEDULE_LEVEL1
+GHOST_SCHEDULE_LEVEL2_4 EQU LEVEL_SCHEDULE_LEVEL2_4
+GHOST_SCHEDULE_LEVEL5P  EQU LEVEL_SCHEDULE_LEVEL5P
 
 GHOST_REVERSAL_BLINKY   EQU 0x01
 GHOST_REVERSAL_PINKY    EQU 0x02
@@ -173,7 +175,7 @@ ghost_init_state:
         ret
 
 ghost_mode_init:
-        ld a, GHOST_SCHEDULE_LEVEL1
+        call level_progression_get_current_schedule_kind
         ld (GHOST_SCHEDULE_KIND), a
         ld a, GHOST_PHASE_S1
         ld (GHOST_MODE_PHASE), a
@@ -181,8 +183,8 @@ ghost_mode_init:
         ld (GHOST_GLOBAL_MODE), a
         ld (GHOST_PRIOR_MODE), a
         call ghost_mode_apply_to_records
-        ld hl, GHOST_SCATTER_7_FRAMES
-        ld (GHOST_PHASE_REMAIN), hl
+        ld a, GHOST_PHASE_S1
+        call ghost_mode_load_phase_duration
         ld hl, 0
         ld (GHOST_FRIGHT_REMAIN), hl
         xor a
@@ -233,7 +235,7 @@ ghost_mode_tick_frightened:
         call ghost_mode_apply_to_records
         ret
 
-; Enters level-1 frightened mode with the current deterministic PRNG state.
+; Enters frightened mode using the current level table.
 ghost_enter_frightened:
         ld a, (GHOST_MODE_PHASE)
         ld b, a
@@ -252,11 +254,20 @@ ghost_enter_frightened_common:
         jr z, .already_frightened
         ld (GHOST_PRIOR_MODE), a
 .already_frightened:
+        call level_progression_get_current_frightened_frames
+        ld (GHOST_FRIGHT_REMAIN), hl
+        ld a, h
+        or l
+        jr z, .no_blue_time
         ld a, GHOST_MODE_FRIGHTENED
         ld (GHOST_GLOBAL_MODE), a
         call ghost_mode_apply_to_records
-        ld hl, GHOST_FRIGHT_L1_FRAMES
-        ld (GHOST_FRIGHT_REMAIN), hl
+        jr .request_reversal
+.no_blue_time:
+        ld a, (GHOST_PRIOR_MODE)
+        ld (GHOST_GLOBAL_MODE), a
+        call ghost_mode_apply_to_records
+.request_reversal:
         call ghost_request_all_reversals
         ret
 
@@ -284,26 +295,29 @@ ghost_mode_phase_to_global:
         ld a, GHOST_MODE_SCATTER
         ret
 
-; Input: A = schedule phase. The schedule-kind byte is a boundary for later
-; level 2-4 and level 5+ tables; T010 fully tunes only the level-1 table.
+; Input: A = schedule phase. Duration comes from the current level schedule
+; family: level 1, levels 2-4, or level 5+.
 ghost_mode_load_phase_duration:
         cp GHOST_PHASE_S1
-        jr z, .scatter7
+        jr z, .scatter_first_pair
         cp GHOST_PHASE_C1
         jr z, .chase20
         cp GHOST_PHASE_S2
-        jr z, .scatter7
+        jr z, .scatter_first_pair
         cp GHOST_PHASE_C2
         jr z, .chase20
         cp GHOST_PHASE_S3
         jr z, .scatter5
         cp GHOST_PHASE_C3
-        jr z, .chase20
+        jr z, .chase_third
         cp GHOST_PHASE_S4
-        jr z, .scatter5
+        jr z, .scatter_fourth
         ld hl, 0
         jr .store
-.scatter7:
+.scatter_first_pair:
+        ld a, (GHOST_SCHEDULE_KIND)
+        cp GHOST_SCHEDULE_LEVEL5P
+        jr z, .scatter5
         ld hl, GHOST_SCATTER_7_FRAMES
         jr .store
 .scatter5:
@@ -311,6 +325,23 @@ ghost_mode_load_phase_duration:
         jr .store
 .chase20:
         ld hl, GHOST_CHASE_20_FRAMES
+        jr .store
+.chase_third:
+        ld a, (GHOST_SCHEDULE_KIND)
+        cp GHOST_SCHEDULE_LEVEL1
+        jr z, .chase20
+        cp GHOST_SCHEDULE_LEVEL2_4
+        jr z, .chase1033
+        ld hl, GHOST_CHASE_1037_FRAMES
+        jr .store
+.chase1033:
+        ld hl, GHOST_CHASE_1033_FRAMES
+        jr .store
+.scatter_fourth:
+        ld a, (GHOST_SCHEDULE_KIND)
+        cp GHOST_SCHEDULE_LEVEL1
+        jr z, .scatter5
+        ld hl, GHOST_SCATTER_1_FRAME
 .store:
         ld (GHOST_PHASE_REMAIN), hl
         ret
