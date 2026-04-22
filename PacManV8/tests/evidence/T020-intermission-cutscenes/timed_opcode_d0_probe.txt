@@ -1,0 +1,5 @@
+[2026-04-21 19:13:36.816] [info] Loaded config scaffold from /home/djglxxii/.config/vanguard8/config.toml
+[2026-04-21 19:13:36.821] [info] Launching deterministic headless runtime.
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  Unsupported timed Z180 opcode 0xD0 at PC 0x2F75
+exit_code=134

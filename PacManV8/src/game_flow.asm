@@ -71,7 +71,7 @@ game_flow_update_frame:
 
         ld a, (GAME_FLOW_CURRENT_STATE)
         cp GAME_FLOW_STATE_INTERMISSION
-        ret z
+        jp z, intermission_update_frame
 
         ld hl, (GAME_FLOW_STATE_TIMER)
         ld a, h
@@ -144,7 +144,7 @@ game_flow_elapsed_transition:
         ld a, GAME_FLOW_STATE_DYING
         jp game_flow_transition_to
 .playing_to_level_complete:
-        call level_progression_set_current_level_2_for_review
+        call intermission_select_review_level_for_game_flow
         ld a, GAME_FLOW_SCRIPT_HANDOFF
         ld (GAME_FLOW_SCRIPT_STEP), a
         ld a, GAME_FLOW_STATE_LEVEL_COMPLETE
@@ -164,9 +164,14 @@ game_flow_transition_to:
         inc a
         ld (GAME_FLOW_TRANSITION_COUNT), a
         ld a, b
+        push af
         call game_flow_mark_state_seen
-        ld a, b
+        pop af
+        cp GAME_FLOW_STATE_INTERMISSION
+        jr z, .start_intermission
         jp game_flow_load_state_timer
+.start_intermission:
+        jp intermission_start
 
 ; Input: A = current state.
 game_flow_load_state_timer:

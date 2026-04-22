@@ -1,0 +1,16 @@
+T020 intermission cutscene tests
+================================
+scenes: 1=tables_turn 2=nail_tear 3=patch_drag
+triggers: completed levels 2,5,9
+scene_duration: 180 frames
+representative_frames: 1020,1770,2520
+completion_frame: 2640
+
+PASS scene_ids_and_triggers: completed levels 2, 5, and 9 map to distinct explicit scene IDs
+PASS frame_schedule_and_completion: each scene has three 60-frame visual groups and completes after 180 frames
+PASS game_flow_and_audio_wiring: game flow delegates INTERMISSION to the T020 owner, which consumes T019 data and requests the T017 FM cue
+PASS visual_script_labels: three distinct scenes expose chase, gag, and exit visual groups plus authored prop draws
+PASS hashes_and_symbols: source, ROM, schedule, and exported intermission symbols are deterministic
+
+result: 5/5 passed
+wrote vectors: tests/evidence/T020-intermission-cutscenes/intermission_vectors.txt

@@ -1,0 +1,42 @@
+T020 Intermission Cutscene Review Checklist
+===========================================
+
+ROM:
+- build/pacman.rom sha256: ac70f956456e2ac188f66d9f26eb96375b119207893973bc176aea36ff1ebb60
+- build/pacman.sym sha256: 0b34367455b37e469fe10998d460627e677bafc5c0515a1a61289a228ee9124c
+
+Deterministic harness:
+- intermission_tests.txt sha256: d486103bcf5e69753cf11a911e51714b0fd97f5111838547aa0d3b59ad272fcb
+- intermission_vectors.txt sha256: 726498bbf238e00a3f75be4e6e02fd4ab2850715bf54d2a2c3bdcb189799ea14
+- schedule hash: 9439cc6fdcf0ab6dc9eb7184731d937d02302bdb9c1df28103e60479d21c0833
+- result: 5/5 passed
+
+Frame captures:
+- scene 1: frame 1020
+  - headless frame hash: a79b667aef218838fbe9ef205a615f11606a08a6f73a730d40fe60127cc60a28
+  - ppm sha256: 0dc7626d705d6af7f9f511683981af46b9a9295dab3d25812163bc253d683efa
+- scene 2: frame 1770
+  - headless frame hash: 082dd26d090aa2632128d266bddd6faa0c50b5b96819dfc7e6f02f3276d93066
+  - ppm sha256: 5b916d0a62acfa691f7c9be85642daa5f1eb9620f15e1f48885a1ce23f93993a
+- scene 3: frame 2520
+  - headless frame hash: c80b7468c3a56d2383582b717f17bc36fde775f5821ab4311081d796e4f0a2ff
+  - ppm sha256: 397f473d3e81e2f25b8db7926073d8a274153ce183186470621248af813be3d1
+- completion: frame 2640
+  - headless frame hash: 31f8226ca0fe920a1b85e33ecd0625ba0846439a3a15d146e1497c817285d34c
+  - ppm sha256: 7dc5ba37bf9dd9d98aa6df51be29d7d11c5947c680dd398633e199b13a0479bd
+
+Human review:
+- [ ] Scene 1 is visibly the level-2 intermission beat and is distinct from scenes 2 and 3.
+- [ ] Scene 2 is visibly the level-5 intermission beat, including the nail/tear prop treatment.
+- [ ] Scene 3 is visibly the level-9 intermission beat, including the patch/cloth prop treatment.
+- [ ] The completion capture shows game flow has left INTERMISSION and returned to the ready path.
+- [ ] The four PPM captures are all distinct and readable at 256x212.
+- [ ] The deterministic harness still reports 5/5 passed after any local rerun.
+
+Rerun:
+1. python3 tools/build.py
+2. python3 tools/intermission_tests.py --vectors-output tests/evidence/T020-intermission-cutscenes/intermission_vectors.txt > tests/evidence/T020-intermission-cutscenes/intermission_tests.txt
+3. /home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 1020 --dump-frame tests/evidence/T020-intermission-cutscenes/intermission_scene_1.ppm --hash-frame 1020 > tests/evidence/T020-intermission-cutscenes/intermission_scene_1_headless.txt
+4. /home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 1770 --dump-frame tests/evidence/T020-intermission-cutscenes/intermission_scene_2.ppm --hash-frame 1770 > tests/evidence/T020-intermission-cutscenes/intermission_scene_2_headless.txt
+5. /home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 2520 --dump-frame tests/evidence/T020-intermission-cutscenes/intermission_scene_3.ppm --hash-frame 2520 > tests/evidence/T020-intermission-cutscenes/intermission_scene_3_headless.txt
+6. /home/djglxxii/src/Vanguard8/cmake-build-debug/src/vanguard8_headless --rom build/pacman.rom --frames 2640 --dump-frame tests/evidence/T020-intermission-cutscenes/intermission_completion.ppm --hash-frame 2640 > tests/evidence/T020-intermission-cutscenes/intermission_completion_headless.txt

@@ -274,6 +274,7 @@ fill_vdp_a_zeroes:
         INCLUDE "sprites.asm"
         INCLUDE "hud.asm"
         INCLUDE "game_flow.asm"
+        INCLUDE "intermission.asm"
         INCLUDE "audio.asm"
 
 vdp_a_palette_data:

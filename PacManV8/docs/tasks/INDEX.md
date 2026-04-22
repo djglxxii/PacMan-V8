@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T020 — Intermission cutscenes
+- Next proposed: T021 — Pattern replay and fidelity testing
 
 ## Phase 0 — Project Setup
 
@@ -70,7 +70,7 @@ human-approved before advancing.
 |------|------------------------------------|---------|------------------|-----------------|
 | T018 | Game state machine and attract mode| completed | T014, T015, T016 | checklist       |
 | T019 | Level progression and speed tables | completed | T018             | test output     |
-| T020 | Intermission cutscenes             | planned | T019             | frame capture   |
+| T020 | Intermission cutscenes             | completed | T019             | frame capture   |
 
 ## Phase 7 — Validation
 

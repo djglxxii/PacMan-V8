@@ -1,0 +1,64 @@
+[2026-04-21 17:30:40.658] [info] Loaded config scaffold from /home/djglxxii/.config/vanguard8/config.toml
+[2026-04-21 17:30:40.663] [info] Launching deterministic headless runtime.
+Vanguard 8 Emulator 0.1.0
+Build: milestone 7
+Core status: deterministic video scheduler with integrated YM2151, AY-3-8910, and MSM5205 audio
+Headless status: deterministic runtime
+ROM size: 49152
+Controller 1 port: 0xFF
+Controller 2 port: 0xFF
+VCLK: off
+Frames completed: 1100
+Master cycles: 262262000
+CPU T-states: 131131000
+Event log size: 235400
+Event log digest: 16641670262548677807
+vanguard8 headless inspection v1
+frame: 1100
+completed_frames: 1100
+master_cycle: 262262000
+cpu_tstates: 131131000
+event_log_digest: 16641670262548677807
+
+[run-until-pc]
+requested: false
+
+[cpu]
+pc: 0x0067
+a: 0x81
+af: 0x8144
+bc: 0x2600
+de: 0x0000
+hl: 0x2d40
+af_alt: 0x0000
+bc_alt: 0x0000
+de_alt: 0x0000
+hl_alt: 0x0000
+ix: 0xffff
+iy: 0xffff
+sp: 0xff00
+i: 0x00
+r: 0x5f
+iff1: true
+iff2: true
+halted: true
+flags: s=0 z=1 h=0 pv=1 n=0 c=0
+cbar: 0x48
+cbr: 0xf0
+bbr: 0x04
+active_bank: 0
+mmu.ca0: 0x0000-0x3fff -> 0x00000
+mmu.bank: 0x4000-0x7fff -> 0x04000
+mmu.ca1: 0x8000-0xffff -> 0xf0000
+
+[peek-logical]
+logical 0x8230 physical 0xf0230 region ca1 length 32
+  0x08230: 37 04 00 00 11 37 00 00 26 37 00 00 2c 39 03 ff
+  0x08240: 7f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+logical 0x8250 physical 0xf0250 region ca1 length 48
+  0x08250: 00 00 00 00 78 00 00 00 ff ff 00 01 00 00 00 00
+  0x08260: 01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+  0x08270: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+logical 0x8270 physical 0xf0270 region ca1 length 16
+  0x08270: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+

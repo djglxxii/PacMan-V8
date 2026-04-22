@@ -1,0 +1,91 @@
+# T020 Intermission Cutscene Vectors
+
+Public behavior source: https://strategywiki.org/wiki/Pac-Man/Gameplay#Intermissions
+Source note: Public intermission descriptions: Intermission I after round 2, Intermission II after round 5, Intermission III after rounds 9/13/17.
+
+Scene IDs:
+- NONE=0
+- TABLES_TURN=1
+- NAIL_TEAR=2
+- PATCH_DRAG=3
+
+Runtime scene schedule:
+- scene 1 tables_turn: trigger_level=2 start_frame=960 representative_frame=1020 completion_frame=1140 next=READY fm_cue_requested=True
+  - CHASE: frames 960-1019
+  - GAG: frames 1020-1079
+  - EXIT: frames 1080-1139
+- scene 2 nail_tear: trigger_level=5 start_frame=1710 representative_frame=1770 completion_frame=1890 next=READY fm_cue_requested=True
+  - CHASE: frames 1710-1769
+  - GAG: frames 1770-1829
+  - EXIT: frames 1830-1889
+- scene 3 patch_drag: trigger_level=9 start_frame=2460 representative_frame=2520 completion_frame=2640 next=READY fm_cue_requested=True
+  - CHASE: frames 2460-2519
+  - GAG: frames 2520-2579
+  - EXIT: frames 2580-2639
+
+Schedule hash: 9439cc6fdcf0ab6dc9eb7184731d937d02302bdb9c1df28103e60479d21c0833
+
+Case results:
+## scene_ids_and_triggers
+status: PASS
+expected: completed levels 2, 5, and 9 map to distinct explicit scene IDs
+details:
+- completed_level=2 -> scene=1 tables_turn
+- completed_level=5 -> scene=2 nail_tear
+- completed_level=9 -> scene=3 patch_drag
+
+## frame_schedule_and_completion
+status: PASS
+expected: each scene has three 60-frame visual groups and completes after 180 frames
+details:
+- scene=tables_turn trigger=2 start=960 representative=1020 complete=1140 next=READY
+-   group=CHASE frames=960-1019
+-   group=GAG frames=1020-1079
+-   group=EXIT frames=1080-1139
+- scene=nail_tear trigger=5 start=1710 representative=1770 complete=1890 next=READY
+-   group=CHASE frames=1710-1769
+-   group=GAG frames=1770-1829
+-   group=EXIT frames=1830-1889
+- scene=patch_drag trigger=9 start=2460 representative=2520 complete=2640 next=READY
+-   group=CHASE frames=2460-2519
+-   group=GAG frames=2520-2579
+-   group=EXIT frames=2580-2639
+
+## game_flow_and_audio_wiring
+status: PASS
+expected: game flow delegates INTERMISSION to the T020 owner, which consumes T019 data and requests the T017 FM cue
+details:
+- main_include=src/intermission.asm
+- game_flow_intermission_update=intermission_update_frame
+- game_flow_intermission_start=intermission_start
+- audio_cue=audio_trigger_intermission_music
+- return_state=GAME_FLOW_STATE_READY via game_flow_transition_to
+
+## visual_script_labels
+status: PASS
+expected: three distinct scenes expose chase, gag, and exit visual groups plus authored prop draws
+details:
+- label=intermission_draw_scene_1_chase
+- label=intermission_draw_scene_1_gag
+- label=intermission_draw_scene_1_exit
+- label=intermission_draw_scene_2_chase
+- label=intermission_draw_scene_2_gag
+- label=intermission_draw_scene_2_exit
+- label=intermission_draw_scene_3_chase
+- label=intermission_draw_scene_3_gag
+- label=intermission_draw_scene_3_exit
+- label=intermission_draw_nail
+- label=intermission_draw_tear
+- label=intermission_draw_patch
+- label=intermission_draw_cloth_trail
+
+## hashes_and_symbols
+status: PASS
+expected: source, ROM, schedule, and exported intermission symbols are deterministic
+details:
+- schedule_hash=9439cc6fdcf0ab6dc9eb7184731d937d02302bdb9c1df28103e60479d21c0833
+- src/intermission.asm sha256=0e3bcfdd77a2f635e3067d741718ff6dc06b260f7f8240b7372ee4e36b9adbcf
+- src/game_flow.asm sha256=e654d1c4d12b5d5b34f0f2d0ea2e49316b264423fe2a239a89b7e14f3ea9f4c2
+- tools/intermission_tests.py sha256=6e8f92af44c32b24c91d1852c45ad1582e654d411212c528f8afb2cf60fc9606
+- build/pacman.rom sha256=ac70f956456e2ac188f66d9f26eb96375b119207893973bc176aea36ff1ebb60
+- build/pacman.sym sha256=0b34367455b37e469fe10998d460627e677bafc5c0515a1a61289a228ee9124c
