@@ -1,0 +1,25 @@
+{
+  "id": "short-corner-route",
+  "title": "Short cornering and pellet route",
+  "public_sources": [
+    {
+      "name": "Pac-Man Dossier",
+      "url": "https://pacman.holenet.info/",
+      "notes": "Documents one-frame dot stalls, cornering importance, tile-based collision, ghost targeting, and level timing tables."
+    }
+  ],
+  "intent": "Validate replay activation, pre-turn buffering, pellet scoring, dot-stall frame accounting, and deterministic checkpoint reads.",
+  "segments": [
+    {"frames": 90, "buttons": ["start"]},
+    {"frames": 44, "buttons": ["left"]},
+    {"frames": 48, "buttons": ["up"]},
+    {"frames": 36, "buttons": ["right"]},
+    {"frames": 24, "buttons": []}
+  ],
+  "checkpoints": [
+    {"name": "activated", "frame": 90},
+    {"name": "left_run", "frame": 137},
+    {"name": "after_corner", "frame": 185},
+    {"name": "settled", "frame": 242}
+  ]
+}

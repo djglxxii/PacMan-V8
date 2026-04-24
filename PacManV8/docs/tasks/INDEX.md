@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T021 — Pattern replay and fidelity testing
+- Next proposed: T022 — Visual polish and palette refinement
 
 ## Phase 0 — Project Setup
 
@@ -76,7 +76,7 @@ human-approved before advancing.
 
 | ID   | Title                              | State   | Depends on | Evidence type   |
 |------|------------------------------------|---------|------------|-----------------|
-| T021 | Pattern replay and fidelity testing| planned | T019       | test output     |
+| T021 | Pattern replay and fidelity testing| completed | T019       | test output     |
 
 ## Phase 8 — Polish
 

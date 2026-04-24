@@ -119,6 +119,7 @@ idle_loop:
         ei
         halt
         call game_flow_update_frame
+        call pattern_replay_update_frame
         jp idle_loop
 
 init_video:
@@ -275,6 +276,7 @@ fill_vdp_a_zeroes:
         INCLUDE "hud.asm"
         INCLUDE "game_flow.asm"
         INCLUDE "intermission.asm"
+        INCLUDE "pattern_replay.asm"
         INCLUDE "audio.asm"
 
 vdp_a_palette_data:

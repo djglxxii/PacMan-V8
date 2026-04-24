@@ -1,0 +1,35 @@
+{
+  "id": "early-level-pattern",
+  "title": "Early-level authored route",
+  "public_sources": [
+    {
+      "name": "Pac-Man Dossier",
+      "url": "https://pacman.holenet.info/",
+      "notes": "Used for public ghost AI, scatter/chase, dot-stall, frightened, and speed-table behavior references; this route is an authored deterministic validation vector, not extracted from restricted program ROMs."
+    },
+    {
+      "name": "StrategyWiki Pac-Man walkthrough",
+      "url": "https://strategywiki.org/wiki/Pac-Man/Walkthrough",
+      "notes": "Public strategy reference for the existence of named early-board routes and the first-board southwest energizer approach."
+    }
+  ],
+  "intent": "Exercise a longer level-1 route with repeated turns, pellet scoring, mode timing, and ghost checkpoint state while recording measured timing drift against the Dossier-derived speed-table contract.",
+  "segments": [
+    {"frames": 90, "buttons": ["start"]},
+    {"frames": 36, "buttons": ["left"]},
+    {"frames": 64, "buttons": ["up"]},
+    {"frames": 72, "buttons": ["right"]},
+    {"frames": 64, "buttons": ["up"]},
+    {"frames": 96, "buttons": ["left"]},
+    {"frames": 56, "buttons": ["down"]},
+    {"frames": 72, "buttons": ["right"]},
+    {"frames": 48, "buttons": []}
+  ],
+  "checkpoints": [
+    {"name": "activated", "frame": 90},
+    {"name": "first_turn", "frame": 169},
+    {"name": "mid_route", "frame": 265},
+    {"name": "late_route", "frame": 449},
+    {"name": "final", "frame": 598}
+  ]
+}

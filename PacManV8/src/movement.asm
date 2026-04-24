@@ -122,7 +122,9 @@ movement_try_turn_at_center:
         ret z
         ld a, (PACMAN_REQUESTED_DIR)
         ld b, a
+        push bc
         call movement_direction_passable_from_current_tile
+        pop bc
         or a
         ret z
         ld a, b
