@@ -15,7 +15,14 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T022 — Visual polish and palette refinement
+- Next proposed: T023 — Boot-time game state initialization (start of Phase 9)
+
+T022 was activated and then aborted on 2026-04-25 once an audit
+(`../AUDIT-2026-04-25-runtime-integration-gaps.md`) revealed the live
+runtime is missing the integration that connects the Phase 1–7 modules
+into a playable loop. Phases 9 (Live Gameplay Integration) and 10 (Final
+Presentation) were added to address those gaps. T022 will resume after
+Phase 10 closes.
 
 ## Phase 0 — Project Setup
 
@@ -82,7 +89,33 @@ human-approved before advancing.
 
 | ID   | Title                              | State   | Depends on | Evidence type   |
 |------|------------------------------------|---------|------------|-----------------|
-| T022 | Visual polish and palette refinement| planned | T021      | frame capture   |
+| T022 | Visual polish and palette refinement| planned | T038       | frame capture   |
+
+## Phase 9 — Live Gameplay Integration
+
+| ID   | Title                              | State   | Depends on        | Evidence type   |
+|------|------------------------------------|---------|-------------------|-----------------|
+| T023 | Boot-time game state initialization| planned | none              | frame capture + test output |
+| T024 | Controller input → movement request| planned | T023              | test output     |
+| T025 | Per-frame PLAYING tick             | planned | T023, T024        | test output     |
+| T026 | Z80 arcade→V8 coordinate transform | planned | T023              | test output     |
+| T027 | Sprite SAT commit from game state  | planned | T026              | frame capture   |
+| T028 | Sprite frame animation             | planned | T027              | frame capture   |
+| T029 | Pellet erase to VDP-B framebuffer  | planned | T025              | frame capture   |
+| T030 | Frightened visuals + final-2s flash| planned | T027              | frame capture   |
+| T031 | Live HUD update                    | planned | T025              | frame capture   |
+| T032 | Audio cue bindings                 | planned | T025              | test output     |
+| T033 | Game-flow predicate wiring         | planned | T025, T031        | test output     |
+| T034 | Integration replay test            | planned | T023–T033         | test output     |
+
+## Phase 10 — Final Presentation
+
+| ID   | Title                              | State   | Depends on        | Evidence type   |
+|------|------------------------------------|---------|-------------------|-----------------|
+| T035 | Bonus fruit                        | planned | T025, T027, T031  | frame capture   |
+| T036 | Score popups                       | planned | T031              | frame capture   |
+| T037 | Attract mode demo content          | planned | T027              | frame capture   |
+| T038 | READY! / GAME OVER overlays        | planned | T031, T033        | frame capture   |
 
 ## Legend
 

@@ -583,6 +583,152 @@ Record input sequences for known Pac-Man patterns and verify:
 
 ---
 
+## Phase 9 — Live Gameplay Integration
+
+**Objective:** Wire the Phase 3 / Phase 4 / Phase 5 / Phase 6 modules into a
+single live PLAYING tick driven by the controller and reactive to gameplay
+events. Each module is already correct in isolation but is not exercised by
+the live runtime; this phase makes the ROM playable.
+
+This phase exists because no prior task owned the integration step that
+connects movement, ghost AI, collision, ghost house, and rendering into a
+per-frame loop. The audit that surfaced the gap is at
+`docs/AUDIT-2026-04-25-runtime-integration-gaps.md`.
+
+### 9.1 Boot-Time Game State Initialization
+
+Replace `sprite_init_debug_state`'s screenshot-time mix of ghost modes with a
+proper game-state init that runs at boot and on game-over → new-game
+transitions. Initializes `ghost_init_state`, `ghost_house_init`,
+`collision_init`, `level_progression_init`, score = 0, lives = 3, level = 1.
+Removes the LOW-3 debug ghost mix.
+
+### 9.2 Controller Input
+
+Add a per-frame input read inside the live PLAYING tick. Maps controller
+port `0x00` D-pad bits to `MOVEMENT_DIR_*` and feeds
+`movement_request_direction`. Refactor the existing
+`pattern_replay_input_to_dir` into a shared input module so the test
+harness and the live game read input the same way.
+
+### 9.3 Per-Frame PLAYING Tick
+
+Replace `game_flow_update_frame`'s timer-only PLAYING state with calls (in
+arcade order) to: input read → `movement_try_turn_at_center` →
+`movement_update_pacman` → `movement_apply_tunnel_wrap` →
+`collision_update_pellet_at_pacman` → `ghost_mode_tick` →
+`ghost_update_all_targets` → `ghost_house_tick` →
+`collision_check_all_ghosts` → dot-stall tick. The PLAYING state's exit
+predicate becomes data-driven (collision or pellet count) instead of a
+fixed frame timer.
+
+### 9.4 Z80 Coordinate Transform
+
+Port `tools/coordinate_transform.py` to a Z80 routine (or a precomputed
+lookup table consulted per sprite per frame). T015 delivered the transform
+in Python and baked static results into `sprite_review_shadow.inc` — the
+live loop needs the same transform at runtime, called per frame.
+
+### 9.5 Sprite SAT Commit From Game State
+
+New per-frame `sprite_commit_from_game_state` that walks Pac-Man's 8.8
+position and the four ghost records, applies §9.4's transform, writes the
+SAT shadow, and DMAs it to VRAM in the V-blank window. Replaces the
+boot-time static SAT upload as the source of on-screen sprite positions.
+
+### 9.6 Sprite Frame Animation
+
+Pac-Man mouth open/close cycle (alternate two patterns every N frames) and
+ghost wobble (alternate body patterns every M frames). Patterns already
+exist in `sprites.bin`; only the SAT pattern field needs cycling.
+
+### 9.7 Pellet Erase to VDP-B Framebuffer
+
+Consume `COLLISION_ERASE_PENDING` and write 8×8 zero-bits at the maze
+framebuffer pixel coordinates corresponding to the eaten tile, via VDP-B
+HMMV. Without this, eaten dots stay visible forever despite being gone
+from the bitset.
+
+### 9.8 Frightened Visuals
+
+On `ghost_enter_frightened`, swap each ghost's slot palette to
+`SPRITE_PALETTE_FRIGHTENED` and pattern to `SPRITE_PINKY_FRIGHT_ID`. In
+the final 2 seconds of frightened, alternate blue/white palette at the
+arcade cadence. Restore prior palette/pattern on frightened exit and on
+ghost-eaten (eyes pattern).
+
+### 9.9 Live HUD Update
+
+Maintain SCORE / LIVES / LEVEL state. On each event update the HUD VRAM
+rows: digits redraw on score change, life icons on death/extra-life, fruit
+icons strip on level transition. Removes LOW-2 (`hud_draw_review_rows`
+dead label).
+
+### 9.10 Audio Cue Bindings
+
+Wire gameplay events to existing `audio_trigger_*`:
+
+- Pellet eaten → waka cycle (alternate two waka variants per dot)
+- Energizer eaten → frightened cue / siren pitch shift
+- Ghost eaten → `audio_trigger_ghost_eaten`
+- Pac-Man dies → `audio_trigger_death_music`
+- Extra-life threshold crossed → `audio_trigger_extra_life`
+- Level start → `audio_trigger_intro_music`
+
+Remove or gate `audio_review_script` behind a debug build flag so resets
+no longer auto-fire the boot-time audio sampler.
+
+### 9.11 Game-Flow Predicate Wiring
+
+Make `GAME_FLOW_STATE_DYING` enter on real collision (Pac-Man tile ==
+non-frightened ghost tile), `GAME_FLOW_STATE_LEVEL_COMPLETE` enter on
+pellet count == 0 + energizer count == 0, `GAME_FLOW_STATE_CONTINUE` check
+lives > 0 (else transition to ATTRACT for game over). Removes the LOW-6 /
+LOW-7 review-mode level/intermission scaffolding from the live path.
+
+### 9.12 Integration Replay Test
+
+Recorded controller-input file plus checkpoint vectors (frame hash, score,
+pellet count, Pac-Man tile, ghost tiles) runnable via the headless
+emulator. Becomes the ongoing regression check for the integrated loop.
+Resolves the MEDIUM-4 RAM-base overlap between `pattern_replay` and
+`intermission` (both currently `0x8270`) since both must coexist after
+integration.
+
+---
+
+## Phase 10 — Final Presentation
+
+**Objective:** Add the visible features that make the game feel complete.
+Each is small in scope and cosmetic in nature, but each requires the live
+PLAYING loop from Phase 9 to be in place first.
+
+### 10.1 Bonus Fruit
+
+Spawn the level-appropriate fruit (`level_progression_get_fruit`) at the
+arcade fruit tile after 70 and 170 dots eaten, despawn after ~10 seconds,
+award the level-appropriate bonus score on Pac-Man collision.
+
+### 10.2 Score Popups
+
+Display "200" / "400" / "800" / "1600" sprites at the ghost-eaten location
+for ~1 second; display the fruit-bonus value at the fruit-eaten location.
+Pauses ghost movement during display per arcade behavior for ghost popups.
+
+### 10.3 Attract-Mode Demo Content
+
+ATTRACT state draws the "CHARACTER / NICKNAME" table with the four ghost
+names and a blinking "PUSH START" prompt. Optionally a brief
+ghost-eats-Pac-Man demo loop (re-authored, not extracted from program ROM).
+
+### 10.4 READY! / GAME OVER Overlays
+
+`GAME_FLOW_STATE_READY` draws "READY!" centered on the maze; the
+post-game-over path through the state machine draws "GAME OVER" before
+transitioning back to ATTRACT. Intro flash on level start.
+
+---
+
 ## Build and Run
 
 ### Build
