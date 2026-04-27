@@ -1,6 +1,6 @@
 T021 pattern replay vectors
 ROM: build/pacman.rom
-ROM SHA-256: a423b8a9e15749cc867c660df81cd73a6b7d5144589436e18cb2286fdd52934a
+ROM SHA-256: 43db4cb980834ce24da50ba6cead78a39720914880a5d81f21efdd97a98215d6
 Replay format: V8RR version 1, power-on anchor, active-low controller bytes
 Pattern replay SRAM base: 0x8270
 
@@ -12,7 +12,7 @@ Public behavior sources:
 - Pac-Man Dossier: https://pacman.holenet.info/ (Used for public ghost AI, scatter/chase, dot-stall, frightened, and speed-table behavior references; this route is an authored deterministic validation vector, not extracted from restricted program ROMs.)
 - StrategyWiki Pac-Man walkthrough: https://strategywiki.org/wiki/Pac-Man/Walkthrough (Public strategy reference for the existence of named early-board routes and the first-board southwest energizer approach.)
 Replay: tests/evidence/T021-pattern-replay-and-fidelity-testing/replays/early-level-pattern.v8r
-Replay SHA-256: 95c7bea84eacfab7cb8658a05ae57963519557dc0b31ae32bbe14961b5b0423d
+Replay SHA-256: 774ead0e5d073507210bba2f25f7836b257830546d4ae1ca4947bd904e428ce6
 Segments:
 - 90 frames: start
 - 36 frames: left
@@ -25,13 +25,13 @@ Segments:
 - 48 frames: neutral
 Frame hashes:
 Checkpoints:
-- early-level-pattern/activated@90: activation_frame=24 expected active=1 replay_frame=66 pac_tile=(7, 26) pac_px=(56, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=354 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=66 pac_tile=(7, 26) pac_px=(56, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=354 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=0.773px
-- early-level-pattern/first_turn@169: activation_frame=24 expected active=1 replay_frame=145 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=275 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=145 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=275 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=1.699px
-- early-level-pattern/first_turn@169: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/early-level-pattern_frame_0169.ppm sha256=c0a29b0596a4b01ab1fb061291d74664bb3eed6b3e27342f156450eca5989281
-- early-level-pattern/mid_route@265: activation_frame=24 expected active=1 replay_frame=241 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=179 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=241 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=179 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=2.824px
-- early-level-pattern/late_route@449: activation_frame=24 expected active=1 replay_frame=425 pac_tile=(6, 26) pac_px=(55, 212) dir=DOWN score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1195 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=425 pac_tile=(6, 26) pac_px=(55, 212) dir=DOWN score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1195 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=4.980px
-- early-level-pattern/final@598: activation_frame=24 expected active=1 replay_frame=574 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1046 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=574 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1046 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=6.727px
-- early-level-pattern/final@598: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/early-level-pattern_frame_0598.ppm sha256=c0a29b0596a4b01ab1fb061291d74664bb3eed6b3e27342f156450eca5989281
+- early-level-pattern/activated@90: activation_frame=25 expected active=1 replay_frame=65 pac_tile=(7, 26) pac_px=(57, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=355 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=65 pac_tile=(7, 26) pac_px=(57, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=355 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=0.762px
+- early-level-pattern/first_turn@169: activation_frame=25 expected active=1 replay_frame=144 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=276 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=144 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=276 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=1.688px
+- early-level-pattern/first_turn@169: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/early-level-pattern_frame_0169.ppm sha256=badcb3c622a1d528f0b0478bfd8fa79b292f086b78229e20198d102eedcfbfd3
+- early-level-pattern/mid_route@265: activation_frame=25 expected active=1 replay_frame=240 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=180 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=240 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=180 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=2.812px
+- early-level-pattern/late_route@449: activation_frame=25 expected active=1 replay_frame=424 pac_tile=(6, 26) pac_px=(55, 212) dir=DOWN score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1196 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=424 pac_tile=(6, 26) pac_px=(55, 212) dir=DOWN score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1196 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=4.969px
+- early-level-pattern/final@598: activation_frame=25 expected active=1 replay_frame=573 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1047 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=573 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=0 phase=1 phase_remain=1047 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=6.715px
+- early-level-pattern/final@598: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/early-level-pattern_frame_0598.ppm sha256=badcb3c622a1d528f0b0478bfd8fa79b292f086b78229e20198d102eedcfbfd3
 Result: PASS
 
 Case: short-corner-route
@@ -41,7 +41,7 @@ Intent: Validate replay activation, pre-turn buffering, pellet scoring, dot-stal
 Public behavior sources:
 - Pac-Man Dossier: https://pacman.holenet.info/ (Documents one-frame dot stalls, cornering importance, tile-based collision, ghost targeting, and level timing tables.)
 Replay: tests/evidence/T021-pattern-replay-and-fidelity-testing/replays/short-corner-route.v8r
-Replay SHA-256: 3bca8153c280587006a6f4fff803ec6a3b3edc4c500ecf952249d0c1397a3f48
+Replay SHA-256: 7b66038e9b52c50d7d6b981db276ecf302a6e91e6f5feb96b617438a919a1307
 Segments:
 - 90 frames: start
 - 44 frames: left
@@ -50,11 +50,11 @@ Segments:
 - 24 frames: neutral
 Frame hashes:
 Checkpoints:
-- short-corner-route/activated@90: activation_frame=24 expected active=1 replay_frame=66 pac_tile=(7, 26) pac_px=(56, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=354 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=66 pac_tile=(7, 26) pac_px=(56, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=354 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=0.773px
-- short-corner-route/left_run@137: activation_frame=24 expected active=1 replay_frame=113 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=307 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=113 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=307 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=1.324px
-- short-corner-route/left_run@137: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/short-corner-route_frame_0137.ppm sha256=c0a29b0596a4b01ab1fb061291d74664bb3eed6b3e27342f156450eca5989281
-- short-corner-route/after_corner@185: activation_frame=24 expected active=1 replay_frame=161 pac_tile=(6, 26) pac_px=(55, 212) dir=RIGHT score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=259 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=161 pac_tile=(6, 26) pac_px=(55, 212) dir=RIGHT score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=259 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=1.887px
-- short-corner-route/settled@242: activation_frame=24 expected active=1 replay_frame=218 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=202 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=218 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=202 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=2.555px
-- short-corner-route/settled@242: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/short-corner-route_frame_0242.ppm sha256=c0a29b0596a4b01ab1fb061291d74664bb3eed6b3e27342f156450eca5989281
+- short-corner-route/activated@90: activation_frame=25 expected active=1 replay_frame=65 pac_tile=(7, 26) pac_px=(57, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=355 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=65 pac_tile=(7, 26) pac_px=(57, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=355 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=0.762px
+- short-corner-route/left_run@137: activation_frame=25 expected active=1 replay_frame=112 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=308 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=112 pac_tile=(6, 26) pac_px=(55, 212) dir=UP score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=308 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=1.312px
+- short-corner-route/left_run@137: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/short-corner-route_frame_0137.ppm sha256=badcb3c622a1d528f0b0478bfd8fa79b292f086b78229e20198d102eedcfbfd3
+- short-corner-route/after_corner@185: activation_frame=25 expected active=1 replay_frame=160 pac_tile=(6, 26) pac_px=(55, 212) dir=RIGHT score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=260 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=160 pac_tile=(6, 26) pac_px=(55, 212) dir=RIGHT score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=260 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=1.875px
+- short-corner-route/settled@242: activation_frame=25 expected active=1 replay_frame=217 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=203 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | observed active=1 replay_frame=217 pac_tile=(6, 26) pac_px=(55, 212) dir=NONE score=60 dots=6 consume=0 mode=1 phase=0 phase_remain=203 level=1 blinky=(14,14) pinky=(14,17) inky=(12,17) clyde=(16,17) | current_step=0x0100 dossier_level1_step=0x0103 drift=2.543px
+- short-corner-route/settled@242: ppm=tests/evidence/T021-pattern-replay-and-fidelity-testing/short-corner-route_frame_0242.ppm sha256=badcb3c622a1d528f0b0478bfd8fa79b292f086b78229e20198d102eedcfbfd3
 Result: PASS
 

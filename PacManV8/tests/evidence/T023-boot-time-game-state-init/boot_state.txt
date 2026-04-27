@@ -1,0 +1,48 @@
+  PASS audio_frame_counter = 37 (advancing, regions independent)
+T023 Boot-Time Game State Initialization Test
+==============================================
+ROM: /home/djglxxii/src/PacManV8/build/pacman.rom
+Peek regions: 7
+
+  PASS blinky_x_tile = 14
+  PASS blinky_y_tile = 14
+  PASS blinky_dir = 1
+  PASS blinky_mode = 1
+  PASS blinky_id = 0
+  PASS pinky_x_tile = 14
+  PASS pinky_y_tile = 17
+  PASS pinky_dir = 2
+  PASS pinky_mode = 1
+  PASS pinky_id = 1
+  PASS inky_x_tile = 12
+  PASS inky_y_tile = 17
+  PASS inky_dir = 0
+  PASS inky_mode = 1
+  PASS inky_id = 2
+  PASS clyde_x_tile = 16
+  PASS clyde_y_tile = 17
+  PASS clyde_dir = 0
+  PASS clyde_mode = 1
+  PASS clyde_id = 3
+  PASS global_mode = 1
+  PASS prior_mode = 1
+  PASS schedule_kind = 0
+  PASS mode_phase = 0
+  PASS phase_remain = 420
+  PASS fright_remain = 0
+  PASS reversal_pending = 0
+  PASS pellet_count = 240
+  PASS energizer_count = 4
+  PASS erase_pending = 0
+  PASS blinky_house_state = 0
+  PASS pinky_house_state = 2
+  PASS inky_house_state = 1
+  PASS clyde_house_state = 1
+  PASS score = 0
+  PASS lives = 3
+  PASS level_current = 1
+  PASS level_completed = 0
+  PASS level_next = 1
+  PASS level_table_index = 0
+
+RESULT: all assertions passed

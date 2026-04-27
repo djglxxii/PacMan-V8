@@ -53,10 +53,8 @@ SPRITE_FRAME_COUNTER         EQU SPRITE_COLOR_SHADOW + SPRITE_COLOR_SHADOW_BYTES
 
 sprite_renderer_init:
         call sprite_upload_patterns
-        call sprite_init_debug_state
-        call sprite_build_shadow
+        call sprite_init_color_shadow
         call sprite_upload_color_shadow
-        call sprite_upload_sat_shadow
         ret
 
 sprite_upload_patterns:
@@ -89,29 +87,41 @@ sprite_upload_sat_shadow:
         VDP_REG_A 14, 0x00
         ret
 
-sprite_init_debug_state:
-        call movement_init_pacman
+sprite_init_color_shadow:
+        ld hl, SPRITE_COLOR_SHADOW
+
+        ld b, 16
+        ld a, SPRITE_PALETTE_PACMAN
+        call .fill_slot
+
+        ld b, 16
+        ld a, SPRITE_PALETTE_BLINKY
+        call .fill_slot
+
+        ld b, 16
+        ld a, SPRITE_PALETTE_PINKY
+        call .fill_slot
+
+        ld b, 16
+        ld a, SPRITE_PALETTE_INKY
+        call .fill_slot
+
+        ld b, 16
+        ld a, SPRITE_PALETTE_CLYDE
+        call .fill_slot
+
+        xor a
+        ld b, 16
+        call .fill_slot
 
         xor a
         ld (SPRITE_FRAME_COUNTER), a
-        ld (GHOST_HOUSE_RELEASE_PENDING), a
-        ld (GHOST_HOUSE_EXIT_PENDING), a
+        ret
 
-        ld a, GHOST_MODE_CHASE
-        ld (GHOST_BLINKY_MODE), a
-        ld a, GHOST_MODE_FRIGHTENED
-        ld (GHOST_PINKY_MODE), a
-        ld a, GHOST_MODE_SCATTER
-        ld (GHOST_INKY_MODE), a
-        ld (GHOST_CLYDE_MODE), a
-
-        ld a, GHOST_HOUSE_OUTSIDE
-        ld (GHOST_HOUSE_BLINKY_STATE), a
-        ld (GHOST_HOUSE_PINKY_STATE), a
-        ld a, GHOST_HOUSE_WAITING
-        ld (GHOST_HOUSE_INKY_STATE), a
-        ld a, GHOST_HOUSE_EXITING
-        ld (GHOST_HOUSE_CLYDE_STATE), a
+.fill_slot:
+        ld (hl), a
+        inc hl
+        djnz .fill_slot
         ret
 
 sprite_build_shadow:

@@ -1,0 +1,9 @@
+T021 pattern replay and fidelity tests
+ROM SHA-256: 43db4cb980834ce24da50ba6cead78a39720914880a5d81f21efdd97a98215d6
+pattern sources: tests/replays/pattern_sources
+evidence dir: tests/evidence/T021-pattern-replay-and-fidelity-testing
+[PASS] early-level-pattern
+  replay: tests/evidence/T021-pattern-replay-and-fidelity-testing/replays/early-level-pattern.v8r sha256=774ead0e5d073507210bba2f25f7836b257830546d4ae1ca4947bd904e428ce6
+[PASS] short-corner-route
+  replay: tests/evidence/T021-pattern-replay-and-fidelity-testing/replays/short-corner-route.v8r sha256=7b66038e9b52c50d7d6b981db276ecf302a6e91e6f5feb96b617438a919a1307
+result: 2/2 passed

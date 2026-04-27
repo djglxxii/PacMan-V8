@@ -113,6 +113,7 @@ reset_entry:
 
         call audio_init
         call game_flow_init
+        call game_state_init
         call init_video
 
 idle_loop:
@@ -272,6 +273,7 @@ fill_vdp_a_zeroes:
         INCLUDE "ghost_ai.asm"
         INCLUDE "collision.asm"
         INCLUDE "ghost_house.asm"
+        INCLUDE "game_state.asm"
         INCLUDE "sprites.asm"
         INCLUDE "hud.asm"
         INCLUDE "game_flow.asm"
