@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T024 |
-| State | planned |
+| State | active |
 | Phase | Phase 9 — Live Gameplay Integration |
 | Depends on | T023 |
 | Plan reference | `docs/PLAN.md` §9.2 Controller Input |
@@ -32,7 +32,7 @@ input module so the test harness and live game read input the same way.
 
 ## Pre-flight
 
-- [ ] T023 completed and merged.
+- [x] T023 completed and merged.
 
 ## Implementation notes
 
@@ -53,9 +53,9 @@ input module so the test harness and live game read input the same way.
 
 **Reviewer checklist:**
 
-- [ ] All four directions accepted.
-- [ ] No direction held → no spurious request.
-- [ ] T021 pattern-replay regression still green.
+- [x] All four directions accepted.
+- [x] No direction held → no spurious request.
+- [x] T021 pattern-replay regression still green.
 
 **Rerun command:**
 
@@ -69,3 +69,4 @@ python3 tools/input_tests.py > tests/evidence/T024-controller-input-to-movement-
 | Date | Entry |
 |------|-------|
 | 2026-04-26 | Created, state: planned. |
+| 2026-04-26 | Activated. Created src/input.asm, refactored pattern_replay_input_to_dir, wired input into game_flow_update_frame PLAYING state. All eight direction/neutral test cases pass, T021 regression green (2/2). |

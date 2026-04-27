@@ -13,9 +13,9 @@ human-approved before advancing.
 
 ## Current focus
 
-- Active: *(none)*
+- Active: T024 — Controller input → movement request (Phase 9)
 - Blocked: *(none)*
-- Next proposed: T024 — Controller input → movement request (Phase 9)
+- Next proposed: T025 — Per-frame PLAYING tick (Phase 9)
 
 T022 was activated and then aborted on 2026-04-25 once an audit
 (`../AUDIT-2026-04-25-runtime-integration-gaps.md`) revealed the live
@@ -96,7 +96,7 @@ Phase 10 closes.
 | ID   | Title                              | State   | Depends on        | Evidence type   |
 |------|------------------------------------|---------|-------------------|-----------------|
 | T023 | Boot-time game state initialization| completed | none              | frame capture + test output |
-| T024 | Controller input → movement request| planned | T023              | test output     |
+| T024 | Controller input → movement request| active | T023              | test output     |
 | T025 | Per-frame PLAYING tick             | planned | T023, T024        | test output     |
 | T026 | Z80 arcade→V8 coordinate transform | planned | T023              | test output     |
 | T027 | Sprite SAT commit from game state  | planned | T026              | frame capture   |

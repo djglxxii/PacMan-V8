@@ -103,30 +103,10 @@ pattern_replay_start:
 
         jp pattern_replay_capture_snapshot
 
-; Input: A = active-low controller port byte. Output: A = MOVEMENT_DIR_*.
+; Input: A = active-low controller port byte (unused; port is re-read).
+; Output: A = MOVEMENT_DIR_*.
 pattern_replay_input_to_dir:
-        bit 7, a
-        jr z, .up
-        bit 5, a
-        jr z, .left
-        bit 6, a
-        jr z, .down
-        bit 4, a
-        jr z, .right
-        ld a, MOVEMENT_DIR_NONE
-        ret
-.up:
-        ld a, MOVEMENT_DIR_UP
-        ret
-.left:
-        ld a, MOVEMENT_DIR_LEFT
-        ret
-.down:
-        ld a, MOVEMENT_DIR_DOWN
-        ret
-.right:
-        ld a, MOVEMENT_DIR_RIGHT
-        ret
+        jp input_read_controller_0_to_dir
 
 pattern_replay_apply_consume_result:
         ld (PATTERN_REPLAY_LAST_CONSUME), a

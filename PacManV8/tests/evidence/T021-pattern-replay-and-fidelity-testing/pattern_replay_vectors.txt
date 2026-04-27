@@ -1,6 +1,6 @@
 T021 pattern replay vectors
 ROM: build/pacman.rom
-ROM SHA-256: 43db4cb980834ce24da50ba6cead78a39720914880a5d81f21efdd97a98215d6
+ROM SHA-256: df50dfef6f33a92437e404f4d87475912bf62bedc215bd1f3ce38dac898629d0
 Replay format: V8RR version 1, power-on anchor, active-low controller bytes
 Pattern replay SRAM base: 0x8270
 
@@ -12,7 +12,7 @@ Public behavior sources:
 - Pac-Man Dossier: https://pacman.holenet.info/ (Used for public ghost AI, scatter/chase, dot-stall, frightened, and speed-table behavior references; this route is an authored deterministic validation vector, not extracted from restricted program ROMs.)
 - StrategyWiki Pac-Man walkthrough: https://strategywiki.org/wiki/Pac-Man/Walkthrough (Public strategy reference for the existence of named early-board routes and the first-board southwest energizer approach.)
 Replay: tests/evidence/T021-pattern-replay-and-fidelity-testing/replays/early-level-pattern.v8r
-Replay SHA-256: 774ead0e5d073507210bba2f25f7836b257830546d4ae1ca4947bd904e428ce6
+Replay SHA-256: dff755caab1aa7b7503beae18d54b02494892eabeb396ba1648a374c455e4e8d
 Segments:
 - 90 frames: start
 - 36 frames: left
@@ -41,7 +41,7 @@ Intent: Validate replay activation, pre-turn buffering, pellet scoring, dot-stal
 Public behavior sources:
 - Pac-Man Dossier: https://pacman.holenet.info/ (Documents one-frame dot stalls, cornering importance, tile-based collision, ghost targeting, and level timing tables.)
 Replay: tests/evidence/T021-pattern-replay-and-fidelity-testing/replays/short-corner-route.v8r
-Replay SHA-256: 7b66038e9b52c50d7d6b981db276ecf302a6e91e6f5feb96b617438a919a1307
+Replay SHA-256: 91f769595bd53514ee9a52a8e302bc09d182e62da23ca9e66be27a9920fd467a
 Segments:
 - 90 frames: start
 - 44 frames: left

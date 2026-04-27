@@ -73,6 +73,12 @@ game_flow_update_frame:
         cp GAME_FLOW_STATE_INTERMISSION
         jp z, intermission_update_frame
 
+        cp GAME_FLOW_STATE_PLAYING
+        jr nz, .timer
+        call input_read_controller_0_to_dir
+        call movement_request_direction
+
+.timer:
         ld hl, (GAME_FLOW_STATE_TIMER)
         ld a, h
         or l

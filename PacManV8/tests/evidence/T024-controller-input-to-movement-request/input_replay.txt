@@ -1,0 +1,15 @@
+T024 Controller Input Test
+==========================
+ROM: /home/djglxxii/src/PacManV8/build/pacman.rom
+WAIT_FRAMES (ATTRACT+READY): 400
+
+[PASS] frame  405  hold UP                    observed=UP
+[PASS] frame  412  neutral after UP           observed=NONE
+[PASS] frame  420  hold LEFT                  observed=LEFT
+[PASS] frame  427  neutral after LEFT         observed=NONE
+[PASS] frame  435  hold DOWN                  observed=DOWN
+[PASS] frame  442  neutral after DOWN         observed=NONE
+[PASS] frame  450  hold RIGHT                 observed=RIGHT
+[PASS] frame  457  neutral after RIGHT        observed=NONE
+
+RESULT: All input direction tests PASSED
