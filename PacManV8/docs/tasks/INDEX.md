@@ -15,7 +15,7 @@ human-approved before advancing.
 
 - Active: *(none)*
 - Blocked: *(none)*
-- Next proposed: T026 — Arcade→V8 coordinate transform (Phase 9)
+- Next proposed: T027 — Sprite SAT commit from game state (Phase 9)
 
 T022 was activated and then aborted on 2026-04-25 once an audit
 (`../AUDIT-2026-04-25-runtime-integration-gaps.md`) revealed the live
@@ -98,7 +98,7 @@ Phase 10 closes.
 | T023 | Boot-time game state initialization| completed | none              | frame capture + test output |
 | T024 | Controller input → movement request| completed | T023              | test output     |
 | T025 | Per-frame PLAYING tick             | completed | T023, T024        | test output     |
-| T026 | Z80 arcade→V8 coordinate transform | planned | T023              | test output     |
+| T026 | Z80 arcade→V8 coordinate transform | completed | T023              | test output     |
 | T027 | Sprite SAT commit from game state  | planned | T026              | frame capture   |
 | T028 | Sprite frame animation             | planned | T027              | frame capture   |
 | T029 | Pellet erase to VDP-B framebuffer  | planned | T025              | frame capture   |

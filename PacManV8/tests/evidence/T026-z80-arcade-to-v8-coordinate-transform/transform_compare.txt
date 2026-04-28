@@ -1,0 +1,12 @@
+T026 Z80 coordinate transform comparison
+coordmap SHA-256: 551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+coord_lut SHA-256: 97fb6f0ee173d7b1e68087e25450e9ca02efe0e428c3dc89c966026c01e6d152
+mapped tile rows: 3-33
+tile columns: 0-27
+sub-tile offsets: (0, 2, 4, 6)
+28x36 grid coverage: mapped rows compared; 2240 unmapped row/offset positions skipped because the Python reference rejects unmapped cells
+positions compared: 13888
+bytes compared: 27776
+cycle estimate: 189-234 T-states per call, below the 250-cycle target for 5 sprites
+mismatches: 0
+coord_transform_z80_tests: PASSED

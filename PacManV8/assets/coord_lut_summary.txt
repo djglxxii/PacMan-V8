@@ -1,0 +1,9 @@
+T026 runtime coordinate transform LUT
+
+coordmap: assets/maze_v8_coordmap.bin bytes=8064 sha256=551bfd06927f84482f59f3c215ba39bd70b1659c3b04ba600feb80095fc567f2
+coord_lut: assets/coord_lut.bin bytes=736 sha256=97fb6f0ee173d7b1e68087e25450e9ca02efe0e428c3dc89c966026c01e6d152
+x_table: offset=0 bytes=224 input=arcade X high byte after modulo 224 output=SAT X
+y_base: offset=224 bytes=256 input=arcade Y high byte modulo 256 output=SAT Y base
+y_threshold: offset=480 bytes=256 input=arcade Y high byte modulo 256 output=fractional carry threshold
+unmapped_y: 0xD0 Sprite Mode 2 terminator Y
+wrapped_y: high-byte values 0x00-0x0F map to arcade pixels 256-271 for rows 32-33; rows 0-2 are unmapped.
