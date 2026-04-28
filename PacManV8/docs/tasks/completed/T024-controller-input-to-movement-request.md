@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T024 |
-| State | active |
+| State | completed |
 | Phase | Phase 9 — Live Gameplay Integration |
 | Depends on | T023 |
 | Plan reference | `docs/PLAN.md` §9.2 Controller Input |

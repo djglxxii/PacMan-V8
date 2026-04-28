@@ -452,7 +452,7 @@ ghost_frightened_candidate_legal:
         jr nz, .not_left
         ld a, (GHOST_FRIGHT_CANDIDATE)
         cp MOVEMENT_DIR_RIGHT
-        jr z, .blocked
+        jp z, .blocked
 .not_left:
         ld a, (GHOST_CHOICE_CURRENT_DIR)
         cp MOVEMENT_DIR_RIGHT
@@ -490,6 +490,9 @@ ghost_frightened_candidate_legal:
         dec a
         jr .left_store
 .left_wrap:
+        ld a, (GHOST_CHOICE_TILE_Y)
+        cp 17
+        jr nz, .blocked
         ld a, MOVEMENT_MAZE_WIDTH - 1
 .left_store:
         ld (GHOST_CANDIDATE_X), a
@@ -508,6 +511,9 @@ ghost_frightened_candidate_legal:
         inc a
         jr .right_store
 .right_wrap:
+        ld a, (GHOST_CHOICE_TILE_Y)
+        cp 17
+        jr nz, .blocked
         xor a
 .right_store:
         ld (GHOST_CANDIDATE_X), a
@@ -797,6 +803,9 @@ ghost_eval_left:
         dec a
         jr .store_x
 .wrap:
+        ld a, (GHOST_CHOICE_TILE_Y)
+        cp 17
+        ret nz
         ld a, MOVEMENT_MAZE_WIDTH - 1
 .store_x:
         ld (GHOST_CANDIDATE_X), a
@@ -837,6 +846,9 @@ ghost_eval_right:
         inc a
         jr .store_x
 .wrap:
+        ld a, (GHOST_CHOICE_TILE_Y)
+        cp 17
+        ret nz
         xor a
 .store_x:
         ld (GHOST_CANDIDATE_X), a
@@ -895,8 +907,8 @@ ghost_candidate_distance:
 
 ; Input: A = signed 8-bit delta. Output: A = absolute value.
 ghost_abs_a:
-        bit 7, a
-        ret z
+        or a
+        ret p
         cpl
         inc a
         ret

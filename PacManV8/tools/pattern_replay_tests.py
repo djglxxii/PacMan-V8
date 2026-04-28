@@ -354,6 +354,7 @@ class ReplayModel:
         if self.requested_dir != DIR_NONE and self.is_center() and self.direction_passable(self.requested_dir):
             self.current_dir = self.requested_dir
         if not self.direction_passable(self.current_dir):
+            self.snap_to_center_on_axis(self.current_dir)
             self.current_dir = DIR_NONE
             return
         if self.current_dir == DIR_LEFT:
@@ -368,6 +369,12 @@ class ReplayModel:
             self.x_px = (self.x_px + WIDTH_TILES * TILE_SIZE) & 0xFF
         elif self.x_px >= WIDTH_TILES * TILE_SIZE:
             self.x_px -= WIDTH_TILES * TILE_SIZE
+
+    def snap_to_center_on_axis(self, direction: int) -> None:
+        if direction in (DIR_LEFT, DIR_RIGHT):
+            self.x_px = (self.x_px & 0xF8) | TILE_CENTER
+        elif direction in (DIR_UP, DIR_DOWN):
+            self.y_px = (self.y_px & 0xF8) | TILE_CENTER
 
     def is_center(self) -> bool:
         return (self.x_px & 0x07) == TILE_CENTER and (self.y_px & 0x07) == TILE_CENTER

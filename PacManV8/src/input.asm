@@ -6,13 +6,17 @@
 ; constant in A (MOVEMENT_DIR_NONE when no direction is pressed).
 input_read_controller_0_to_dir:
         in a, (0x00)
-        bit 7, a
+        ld b, a
+        and 0x80
         jr z, .up
-        bit 5, a
+        ld a, b
+        and 0x20
         jr z, .left
-        bit 6, a
+        ld a, b
+        and 0x40
         jr z, .down
-        bit 4, a
+        ld a, b
+        and 0x10
         jr z, .right
         ld a, MOVEMENT_DIR_NONE
         ret

@@ -75,8 +75,14 @@ game_flow_update_frame:
 
         cp GAME_FLOW_STATE_PLAYING
         jr nz, .timer
-        call input_read_controller_0_to_dir
-        call movement_request_direction
+        ; When pattern_replay is active it owns the gameplay tick.
+        ; Otherwise run the live PLAYING tick and skip the timer —
+        ; PLAYING exits are predicate-driven (T033), not timer-based.
+        ld a, (0x8270)          ; PATTERN_REPLAY_ACTIVE
+        or a
+        jr nz, .timer
+        call game_state_tick_playing
+        ret
 
 .timer:
         ld hl, (GAME_FLOW_STATE_TIMER)
@@ -204,13 +210,7 @@ game_flow_load_state_timer:
         ld hl, GAME_FLOW_DURATION_READY
         jr .store
 .playing:
-        ld a, (GAME_FLOW_SCRIPT_STEP)
-        cp GAME_FLOW_SCRIPT_LEVEL_COMPLETE
-        jr z, .playing_level
-        ld hl, GAME_FLOW_DURATION_PLAYING_DYING
-        jr .store
-.playing_level:
-        ld hl, GAME_FLOW_DURATION_PLAYING_LEVEL
+        ld hl, 0       ; PLAYING is unbounded — exits are predicate-driven (T033).
         jr .store
 .dying:
         ld hl, GAME_FLOW_DURATION_DYING

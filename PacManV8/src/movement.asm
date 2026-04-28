@@ -88,7 +88,9 @@ movement_request_direction:
         jr z, .accept
 
 .window_check:
+        push bc                         ; preserve direction in B
         call movement_distance_to_next_center_px
+        pop bc                          ; restore direction in B; A still holds distance
         cp MOVEMENT_TURN_WINDOW_PX + 1
         jr c, .accept
         or a
@@ -105,12 +107,41 @@ movement_update_pacman:
         call movement_current_direction_passable
         or a
         jr nz, .move
+        call movement_snap_to_center_on_current_axis
         ld a, MOVEMENT_DIR_NONE
         ld (PACMAN_CURRENT_DIR), a
         ret
 .move:
         call movement_move_one_pixel
         call movement_apply_tunnel_wrap
+        ret
+
+movement_snap_to_center_on_current_axis:
+        ld a, (PACMAN_CURRENT_DIR)
+        cp MOVEMENT_DIR_LEFT
+        jr z, .snap_x
+        cp MOVEMENT_DIR_RIGHT
+        jr z, .snap_x
+        cp MOVEMENT_DIR_UP
+        jr z, .snap_y
+        cp MOVEMENT_DIR_DOWN
+        jr z, .snap_y
+        ret
+.snap_x:
+        xor a
+        ld (PACMAN_X_FP), a
+        ld a, (PACMAN_X_FP + 1)
+        and 0xF8
+        or 4
+        ld (PACMAN_X_FP + 1), a
+        ret
+.snap_y:
+        xor a
+        ld (PACMAN_Y_FP), a
+        ld a, (PACMAN_Y_FP + 1)
+        and 0xF8
+        or 4
+        ld (PACMAN_Y_FP + 1), a
         ret
 
 movement_try_turn_at_center:

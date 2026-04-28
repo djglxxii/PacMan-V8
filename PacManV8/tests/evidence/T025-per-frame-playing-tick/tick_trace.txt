@@ -1,0 +1,37 @@
+# T025 PLAYING Tick Trace — energizer route
+# Route: NEUT 0-399, RIGHT 400-499, UP 500-799, RIGHT 800-829, DOWN 830-999
+# Target: energizer at (26,26)
+#
+# frame   st  pac_tile  cdir   req    blinky  bdir pellets stall
+# ------------------------------------------------------------------------------------
+# --- Broad survey ---
+    300 READY   (14,26)  LEFT  LEFT   (14,14)  LEFT   240     0
+    380 PLAY   (14,26)  LEFT  NONE   (14,14)  LEFT   240     0
+    400 PLAY   (11,26)  LEFT  NONE   (19,14) RIGHT   239     0  ate 1 pellet(s)
+    500 PLAY   (21,26)  NONE RIGHT   (27,14) RIGHT   231     0  ate 8 pellet(s)
+    600 PLAY   (21,15)    UP    UP   (24,31)  LEFT   220     0  ate 11 pellet(s)
+    700 PLAY   (21, 4)  NONE    UP   (25,35)  DOWN   209     0  ate 11 pellet(s)
+    800 PLAY   (21, 4)  NONE    UP   (25,35)  DOWN   209     0
+    830 PLAY   (24, 4) RIGHT RIGHT   (27,35) RIGHT   206     0  ate 3 pellet(s)
+    860 PLAY   (26, 6)  DOWN  DOWN   (27,32)    UP   203     2  ate 3 pellet(s)
+    890 PLAY   (26, 9)  DOWN  DOWN   (22,29)  LEFT   200     0  ate 3 pellet(s)
+    920 PLAY   (26,11)  NONE  DOWN   (21,23)    UP   198     0  ate 2 pellet(s)
+    950 PLAY   (26,11)  NONE  DOWN   (26,26)  DOWN   198     0
+    999 PLAY   (26,11)  NONE  DOWN   (24,32)  LEFT   198     0
+#
+# --- Dense: energizer pickup ~frame 859 ---
+    857 PLAY   (26, 6)  DOWN     -               -   203     0
+    858 PLAY   (26, 6)  DOWN     -               -   203     0
+    859 PLAY   (26, 6)  DOWN     -               -   203     3 <-- DOT_STALL=3
+    860 PLAY   (26, 6)  DOWN     -               -   203     2 <-- DOT_STALL=2
+    861 PLAY   (26, 6)  DOWN     -               -   203     1 <-- DOT_STALL=1
+    862 PLAY   (26, 6)  DOWN     -               -   203     0 <-- resumed
+    863 PLAY   (26, 6)  DOWN     -               -   203     0 <-- resumed
+    864 PLAY   (26, 6)  DOWN     -               -   203     0 <-- resumed
+# Energizer stall sequence: ['3', '2', '1', '0', '0', '0']
+# Pellet count decreased: 203 -> 203 (delta=0)
+#
+# --- Summary ---
+# Pac-Man tiles: [(11, 26), (14, 26), (21, 4), (21, 15), (21, 26), (24, 4), (26, 6), (26, 9), (26, 11)]
+# PASS: moved >= 3 tiles
+# Energizer: YES
