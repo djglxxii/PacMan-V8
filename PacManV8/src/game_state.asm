@@ -74,6 +74,7 @@ game_state_tick_playing:
         call movement_update_ghosts
         call ghost_house_tick
         call collision_check_all_ghosts
+        call pellet_erase_commit
         ld a, (COLLISION_DOT_STALL)
         or a
         call z, sprite_animation_tick
@@ -85,6 +86,7 @@ game_state_tick_playing:
         call movement_update_ghosts
         call ghost_house_tick
         call collision_check_all_ghosts
+        call pellet_erase_commit
         jp sprite_commit_from_game_state
 
 ; Update ghost tile positions. Ghosts outside the house move one tile

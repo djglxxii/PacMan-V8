@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | ID | T029 |
-| State | planned |
+| State | active |
 | Phase | Phase 9 — Live Gameplay Integration |
 | Depends on | T025 |
 | Plan reference | `docs/PLAN.md` §9.7 Pellet Erase to VDP-B Framebuffer |
@@ -20,7 +20,8 @@ dots actually disappear from the maze.
   - New `pellet_erase_commit` that runs after the gameplay tick and
     before the next V-blank closes. Reads `COLLISION_ERASE_TILE_X/Y`
     and `COLLISION_ERASE_KIND`, computes the maze framebuffer pixel
-    coordinates, issues a VDP-B HMMV with width 8, height 8, value 0.
+    coordinates, issues a VDP-B HMMV with width 8 pixels, fitted row
+    height, value 0.
   - Resolves the `COLLISION_ERASE_PENDING` flag via
     `collision_clear_erase_queue` after the DMA.
   - Tile-to-framebuffer-pixel mapping uses the same fitted maze geometry
@@ -35,7 +36,7 @@ dots actually disappear from the maze.
 
 ## Pre-flight
 
-- [ ] T025 completed (live tick driving the erase queue).
+- [x] T025 completed (live tick driving the erase queue).
 
 ## Implementation notes
 
@@ -52,15 +53,21 @@ dots actually disappear from the maze.
 **Artifact(s):**
 
 - `tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/before_after.ppm`
-  pair — PPM before Pac-Man eats a 5-pellet horizontal run, PPM after,
-  with all 5 pellets gone.
+  — side-by-side VDP-B layer PPM before/after Pac-Man eats a 5-pellet
+  horizontal run, with all 5 pellets gone in the after half.
+- `tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/pellet_erase_summary.txt`
+  — replay hashes, frame numbers, target tile pixel checks, and
+  `COLLISION_PELLET_COUNT` delta.
 
 **Reviewer checklist:**
 
-- [ ] Eaten pellets are invisible in the after PPM.
-- [ ] Walls and unrelated pellets are unchanged.
-- [ ] Pellet count in `COLLISION_PELLET_COUNT` matches the visible
-      pellet count in the PPM.
+- [x] Eaten pellets are invisible in the after PPM: target tiles
+      `(17,26)` through `(21,26)` have pellet-color pixels
+      `[4,2,2,2,2] -> [0,0,0,0,0]`.
+- [x] Walls and unrelated pellets are unchanged: control tile `(12,26)`
+      remains `6 -> 6` pellet-color pixels.
+- [x] Pellet count in `COLLISION_PELLET_COUNT` matches the visible erased
+      run: `238 -> 233`, delta `5`.
 
 **Rerun command:**
 
@@ -74,3 +81,5 @@ python3 tools/pellet_erase_replay.py
 | Date | Entry |
 |------|-------|
 | 2026-04-26 | Created, state: planned. |
+| 2026-04-29 | Activated as the next Phase 9 integration task. |
+| 2026-04-29 | Implemented `pellet_erase_commit`, added replay evidence tooling, and generated VDP-B before/after artifacts. |

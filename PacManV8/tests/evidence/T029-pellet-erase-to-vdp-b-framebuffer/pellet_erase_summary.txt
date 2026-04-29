@@ -1,0 +1,16 @@
+T029 pellet erase replay
+ROM: build/pacman.rom sha256=a67c00b783f996e555c3a16b195d7c0903c8471138be7c5fc3ea44229450fa61
+Replay: tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/pellet_erase.v8r sha256=8d5e49bb83d1c6cadf30c54e62d6e5296633099a2637cca3a30d1dc017ca7332
+Route: hold RIGHT; before is after tiles 15-16 are eaten, after is after the visible 17-21 run is eaten.
+Before frame: 395 vdpb_ppm=tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/before_vdpb.ppm sha256=97e5f31cadaf3206f271f2d602ee7a79f75ffe39663a0cc4f4da2743daafb957
+After frame: 440 vdpb_ppm=tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/after_vdpb.ppm sha256=b65bf17a74a3193372f17b00699063d09f426b4be4b22062ffafcdd67f924194
+Composite before: tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/before_composite.ppm sha256=f42120f639e21c45d50585624fba71228fe31c64db6b751383f6317cab480e9e
+Composite after: tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/after_composite.ppm sha256=c2fe07be2b0f3b216e1e79f87df60f628f5318db7153daff45d3ec1626e7f6a5
+Combined VDP-B frame: tests/evidence/T029-pellet-erase-to-vdp-b-framebuffer/before_after.ppm sha256=5f5f09ceb6f360549eb0385d85619975dd3a59435b5bbf9bfbf3cdda47a94f2f
+Collision pellet count: 238 -> 233 delta=5
+Target tiles: ((17, 26), (18, 26), (19, 26), (20, 26), (21, 26))
+Target pellet-color pixels before: [4, 2, 2, 2, 2]
+Target pellet-color pixels after: [0, 0, 0, 0, 0]
+Control tile (12, 26) pellet-color pixels: 6 -> 6
+Changed RGB pixels between before/after: 108
+Erase queue after frame: [0, 21, 26, 0]

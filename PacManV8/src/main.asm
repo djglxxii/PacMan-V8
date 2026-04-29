@@ -274,6 +274,7 @@ fill_vdp_a_zeroes:
         INCLUDE "ghost_ai.asm"
         INCLUDE "collision.asm"
         INCLUDE "ghost_house.asm"
+        INCLUDE "pellet_erase.asm"
         INCLUDE "game_state.asm"
         INCLUDE "coord_transform.asm"
         INCLUDE "sprites.asm"

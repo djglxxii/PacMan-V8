@@ -13,9 +13,9 @@ human-approved before advancing.
 
 ## Current focus
 
-- Active: *(none)*
+- Active: *(none — awaiting next task approval)*
 - Blocked: *(none)*
-- Next proposed: T029 — Pellet erase to VDP-B framebuffer (Phase 9)
+- Next proposed: T030 — Frightened visuals + final-2s flash (Phase 9)
 
 T022 was activated and then aborted on 2026-04-25 once an audit
 (`../AUDIT-2026-04-25-runtime-integration-gaps.md`) revealed the live
@@ -101,7 +101,7 @@ Phase 10 closes.
 | T026 | Z80 arcade→V8 coordinate transform | completed | T023              | test output     |
 | T027 | Sprite SAT commit from game state  | completed | T026              | frame capture   |
 | T028 | Sprite frame animation             | completed | T027              | frame capture   |
-| T029 | Pellet erase to VDP-B framebuffer  | planned | T025              | frame capture   |
+| T029 | Pellet erase to VDP-B framebuffer  | completed | T025              | frame capture   |
 | T030 | Frightened visuals + final-2s flash| planned | T027              | frame capture   |
 | T031 | Live HUD update                    | planned | T025              | frame capture   |
 | T032 | Audio cue bindings                 | planned | T025              | test output     |
