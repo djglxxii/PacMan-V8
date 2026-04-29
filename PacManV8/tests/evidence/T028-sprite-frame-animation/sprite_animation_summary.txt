@@ -1,0 +1,35 @@
+T028 sprite frame animation replay
+ROM: build/pacman.rom sha256=819d78c2bc6710683357fd5c75558408dd4f8bcc244685ff8d4577543160d4e9
+Replay: tests/evidence/T028-sprite-frame-animation/anim_seq.v8r sha256=c2a088cce6f978bef18829d2092d9740aac90a8527753afa2a432ae6f6ad2d68
+Route: neutral controller; Pac-Man keeps his initialized leftward direction until he reaches a wall.
+Labels are gameplay-sequence checkpoints; absolute frames include ATTRACT+READY warmup.
+Pac-Man phases: 0=open, 1=half, 2=closed, 3=half.
+
+anim_seq_0006: absolute_frame=383 ppm=tests/evidence/T028-sprite-frame-animation/anim_seq_0006.ppm sha256=b623a119bbe5591a12403cdb4c063ff6b67f6c911d92f5c7175c90fc89f6604c
+  flow_state=2 flow_frame=366 dot_stall=0 pacman_fp=(0x6E00,0xD400) dir=1 requested=4
+  anim: pac_counter=2 pac_phase=0 ghost_counter=6 ghost_phase=0
+  sat: s0=xy(118,148) pat=44 pal=01; s1=xy(132, 72) pat=98 pal=02; s2=xy(124, 91) pat=90 pal=03; s3=xy(108, 91) pat=80 pal=04; s4=xy(140, 91) pat=80 pal=05
+anim_seq_0012: absolute_frame=389 ppm=tests/evidence/T028-sprite-frame-animation/anim_seq_0012.ppm sha256=bd62d9116394c4f42ed771bcfb89057eea69f48b8c7f43622a2c3aab4428170f
+  flow_state=2 flow_frame=372 dot_stall=0 pacman_fp=(0x6800,0xD400) dir=1 requested=4
+  anim: pac_counter=2 pac_phase=1 ghost_counter=4 ghost_phase=1
+  sat: s0=xy(112,148) pat=54 pal=01; s1=xy(148, 72) pat=9C pal=02; s2=xy(124, 91) pat=94 pal=03; s3=xy(108, 91) pat=84 pal=04; s4=xy(140, 91) pat=84 pal=05
+anim_seq_0018: absolute_frame=395 ppm=tests/evidence/T028-sprite-frame-animation/anim_seq_0018.ppm sha256=0a8c0d958ecb390dbbbfc3cb5af9a76ec73303374fe12537c0d687475ae5a89a
+  flow_state=2 flow_frame=378 dot_stall=0 pacman_fp=(0x6300,0xD400) dir=1 requested=4
+  anim: pac_counter=0 pac_phase=2 ghost_counter=0 ghost_phase=0
+  sat: s0=xy(107,148) pat=64 pal=01; s1=xy(156, 72) pat=98 pal=02; s2=xy(124, 91) pat=90 pal=03; s3=xy(108, 91) pat=80 pal=04; s4=xy(140, 91) pat=80 pal=05
+anim_seq_0024: absolute_frame=401 ppm=tests/evidence/T028-sprite-frame-animation/anim_seq_0024.ppm sha256=40e8f6b82d32f70a9ebb34d7a22891b309b3fbf54c308e8c59170a6a5b7542f4
+  flow_state=2 flow_frame=384 dot_stall=0 pacman_fp=(0x5D00,0xD400) dir=1 requested=4
+  anim: pac_counter=0 pac_phase=3 ghost_counter=6 ghost_phase=0
+  sat: s0=xy(101,148) pat=54 pal=01; s1=xy(172, 72) pat=98 pal=02; s2=xy(124, 91) pat=90 pal=03; s3=xy(108, 91) pat=80 pal=04; s4=xy(140, 91) pat=80 pal=05
+ghost_wobble_0007: absolute_frame=384 ppm=tests/evidence/T028-sprite-frame-animation/ghost_wobble_0007.ppm sha256=346e84c386fcd717b40f853a0d653dded209cc35a4f84636cdbb044b1ab49b2a
+  flow_state=2 flow_frame=367 dot_stall=0 pacman_fp=(0x6D00,0xD400) dir=1 requested=4
+  anim: pac_counter=3 pac_phase=0 ghost_counter=7 ghost_phase=0
+  sat: s0=xy(117,148) pat=44 pal=01; s1=xy(132, 72) pat=98 pal=02; s2=xy(124, 91) pat=90 pal=03; s3=xy(108, 91) pat=80 pal=04; s4=xy(140, 91) pat=80 pal=05
+ghost_wobble_0015: absolute_frame=392 ppm=tests/evidence/T028-sprite-frame-animation/ghost_wobble_0015.ppm sha256=09b3e5dfd3201623cb7dbae829e943659d1ec4e6d3c3e32186420b1a94c91f4f
+  flow_state=2 flow_frame=375 dot_stall=0 pacman_fp=(0x6500,0xD400) dir=1 requested=4
+  anim: pac_counter=5 pac_phase=1 ghost_counter=7 ghost_phase=1
+  sat: s0=xy(109,148) pat=54 pal=01; s1=xy(148, 72) pat=9C pal=02; s2=xy(124, 91) pat=94 pal=03; s3=xy(108, 91) pat=84 pal=04; s4=xy(140, 91) pat=84 pal=05
+stopped_wall_0108: absolute_frame=485 ppm=tests/evidence/T028-sprite-frame-animation/stopped_wall_0108.ppm sha256=0845eac021af02c105814ca9196d145505954824685f9a7c23e23c2c61a84065
+  flow_state=2 flow_frame=468 dot_stall=0 pacman_fp=(0x3400,0xD400) dir=4 requested=4
+  anim: pac_counter=0 pac_phase=2 ghost_counter=6 ghost_phase=1
+  sat: s0=xy( 60,148) pat=64 pal=01; s1=xy(228, 72) pat=9C pal=02; s2=xy(124, 91) pat=94 pal=03; s3=xy(108, 91) pat=84 pal=04; s4=xy(140, 91) pat=84 pal=05

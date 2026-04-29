@@ -1,0 +1,9 @@
+T021 pattern replay and fidelity tests
+ROM SHA-256: 819d78c2bc6710683357fd5c75558408dd4f8bcc244685ff8d4577543160d4e9
+pattern sources: tests/replays/pattern_sources
+evidence dir: tests/evidence/T028-sprite-frame-animation/t021-regression
+[PASS] early-level-pattern
+  replay: tests/evidence/T028-sprite-frame-animation/t021-regression/replays/early-level-pattern.v8r sha256=e6161202c4b54ce42ef0e813aac430d00ddef3b339a1e5a6b5ca345795f23cfc
+[PASS] short-corner-route
+  replay: tests/evidence/T028-sprite-frame-animation/t021-regression/replays/short-corner-route.v8r sha256=9e5bd67b36a6a87d8b5b5d6760f6cd9f224e6d2c27ab6ee0b0b4e13e16477dff
+result: 2/2 passed

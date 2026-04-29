@@ -25,6 +25,9 @@ SPRITE_CLYDE_SLOT            EQU 4
 SPRITE_RESERVED_SLOT         EQU 5
 
 SPRITE_PACMAN_ID             EQU 1
+SPRITE_PACMAN_OPEN_BASE_ID   EQU 16
+SPRITE_PACMAN_HALF_BASE_ID   EQU 20
+SPRITE_PACMAN_CLOSED_BASE_ID EQU 24
 SPRITE_BLINKY_ID             EQU 8
 SPRITE_GHOST_NORMAL_BASE_ID  EQU 32
 SPRITE_FRIGHTENED_ID         EQU 50
@@ -33,6 +36,9 @@ SPRITE_INKY_HOUSE_ID         EQU 32
 SPRITE_CLYDE_EXIT_ID         EQU 9
 
 SPRITE_PACMAN_PATTERN        EQU SPRITE_PACMAN_ID * 4
+SPRITE_PACMAN_OPEN_PATTERN   EQU SPRITE_PACMAN_OPEN_BASE_ID * 4
+SPRITE_PACMAN_HALF_PATTERN   EQU SPRITE_PACMAN_HALF_BASE_ID * 4
+SPRITE_PACMAN_CLOSED_PATTERN EQU SPRITE_PACMAN_CLOSED_BASE_ID * 4
 SPRITE_BLINKY_PATTERN        EQU SPRITE_BLINKY_ID * 4
 SPRITE_PINKY_PATTERN         EQU SPRITE_PINKY_FRIGHT_ID * 4
 SPRITE_INKY_PATTERN          EQU SPRITE_INKY_HOUSE_ID * 4
@@ -49,12 +55,21 @@ SPRITE_PALETTE_CLYDE         EQU 5
 SPRITE_PALETTE_FRIGHTENED    EQU 8
 
 SPRITE_TERMINATOR_Y          EQU 0xD0
+SPRITE_PACMAN_ANIM_RATE      EQU 6
+SPRITE_GHOST_WOBBLE_RATE     EQU 8
+SPRITE_PACMAN_PHASE_OPEN     EQU 0
+SPRITE_PACMAN_PHASE_HALF_1   EQU 1
+SPRITE_PACMAN_PHASE_CLOSED   EQU 2
+SPRITE_PACMAN_PHASE_HALF_2   EQU 3
 
 SPRITE_STATE_BASE            EQU 0x8300
 SPRITE_SAT_SHADOW            EQU SPRITE_STATE_BASE
 SPRITE_COLOR_SHADOW          EQU SPRITE_SAT_SHADOW + SPRITE_SAT_SHADOW_BYTES
 SPRITE_FRAME_COUNTER         EQU SPRITE_COLOR_SHADOW + SPRITE_COLOR_SHADOW_BYTES
-SPRITE_COMMIT_WORK_PATTERN   EQU SPRITE_FRAME_COUNTER + 1
+SPRITE_PACMAN_ANIM_PHASE     EQU SPRITE_FRAME_COUNTER + 1
+SPRITE_GHOST_WOBBLE_COUNTER  EQU SPRITE_PACMAN_ANIM_PHASE + 1
+SPRITE_GHOST_WOBBLE_PHASE    EQU SPRITE_GHOST_WOBBLE_COUNTER + 1
+SPRITE_COMMIT_WORK_PATTERN   EQU SPRITE_GHOST_WOBBLE_PHASE + 1
 SPRITE_COMMIT_WORK_PALETTE   EQU SPRITE_COMMIT_WORK_PATTERN + 1
 
 sprite_renderer_init:
@@ -122,8 +137,13 @@ sprite_init_color_shadow:
         ld b, 16
         call .fill_slot
 
-        xor a
+        ld a, 2
         ld (SPRITE_FRAME_COUNTER), a
+        ld a, SPRITE_PACMAN_PHASE_HALF_2
+        ld (SPRITE_PACMAN_ANIM_PHASE), a
+        xor a
+        ld (SPRITE_GHOST_WOBBLE_COUNTER), a
+        ld (SPRITE_GHOST_WOBBLE_PHASE), a
         ret
 
 .fill_slot:
@@ -150,14 +170,14 @@ sprite_clear_sat_shadow:
 sprite_commit_from_game_state:
         call sprite_clear_sat_shadow
 
+        call sprite_pacman_current_pattern
+        ld (SPRITE_COMMIT_WORK_PATTERN), a
+        ld a, SPRITE_PALETTE_PACMAN
+        ld (SPRITE_COMMIT_WORK_PALETTE), a
         ld hl, (PACMAN_Y_FP)
         ld de, (PACMAN_X_FP)
         call coord_arcade_to_v8
         ld de, SPRITE_SAT_SHADOW + (SPRITE_PACMAN_SLOT * SPRITE_SAT_STRIDE)
-        ld a, SPRITE_PACMAN_PATTERN
-        ld (SPRITE_COMMIT_WORK_PATTERN), a
-        ld a, SPRITE_PALETTE_PACMAN
-        ld (SPRITE_COMMIT_WORK_PALETTE), a
         call sprite_store_transformed_slot
 
         ld hl, GHOST_BLINKY_BASE
@@ -185,6 +205,92 @@ sprite_commit_from_game_state:
         call sprite_commit_ghost_slot
 
         jp sprite_upload_sat_shadow
+
+sprite_animation_tick:
+        ld a, (GAME_FLOW_CURRENT_STATE)
+        cp GAME_FLOW_STATE_PLAYING
+        ret nz
+        ld a, (COLLISION_DOT_STALL)
+        or a
+        ret nz
+
+        ld a, (PACMAN_CURRENT_DIR)
+        cp MOVEMENT_DIR_NONE
+        jr nz, .pacman_moving
+        ld a, SPRITE_PACMAN_PHASE_CLOSED
+        ld (SPRITE_PACMAN_ANIM_PHASE), a
+        xor a
+        ld (SPRITE_FRAME_COUNTER), a
+        jr .ghost_wobble
+
+.pacman_moving:
+        ld a, (SPRITE_FRAME_COUNTER)
+        inc a
+        cp SPRITE_PACMAN_ANIM_RATE
+        jr c, .store_pacman_counter
+        xor a
+        ld (SPRITE_FRAME_COUNTER), a
+        ld a, (SPRITE_PACMAN_ANIM_PHASE)
+        inc a
+        and 0x03
+        ld (SPRITE_PACMAN_ANIM_PHASE), a
+        jr .ghost_wobble
+.store_pacman_counter:
+        ld (SPRITE_FRAME_COUNTER), a
+
+.ghost_wobble:
+        ld a, (SPRITE_GHOST_WOBBLE_COUNTER)
+        inc a
+        cp SPRITE_GHOST_WOBBLE_RATE
+        jr c, .store_ghost_counter
+        xor a
+        ld (SPRITE_GHOST_WOBBLE_COUNTER), a
+        ld a, (SPRITE_GHOST_WOBBLE_PHASE)
+        xor 0x01
+        ld (SPRITE_GHOST_WOBBLE_PHASE), a
+        ret
+.store_ghost_counter:
+        ld (SPRITE_GHOST_WOBBLE_COUNTER), a
+        ret
+
+sprite_pacman_current_pattern:
+        call sprite_pacman_direction_pattern_offset
+        ld b, a
+        ld a, (PACMAN_CURRENT_DIR)
+        cp MOVEMENT_DIR_NONE
+        jr nz, .animated
+        ld a, SPRITE_PACMAN_PHASE_CLOSED
+        jr .lookup
+.animated:
+        ld a, (SPRITE_PACMAN_ANIM_PHASE)
+        and 0x03
+.lookup:
+        ld hl, sprite_pacman_phase_patterns
+        ld e, a
+        ld d, 0
+        add hl, de
+        ld a, (hl)
+        add a, b
+        ret
+
+sprite_pacman_direction_pattern_offset:
+        ld a, (PACMAN_CURRENT_DIR)
+        cp MOVEMENT_DIR_NONE
+        jr c, .valid
+        ld a, (PACMAN_REQUESTED_DIR)
+        cp MOVEMENT_DIR_NONE
+        jr c, .valid
+        ld a, MOVEMENT_DIR_LEFT
+.valid:
+        add a, a
+        add a, a
+        ret
+
+sprite_pacman_phase_patterns:
+        db SPRITE_PACMAN_OPEN_PATTERN
+        db SPRITE_PACMAN_HALF_PATTERN
+        db SPRITE_PACMAN_CLOSED_PATTERN
+        db SPRITE_PACMAN_HALF_PATTERN
 
 ; Input: HL = ghost record base, DE = SAT slot address.
 sprite_commit_ghost_slot:
@@ -218,14 +324,21 @@ sprite_commit_ghost_slot:
         jp sprite_store_transformed_slot
 
 ; Input: A = direction enum. Output: A = pattern byte.
-; T028 will toggle the low wobble bit; T027 holds frame 0.
 sprite_ghost_dir_to_pattern:
         cp MOVEMENT_DIR_NONE
         jr c, .valid
         xor a
 .valid:
         add a, a
+        add a, a
+        add a, a
         add a, SPRITE_GHOST_NORMAL_BASE_PATTERN
+        ld b, a
+        ld a, (SPRITE_GHOST_WOBBLE_PHASE)
+        and 0x01
+        add a, a
+        add a, a
+        add a, b
         ret
 
 ; Input: A = tile coordinate. Output: HL = (tile * 8 + 4) << 8.

@@ -31,7 +31,7 @@ mechanical checklist prevents silent RAM corruption:
 0x8260  LEVEL_STATE_BASE         (level_progression.asm:48) ~0x8268
 0x8270  INTERMISSION_STATE_BASE  (intermission.asm:32)   ← CONFLICT
 0x8270  PATTERN_REPLAY_STATE_BASE(pattern_replay.asm:6)  ← CONFLICT
-0x8300  SPRITE_STATE_BASE        (sprites.asm:49)        ~0x838F
+0x8300  SPRITE_STATE_BASE        (sprites.asm:61)        ~0x8395
 ```
 
 ## Known overlaps

@@ -62,13 +62,24 @@ game_state_tick_playing:
         or a
         jr z, .move
         call collision_tick_dot_stall
-        jr .after_move
+        jr .after_stall
 
 .move:
         call movement_update_pacman
         call collision_update_pellet_at_pacman
 
 .after_move:
+        call ghost_mode_tick
+        call ghost_update_all_targets
+        call movement_update_ghosts
+        call ghost_house_tick
+        call collision_check_all_ghosts
+        ld a, (COLLISION_DOT_STALL)
+        or a
+        call z, sprite_animation_tick
+        jp sprite_commit_from_game_state
+
+.after_stall:
         call ghost_mode_tick
         call ghost_update_all_targets
         call movement_update_ghosts
