@@ -74,7 +74,7 @@ game_state_tick_playing:
         call movement_update_ghosts
         call ghost_house_tick
         call collision_check_all_ghosts
-        ret
+        jp sprite_commit_from_game_state
 
 ; Update ghost tile positions. Ghosts outside the house move one tile
 ; every GHOST_MOVE_THRESHOLD frames.

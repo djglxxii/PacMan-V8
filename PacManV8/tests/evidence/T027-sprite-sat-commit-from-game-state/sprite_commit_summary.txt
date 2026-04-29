@@ -1,0 +1,18 @@
+T027 sprite SAT commit replay
+ROM: build/pacman.rom sha256=e6f3a4848a4c020435a6fe85626408ac044918a3fb9a9bd8c47141e1b0991a90
+Replay: tests/evidence/T027-sprite-sat-commit-from-game-state/move_seq.v8r sha256=576714898553551b265ba8a57f74c87e17354348150bc4998edbdc4c492fa85e
+Route: neutral through PLAYING+60, right for 100 frames, then up.
+Labels are gameplay-sequence checkpoints; absolute frames include ATTRACT+READY warmup.
+
+move_seq_0030: absolute_frame=390 ppm=tests/evidence/T027-sprite-sat-commit-from-game-state/move_seq_0030.ppm sha256=d3f27a867fa9ab2c9c02c9fc90d8cc3891e51f29b1cc73f7feae6ba8b504e3f6
+  pacman_fp=(0x6700,0xD400) dir=1 requested=4
+  ghosts: blinky=tile(17,14) dir=3 mode=1; pinky=tile(14,17) dir=2 mode=1; inky=tile(12,17) dir=0 mode=1; clyde=tile(16,17) dir=0 mode=1
+  sat: s0=xy(111,148) pat=04 pal=01; s1=xy(148, 72) pat=86 pal=02; s2=xy(124, 91) pat=84 pal=03; s3=xy(108, 91) pat=80 pal=04; s4=xy(140, 91) pat=80 pal=05
+move_seq_0090: absolute_frame=450 ppm=tests/evidence/T027-sprite-sat-commit-from-game-state/move_seq_0090.ppm sha256=2c2f2b7fb62b09fcf9a46b0334c8d86df0588bb8e7b99d08a424a5c222bdf4d4
+  pacman_fp=(0x6900,0xD400) dir=3 requested=3
+  ghosts: blinky=tile(27,14) dir=3 mode=1; pinky=tile(14,17) dir=2 mode=1; inky=tile(12,17) dir=0 mode=1; clyde=tile(16,17) dir=0 mode=1
+  sat: s0=xy(113,148) pat=04 pal=01; s1=xy(228, 72) pat=86 pal=02; s2=xy(124, 91) pat=84 pal=03; s3=xy(108, 91) pat=80 pal=04; s4=xy(140, 91) pat=80 pal=05
+move_seq_0180: absolute_frame=540 ppm=tests/evidence/T027-sprite-sat-commit-from-game-state/move_seq_0180.ppm sha256=191ca8c9430bb4d50f7993c89c26fcc0ce479168051c3d658745dc5a88607eab
+  pacman_fp=(0xAC00,0xC300) dir=0 requested=0
+  ghosts: blinky=tile(27,17) dir=2 mode=1; pinky=tile(14,17) dir=2 mode=1; inky=tile(12,17) dir=0 mode=1; clyde=tile(16,17) dir=0 mode=1
+  sat: s0=xy(180,134) pat=04 pal=01; s1=xy(228, 91) pat=84 pal=02; s2=xy(124, 91) pat=84 pal=03; s3=xy(108, 91) pat=80 pal=04; s4=xy(140, 91) pat=80 pal=05

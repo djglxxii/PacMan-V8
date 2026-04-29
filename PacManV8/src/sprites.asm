@@ -26,7 +26,9 @@ SPRITE_RESERVED_SLOT         EQU 5
 
 SPRITE_PACMAN_ID             EQU 1
 SPRITE_BLINKY_ID             EQU 8
-SPRITE_PINKY_FRIGHT_ID       EQU 50
+SPRITE_GHOST_NORMAL_BASE_ID  EQU 32
+SPRITE_FRIGHTENED_ID         EQU 50
+SPRITE_PINKY_FRIGHT_ID       EQU SPRITE_FRIGHTENED_ID
 SPRITE_INKY_HOUSE_ID         EQU 32
 SPRITE_CLYDE_EXIT_ID         EQU 9
 
@@ -35,6 +37,8 @@ SPRITE_BLINKY_PATTERN        EQU SPRITE_BLINKY_ID * 4
 SPRITE_PINKY_PATTERN         EQU SPRITE_PINKY_FRIGHT_ID * 4
 SPRITE_INKY_PATTERN          EQU SPRITE_INKY_HOUSE_ID * 4
 SPRITE_CLYDE_PATTERN         EQU SPRITE_CLYDE_EXIT_ID * 4
+SPRITE_GHOST_NORMAL_BASE_PATTERN EQU SPRITE_GHOST_NORMAL_BASE_ID * 4
+SPRITE_FRIGHTENED_PATTERN    EQU SPRITE_FRIGHTENED_ID * 4
 
 SPRITE_PALETTE_TRANSPARENT   EQU 0
 SPRITE_PALETTE_PACMAN        EQU 1
@@ -50,11 +54,15 @@ SPRITE_STATE_BASE            EQU 0x8300
 SPRITE_SAT_SHADOW            EQU SPRITE_STATE_BASE
 SPRITE_COLOR_SHADOW          EQU SPRITE_SAT_SHADOW + SPRITE_SAT_SHADOW_BYTES
 SPRITE_FRAME_COUNTER         EQU SPRITE_COLOR_SHADOW + SPRITE_COLOR_SHADOW_BYTES
+SPRITE_COMMIT_WORK_PATTERN   EQU SPRITE_FRAME_COUNTER + 1
+SPRITE_COMMIT_WORK_PALETTE   EQU SPRITE_COMMIT_WORK_PATTERN + 1
 
 sprite_renderer_init:
         call sprite_upload_patterns
         call sprite_init_color_shadow
         call sprite_upload_color_shadow
+        call sprite_clear_sat_shadow
+        call sprite_upload_sat_shadow
         ret
 
 sprite_upload_patterns:
@@ -122,6 +130,137 @@ sprite_init_color_shadow:
         ld (hl), a
         inc hl
         djnz .fill_slot
+        ret
+
+sprite_clear_sat_shadow:
+        ld hl, SPRITE_SAT_SHADOW
+        ld b, SPRITE_SAT_SHADOW_BYTES
+        xor a
+.loop:
+        ld (hl), a
+        inc hl
+        djnz .loop
+        ld a, SPRITE_TERMINATOR_Y
+        ld (SPRITE_SAT_SHADOW + (SPRITE_RESERVED_SLOT * SPRITE_SAT_STRIDE)), a
+        ret
+
+; Builds the five live entity SAT slots from gameplay state and uploads them
+; to VDP-A. Called from the foreground frame loop immediately after HALT,
+; through game_state_tick_playing's post-collision path.
+sprite_commit_from_game_state:
+        call sprite_clear_sat_shadow
+
+        ld hl, (PACMAN_Y_FP)
+        ld de, (PACMAN_X_FP)
+        call coord_arcade_to_v8
+        ld de, SPRITE_SAT_SHADOW + (SPRITE_PACMAN_SLOT * SPRITE_SAT_STRIDE)
+        ld a, SPRITE_PACMAN_PATTERN
+        ld (SPRITE_COMMIT_WORK_PATTERN), a
+        ld a, SPRITE_PALETTE_PACMAN
+        ld (SPRITE_COMMIT_WORK_PALETTE), a
+        call sprite_store_transformed_slot
+
+        ld hl, GHOST_BLINKY_BASE
+        ld de, SPRITE_SAT_SHADOW + (SPRITE_BLINKY_SLOT * SPRITE_SAT_STRIDE)
+        ld a, SPRITE_PALETTE_BLINKY
+        ld (SPRITE_COMMIT_WORK_PALETTE), a
+        call sprite_commit_ghost_slot
+
+        ld hl, GHOST_PINKY_BASE
+        ld de, SPRITE_SAT_SHADOW + (SPRITE_PINKY_SLOT * SPRITE_SAT_STRIDE)
+        ld a, SPRITE_PALETTE_PINKY
+        ld (SPRITE_COMMIT_WORK_PALETTE), a
+        call sprite_commit_ghost_slot
+
+        ld hl, GHOST_INKY_BASE
+        ld de, SPRITE_SAT_SHADOW + (SPRITE_INKY_SLOT * SPRITE_SAT_STRIDE)
+        ld a, SPRITE_PALETTE_INKY
+        ld (SPRITE_COMMIT_WORK_PALETTE), a
+        call sprite_commit_ghost_slot
+
+        ld hl, GHOST_CLYDE_BASE
+        ld de, SPRITE_SAT_SHADOW + (SPRITE_CLYDE_SLOT * SPRITE_SAT_STRIDE)
+        ld a, SPRITE_PALETTE_CLYDE
+        ld (SPRITE_COMMIT_WORK_PALETTE), a
+        call sprite_commit_ghost_slot
+
+        jp sprite_upload_sat_shadow
+
+; Input: HL = ghost record base, DE = SAT slot address.
+sprite_commit_ghost_slot:
+        push de
+        ld a, (hl)                  ; GHOST_RECORD_X_TILE.
+        ld c, a
+        inc hl
+        ld a, (hl)                  ; GHOST_RECORD_Y_TILE.
+        ld b, a
+        inc hl
+        ld a, (hl)                  ; GHOST_RECORD_DIR.
+        push bc
+        call sprite_ghost_dir_to_pattern
+        ld (SPRITE_COMMIT_WORK_PATTERN), a
+        inc hl
+        ld a, (hl)                  ; GHOST_RECORD_MODE.
+        cp GHOST_MODE_FRIGHTENED
+        jr nz, .normal_pattern
+        ld a, SPRITE_FRIGHTENED_PATTERN
+        ld (SPRITE_COMMIT_WORK_PATTERN), a
+.normal_pattern:
+        pop bc
+        ld a, c                     ; X tile -> 8.8 tile-center X.
+        call sprite_tile_to_center_fp
+        ld d, h
+        ld e, l
+        ld a, b                     ; Y tile -> 8.8 tile-center Y.
+        call sprite_tile_to_center_fp
+        call coord_arcade_to_v8
+        pop de
+        jp sprite_store_transformed_slot
+
+; Input: A = direction enum. Output: A = pattern byte.
+; T028 will toggle the low wobble bit; T027 holds frame 0.
+sprite_ghost_dir_to_pattern:
+        cp MOVEMENT_DIR_NONE
+        jr c, .valid
+        xor a
+.valid:
+        add a, a
+        add a, SPRITE_GHOST_NORMAL_BASE_PATTERN
+        ret
+
+; Input: A = tile coordinate. Output: HL = (tile * 8 + 4) << 8.
+sprite_tile_to_center_fp:
+        add a, a
+        add a, a
+        add a, a
+        add a, MOVEMENT_TILE_CENTER
+        ld h, a
+        ld l, 0
+        ret
+
+; Input: H = SAT Y, L = SAT X, DE = SAT slot address,
+;        SPRITE_COMMIT_WORK_PATTERN = pattern byte.
+sprite_store_transformed_slot:
+        ld a, h
+        ld (de), a
+        inc de
+        ld a, l
+        ld (de), a
+        inc de
+        ld a, (SPRITE_COMMIT_WORK_PATTERN)
+        ld (de), a
+        inc de
+        ld a, (SPRITE_COMMIT_WORK_PALETTE)
+        ld (de), a
+        inc de
+        xor a
+        ld (de), a
+        inc de
+        ld (de), a
+        inc de
+        ld (de), a
+        inc de
+        ld (de), a
         ret
 
 sprite_build_shadow:

@@ -1,0 +1,9 @@
+T021 pattern replay and fidelity tests
+ROM SHA-256: e6f3a4848a4c020435a6fe85626408ac044918a3fb9a9bd8c47141e1b0991a90
+pattern sources: tests/replays/pattern_sources
+evidence dir: tests/evidence/T027-sprite-sat-commit-from-game-state/t021-regression
+[PASS] early-level-pattern
+  replay: tests/evidence/T027-sprite-sat-commit-from-game-state/t021-regression/replays/early-level-pattern.v8r sha256=4932e6cfffc94c6890d183e592edb6de9c85a97fc36e3cc6b6f6ccebbb4fac6b
+[PASS] short-corner-route
+  replay: tests/evidence/T027-sprite-sat-commit-from-game-state/t021-regression/replays/short-corner-route.v8r sha256=b854f379d1a7346a3380b2cde606058cdf16116590d9f18efbed7bce165da408
+result: 2/2 passed
